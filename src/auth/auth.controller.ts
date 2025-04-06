@@ -13,10 +13,7 @@ export class AuthController {
     @Body() body: any,
     @Res() res: Response,
   ) {
-    console.log(body);
-    return res.status(200).send({
-      message: 'Login successful',
-    });
+    return this.authService.Login(body, res);
   };
 
   @Public()

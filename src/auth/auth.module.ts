@@ -8,7 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { getJwtConfig } from '../config/configuration';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './authUtils/auth.guard';
-
+import { UsersModule } from 'src/users/users.module';
 @Module({
   imports: [
     JwtModule.registerAsync({
@@ -24,9 +24,10 @@ import { AuthGuard } from './authUtils/auth.guard';
       },
       inject: [ConfigService],
     }),
+    UsersModule,
   ],
   providers: [
-    AuthService, 
+    AuthService,
     AuthUtilsService,
     {
       provide: APP_GUARD,

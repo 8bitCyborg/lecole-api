@@ -13,13 +13,13 @@ export class Users {
   @ObjectIdColumn()
   _id: ObjectId;
 
-  @Column()
+  @Column({ nullable: true, default: null })
   username: string;
 
   @Column()
   email: string;
 
-  @Column({ nullable: true })
+  @Column()
   phone: string;
 
   @Column()
