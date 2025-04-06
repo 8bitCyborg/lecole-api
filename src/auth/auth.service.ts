@@ -29,6 +29,7 @@ export class AuthService {
         }),
       });
     } catch (error) {
+      console.log('error', error, process.env.JWT_SECRET);
       throw new UnauthorizedException(error);
     };
   };
