@@ -13,7 +13,6 @@ export class AuthService {
     try {
       const { login_id, password } = data;
       const user: any = await this.userService.findUser(login_id);
-      console.log('user', user);
       if (!user) {
         return res.status(401).send({ 
           message: 'Incorrect Username or Password',
@@ -22,7 +21,6 @@ export class AuthService {
       };
 
       const isPasswordValid = await this.AuthUtilsService.verifyPassword(password, user.password);
-      console.log(isPasswordValid);
       if (!isPasswordValid) {
         return res.status(401).send({ 
           message: 'Incorrect Username or Password',
@@ -40,7 +38,6 @@ export class AuthService {
       });
       
     } catch (error) {
-      console.log(error);
       return res.status(500).send({
         message: error,
         status: 500,

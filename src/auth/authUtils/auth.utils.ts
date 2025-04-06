@@ -17,7 +17,6 @@ export class AuthUtilsService {
   };
 
   async verifyPassword(password: string, hash: string): Promise<boolean>{
-    console.log(password, hash);
     return await bcrypt.compare(password, hash);
   };
 };
