@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { getDatabaseConfig } from './config/configuration';
+import { StudentsModule } from './students/students.module';
 
 @Module({
   imports: [
@@ -13,11 +14,13 @@ import { getDatabaseConfig } from './config/configuration';
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
-      useFactory: (configService: ConfigService) => getDatabaseConfig(configService),
+      useFactory: (configService: ConfigService) =>
+        getDatabaseConfig(configService),
       inject: [ConfigService],
     }),
     AuthModule,
-    UsersModule
+    UsersModule,
+    StudentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

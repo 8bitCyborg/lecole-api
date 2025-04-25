@@ -7,47 +7,57 @@ export class AuthService {
   constructor(
     private AuthUtilsService: AuthUtilsService,
     private userService: UsersService,
-  ){};
+  ) {}
 
-  async Login(data: any, res: Response){
+  async Login(data: any, res: Response) {
     try {
-      const { login_id, password } = data;
-      const user: any = await this.userService.findUser(login_id);
+      const { email, password } = data;
+      const user: any = await this.userService.findUser(email);
+      console.log('User: ', user);
       if (!user) {
-        return res.status(401).send({ 
+        return res.status(401).send({
           message: 'Incorrect Username or Password',
           status: 401,
         });
-      };
+      }
 
-      const isPasswordValid = await this.AuthUtilsService.verifyPassword(password, user.password);
+      const isPasswordValid = await this.AuthUtilsService.verifyPassword(
+        password,
+        user.password,
+      );
+
+      console.log('is password valid: ', isPasswordValid);
+
       if (!isPasswordValid) {
-        return res.status(401).send({ 
+        return res.status(401).send({
           message: 'Incorrect Username or Password',
           status: 401,
         });
-      };
+      }
 
       return res.status(200).send({
         message: 'Login successful',
         status: 200,
         data: {
           ...user,
-          access_token: await this.AuthUtilsService.tokenize(user._id, user.email),
+          access_token: await this.AuthUtilsService.tokenize(
+            user._id,
+            user.email,
+          ),
         },
       });
-      
     } catch (error) {
+      console.log('Error logging in', error);
       return res.status(500).send({
         message: error,
         status: 500,
       });
-    };
-  };
+    }
+  }
 
-
-  async Register(data: any, res: Response){
+  async Register(data: any, res: Response) {
     try {
+      console.log('Data: ', data);
       const user = await this.userService.createUser({
         ...data,
         email: data.email.toLowerCase(),
@@ -56,19 +66,21 @@ export class AuthService {
 
       if (!user) {
         throw new UnauthorizedException('User already exists');
-      };
+      }
 
       return res.status(200).send({
         message: 'Register successful',
         status: 200,
         data: {
           ...user,
-          access_token: await this.AuthUtilsService.tokenize(user._id, user.email),
+          access_token: await this.AuthUtilsService.tokenize(
+            user._id,
+            user.email,
+          ),
         },
       });
     } catch (error) {
       throw new UnauthorizedException(error);
-    };
-  };
-
-};
+    }
+  }
+}
