@@ -2,11 +2,15 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthUtilsService } from './authUtils/auth.utils';
 import { UsersService } from 'src/users/users.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Users } from 'src/users/entity/user.entity';
+import { Repository } from 'typeorm';
 @Injectable()
 export class AuthService {
   constructor(
     private AuthUtilsService: AuthUtilsService,
     private userService: UsersService,
+    @InjectRepository(Users) private userRepository: Repository<Users>,
   ) {}
 
   async Login(data: any, res: Response) {
@@ -58,6 +62,7 @@ export class AuthService {
   async Register(data: any, res: Response) {
     try {
       console.log('Data: ', data);
+
       const user = await this.userService.createUser({
         ...data,
         email: data.email.toLowerCase(),

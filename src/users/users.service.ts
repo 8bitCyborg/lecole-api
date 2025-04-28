@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Users } from './entity/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { RegisterDto } from 'src/auth/dto/register.dto';
+import { UserDto } from './dto/user.dto';
 
 @Injectable()
 export class UsersService {
@@ -26,16 +28,15 @@ export class UsersService {
     }
   }
 
-  async createUser(data: any) {
+  async createUser(data: UserDto) {
     try {
       const checkIfUserExists = await this.usersRepository.findOneBy({
         email: data.email,
       });
-      if (Boolean(checkIfUserExists)) {
-        return false;
-      }
+      if (checkIfUserExists) return false;
 
       const user = await this.usersRepository.save(data);
+      console.log('User create: ', user);
       return user;
     } catch (error) {
       console.log('error creating user: ', error);

@@ -1,33 +1,43 @@
 import { ObjectId } from 'mongodb';
+import { School } from 'src/schools/entities/school.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   ObjectIdColumn,
+  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'students' })
 export class Students {
   @ObjectIdColumn()
   _id: ObjectId;
 
-  @Column()
-  firstName: string;
+  @Column({ type: 'int' })
+  firstName: number;
 
   @Column()
   lastName: string;
 
   @Column()
+  initialClassAtAdmission: string;
+
+  @Column({ default: 'active' })
+  currentStatus: 'active' | 'graduated' | 'transferred';
+
+  @Column({})
   gender: string;
 
   @Column()
   age: number;
 
-  @Column()
+  @Column({ default: 'JSS2' })
   class: string;
 
-  @Column()
+  @PrimaryColumn()
   phone: string;
 
   @Column()
@@ -40,8 +50,12 @@ export class Students {
   address: string;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
+
+  // @ManyToOne(() => School, (school) => school.students)
+  // @JoinColumn()
+  // school: School;
 }

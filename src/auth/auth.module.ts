@@ -9,15 +9,17 @@ import { getJwtConfig } from '../config/configuration';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './authUtils/auth.guard';
 import { UsersModule } from 'src/users/users.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 @Module({
   imports: [
+    TypeOrmModule.forFeature([Users]),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => {
         const config = getJwtConfig(configService);
         return {
           secret: config.jwtSecret,
-          signOptions: { 
-            expiresIn: config.jwtExpiresIn 
+          signOptions: {
+            expiresIn: config.jwtExpiresIn,
           },
           global: true,
         };
@@ -34,6 +36,6 @@ import { UsersModule } from 'src/users/users.module';
       useClass: AuthGuard,
     },
   ],
-  controllers: [AuthController]
+  controllers: [AuthController],
 })
 export class AuthModule {}

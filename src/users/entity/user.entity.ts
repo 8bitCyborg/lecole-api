@@ -3,10 +3,24 @@ import {
   Column,
   ObjectId,
   ObjectIdColumn,
-  Index,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToOne,
+  JoinColumn,
+  ManyToOne,
 } from 'typeorm';
+import { Staff } from '../../staff/entities/staff.entity';
+import { School } from 'src/schools/entities/school.entity';
+
+export enum UserRole {
+  SUPERADMIN = 'superadmin',
+  ADMIN = 'admin',
+  // STAFF = 'staff',
+  // STUDENT = 'student',
+  SUBADMIN = 'subadmin',
+  FINANCE = 'finance',
+  EXAMS = 'exam',
+}
 
 @Entity()
 export class Users {
@@ -23,20 +37,41 @@ export class Users {
   phone: string;
 
   @Column()
-  first_name: string;
+  firstName: string;
 
   @Column()
-  last_name: string;
+  lastName: string;
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.SUPERADMIN,
+  })
+  role: UserRole;
+
+  // @Column({ nullable: true })
+  // studentId: ObjectId;
+
+  // @OneToOne(() => Staff, { nullable: true })
+  // @JoinColumn({ name: 'staffId' })
+  // staff: Staff;
+
+  // @Column({ nullable: true })
+  // staffId: ObjectId;
 
   @Column({ default: false })
-  is_active: boolean;
+  isActive: boolean;
 
   @Column()
   password: string;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
+
+  @ManyToOne(() => School, (school) => school.users)
+  @JoinColumn()
+  school: School;
 }
