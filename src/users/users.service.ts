@@ -28,16 +28,13 @@ export class UsersService {
   // }
 
   async findUser(login_id: string) {
-    // try {
-    //   const user = await this.userModel.find({ email: login_id });
-    //   return user;
-    // } catch (error) {
-    //   console.log('Error finding User');
-    //   return error;
-    // }
-
-    const user = await this.userModel.find({ email: login_id });
-    return user;
+    try {
+      const user = await this.userModel.findOne({ email: login_id });
+      return user;
+    } catch (error) {
+      console.log('Error finding user: ', error);
+      return false;
+    }
   }
 
   async createUser(data: UserDto) {

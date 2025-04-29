@@ -7,11 +7,14 @@ import { Users } from 'src/users/entity/user.entity';
 import { Repository } from 'typeorm';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/users/schemas/user.schema';
+import { School } from 'src/schools/schemas/school.schema';
+import { SchoolsService } from 'src/schools/schools.service';
 @Injectable()
 export class AuthService {
   constructor(
     private AuthUtilsService: AuthUtilsService,
     private userService: UsersService,
+    private schoolService: SchoolsService,
     // @InjectRepository(Users) private userRepository: Repository<Users>,
     @InjectModel(User.name) private userModel,
   ) {}
@@ -65,6 +68,9 @@ export class AuthService {
   async Register(data: any, res: Response) {
     try {
       console.log('Data: ', data);
+
+      const school = await this.schoolService.createSchool(data);
+      console.log('School created: ', school);
 
       const user = await this.userService.createUser({
         ...data,

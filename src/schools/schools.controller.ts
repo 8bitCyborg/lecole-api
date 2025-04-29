@@ -10,14 +10,16 @@ import {
 import { SchoolsService } from './schools.service';
 import { CreateSchoolDto } from './dto/create-school.dto';
 import { UpdateSchoolDto } from './dto/update-school.dto';
+import { Public } from 'src/auth/authUtils/auth.guard';
 
 @Controller('schools')
 export class SchoolsController {
   constructor(private readonly schoolsService: SchoolsService) {}
 
+  @Public()
   @Post()
   create(@Body() createSchoolDto: CreateSchoolDto) {
-    return this.schoolsService.create(createSchoolDto);
+    return this.schoolsService.createSchool(createSchoolDto);
   }
 
   @Get()

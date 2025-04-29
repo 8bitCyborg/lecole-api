@@ -35,9 +35,6 @@ export class School extends Document {
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Term' })
   currentTermId?: MongooseSchema.Types.ObjectId;
-
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const SchoolSchema = SchemaFactory.createForClass(School);
