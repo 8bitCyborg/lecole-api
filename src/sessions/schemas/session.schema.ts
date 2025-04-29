@@ -9,12 +9,6 @@ export class Session extends Document {
 
   @Prop({ type: [MongooseSchema.Types.ObjectId], ref: 'Term' })
   termsId: MongooseSchema.Types.ObjectId[];
-
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'School' })
-  school: School;
-
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const SessionSchema = SchemaFactory.createForClass(Session);

@@ -1,11 +1,24 @@
+import { Session } from './schemas/session.schema';
 import { Injectable } from '@nestjs/common';
-import { CreateSessionDto } from './dto/create-session.dto';
 import { UpdateSessionDto } from './dto/update-session.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import mongoose, { Types } from 'mongoose';
 
 @Injectable()
 export class SessionsService {
-  create(createSessionDto: CreateSessionDto) {
-    return 'This action adds a new session';
+  constructor(@InjectModel(Session.name) private sessionModel) {}
+
+  async createSession(schoolId) {
+    try {
+      const session = await this.sessionModel.create({
+        schoolId: new mongoose.Types.ObjectId(schoolId),
+      });
+      console.log('Session created: ', session);
+      return session;
+    } catch (error) {
+      console.log('error creating session: ', error);
+      return error;
+    }
   }
 
   findAll() {
