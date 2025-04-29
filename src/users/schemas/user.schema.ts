@@ -41,7 +41,7 @@ export class User {
   password: string;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'School' })
-  school: School;
+  schoolId: School;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

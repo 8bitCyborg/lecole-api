@@ -1,3 +1,4 @@
+import { Session } from './../../sessions/schemas/session.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
@@ -10,6 +11,12 @@ export enum SubscriptionStatus {
 export class School extends Document {
   @Prop({ required: true })
   name: string;
+
+  @Prop({ required: true })
+  founderFirstName: string;
+
+  @Prop({ required: true })
+  founderLastName: string;
 
   @Prop()
   address?: string;
@@ -35,6 +42,9 @@ export class School extends Document {
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Term' })
   currentTermId?: MongooseSchema.Types.ObjectId;
+
+  @Prop([{ type: MongooseSchema.Types.ObjectId, ref: 'Term' }])
+  sessionIds: Session[];
 }
 
 export const SchoolSchema = SchemaFactory.createForClass(School);

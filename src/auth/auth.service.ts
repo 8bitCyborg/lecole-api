@@ -69,14 +69,21 @@ export class AuthService {
     try {
       console.log('Data: ', data);
 
-      const school = await this.schoolService.createSchool(data);
+      const school = await this.schoolService.createSchool({
+        ...data,
+        founderFirstName: data.firstName,
+        founderLastName: data.lastName,
+      });
       console.log('School created: ', school);
 
       const user = await this.userService.createUser({
         ...data,
+        schoolId: school._id,
         email: data.email.toLowerCase(),
         password: await this.AuthUtilsService.hashPassword(data.password),
       });
+
+      console.log('User created: ', user);
 
       if (!user) {
         throw new UnauthorizedException('User already exists');
