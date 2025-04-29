@@ -10,9 +10,12 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './authUtils/auth.guard';
 import { UsersModule } from 'src/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchema } from 'src/users/schemas/user.schema';
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Users]),
+    // TypeOrmModule.forFeature([Users]),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => {
         const config = getJwtConfig(configService);

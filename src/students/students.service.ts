@@ -4,11 +4,14 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { StudentDto } from './entity/student.dto';
 import { validate } from 'class-validator';
+import { InjectModel } from '@nestjs/mongoose';
+import { Student } from './schemas/student.schema';
 
 @Injectable()
 export class StudentsService {
   constructor(
-    @InjectRepository(Students) private studentRepository: Repository<Students>,
+    // @InjectRepository(Students) private studentRepository: Repository<Students>,
+    @InjectModel(Student.name) private studentModel,
   ) {}
 
   async addStudent(studentData: StudentDto) {
@@ -17,9 +20,9 @@ export class StudentsService {
 
       console.log('Error: ', error);
 
-      const student = this.studentRepository.create(studentData);
+      const student = this.studentModel.create(studentData);
       console.log('Student created: ', student);
-      return this.studentRepository.save(student);
+      // return this.studentRepository.save(student);
     } catch (error: any) {
       console.log('error creating student: ', error);
       return false;
@@ -28,7 +31,7 @@ export class StudentsService {
 
   getAllStudents(schooId: string) {
     try {
-      return this.studentRepository.find();
+      return this.studentModel.find();
     } catch (error) {
       console.log('error getting students: ', error);
       return false;

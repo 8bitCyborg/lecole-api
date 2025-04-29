@@ -20,6 +20,9 @@ import { Payment } from './payments/entities/payment.entity';
 import { School } from './schools/entities/school.entity';
 import { Session } from './sessions/entity/session.entity';
 import { Staff } from './staff/entities/staff.entity';
+import { MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchema } from './users/schemas/user.schema';
+import { Student, StudentSchema } from './students/schemas/student.schema';
 
 @Module({
   imports: [
@@ -31,12 +34,17 @@ import { Staff } from './staff/entities/staff.entity';
     //     getDatabaseConfig(configService),
     //   inject: [ConfigService],
     // }),
-    TypeOrmModule.forRoot({
-      type: 'mongodb',
-      url: 'mongodb://localhost:27017/lecole',
-      entities: [Payment, Students, Users, School, Session, Staff],
-      synchronize: true,
-    }),
+    // TypeOrmModule.forRoot({
+    //   type: 'mongodb',
+    //   url: 'mongodb://localhost:27017/lecole',
+    //   entities: [Payment, Students, Users, School, Session, Staff],
+    //   synchronize: true,
+    // }),
+    MongooseModule.forRoot(`${process.env.DB_CONNECTION_URL}`),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+      { name: Student.name, schema: StudentSchema },
+    ]),
     AuthModule,
     UsersModule,
     StudentsModule,
@@ -49,6 +57,4 @@ import { Staff } from './staff/entities/staff.entity';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {
-  constructor(private dataSource: DataSource) {}
-}
+export class AppModule {}

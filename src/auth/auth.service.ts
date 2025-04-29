@@ -5,12 +5,15 @@ import { UsersService } from 'src/users/users.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from 'src/users/entity/user.entity';
 import { Repository } from 'typeorm';
+import { InjectModel } from '@nestjs/mongoose';
+import { User } from 'src/users/schemas/user.schema';
 @Injectable()
 export class AuthService {
   constructor(
     private AuthUtilsService: AuthUtilsService,
     private userService: UsersService,
-    @InjectRepository(Users) private userRepository: Repository<Users>,
+    // @InjectRepository(Users) private userRepository: Repository<Users>,
+    @InjectModel(User.name) private userModel,
   ) {}
 
   async Login(data: any, res: Response) {
