@@ -9,10 +9,12 @@ export class SessionsService {
   constructor(@InjectModel(Session.name) private sessionModel) {}
 
   async createSession(schoolId) {
+    console.log('Schoolid: ', schoolId);
     try {
       const session = await this.sessionModel.create({
-        schoolId: new mongoose.Types.ObjectId(schoolId),
+        schoolId: schoolId,
       });
+
       console.log('Session created: ', session);
       return session;
     } catch (error) {
@@ -25,8 +27,17 @@ export class SessionsService {
     return `This action returns all sessions`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} session`;
+  async findOne(sessionId: string) {
+    try {
+      const session = await this.sessionModel
+        .find({ _id: sessionId })
+        .populate('schoolId');
+
+      return session;
+    } catch (error) {
+      console.log('error fetching session: ', error);
+      return false;
+    }
   }
 
   update(id: number, updateSessionDto: UpdateSessionDto) {

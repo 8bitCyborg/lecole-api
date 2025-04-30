@@ -16,7 +16,7 @@ export class SessionsController {
   constructor(private readonly sessionsService: SessionsService) {}
 
   @Post(':schoolId')
-  create(@Param() schoolId) {
+  create(@Param('schoolId') schoolId) {
     return this.sessionsService.createSession(schoolId);
   }
 
@@ -25,9 +25,9 @@ export class SessionsController {
     return this.sessionsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.sessionsService.findOne(+id);
+  @Get(':sessionId')
+  findOne(@Param('sessionId') sessionId: string) {
+    return this.sessionsService.findOne(sessionId);
   }
 
   @Patch(':id')
