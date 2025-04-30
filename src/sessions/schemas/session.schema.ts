@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document, Schema as MongooseSchema, Types } from 'mongoose';
-import { School } from '../../schools/schemas/school.schema';
+import  { Document, Schema as MongooseSchema, Types } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Session extends Document {
@@ -15,7 +14,7 @@ export class Session extends Document {
   @Prop({ type: [MongooseSchema.Types.ObjectId], ref: 'Term' })
   termsId: MongooseSchema.Types.ObjectId[];
 
-  @Prop({ default: '2020' })
+  @Prop()
   year: string;
 }
 

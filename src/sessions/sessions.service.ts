@@ -9,9 +9,8 @@ export class SessionsService {
   constructor(@InjectModel(Session.name) private sessionModel) {}
 
   async createSession(schoolId) {
-    console.log('Schoolid: ', schoolId);
     try {
-      const session = await this.sessionModel.create({
+      const session: Session = await this.sessionModel.create({
         schoolId: schoolId,
       });
 
@@ -32,7 +31,7 @@ export class SessionsService {
       const session = await this.sessionModel
         .find({ _id: sessionId })
         .populate('schoolId');
-
+      console.log('Session retrieved: ', session);
       return session;
     } catch (error) {
       console.log('error fetching session: ', error);
