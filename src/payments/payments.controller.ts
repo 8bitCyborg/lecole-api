@@ -10,25 +10,31 @@ import {
 import { PaymentsService } from './payments.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
+import { Public } from 'src/auth/authUtils/auth.guard';
 
 @Controller('payments')
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
-  @Post()
-  create(@Body() createPaymentDto: CreatePaymentDto) {
-    return this.paymentsService.create(createPaymentDto);
+  @Public()
+  @Post(':schoolId')
+  create(
+    @Param('schoolId') schoolId,
+    @Body() createPaymentDto: CreatePaymentDto,
+  ) {
+    return this.paymentsService.createPayment(createPaymentDto);
   }
 
-  @Get()
-  findAll() {
-    return this.paymentsService.findAll();
+  @Get(':schoolId')
+  findAll(@Param('schoolId') schoolId: string) {
+    console.log('School id:', schoolId);
+    return this.paymentsService.findAll(schoolId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.paymentsService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.paymentsService.findOne(+id);
+  // }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePaymentDto: UpdatePaymentDto) {

@@ -1,6 +1,8 @@
 import { Session } from './../../sessions/schemas/session.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import { Staff } from 'src/staff/schemas/staff.schema';
+import { Student } from 'src/students/schemas/student.schema';
 
 export enum SubscriptionStatus {
   ACTIVE = 'active',
@@ -39,6 +41,12 @@ export class School extends Document {
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Session' })
   currentSessionId?: MongooseSchema.Types.ObjectId;
+
+  @Prop([{ type: MongooseSchema.Types.ObjectId, ref: 'Student' }])
+  students?: Student[];
+
+  @Prop([{ type: MongooseSchema.Types.ObjectId, ref: 'Staff' }])
+  staff?: Staff[];
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Term' })
   currentTermId?: MongooseSchema.Types.ObjectId;

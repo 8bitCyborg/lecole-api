@@ -22,8 +22,15 @@ export class SchoolsController {
     return this.schoolsService.createSchool(createSchoolDto);
   }
 
+  @Public()
   @Get()
   findAll() {
+    console.log('Request made');
+    // return 'Jello';
+    return {
+      name: 'Hello world',
+    };
+
     return this.schoolsService.findAll();
   }
 
