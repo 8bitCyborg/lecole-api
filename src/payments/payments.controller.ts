@@ -22,7 +22,6 @@ export class PaymentsController {
     @Param('schoolId') schoolId,
     @Body() createPaymentDto: CreatePaymentDto,
   ) {
-    console.log('Payments');
     return this.paymentsService.createPayment(createPaymentDto);
   }
 
