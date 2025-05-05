@@ -6,8 +6,18 @@ import * as bcrypt from 'bcrypt';
 export class AuthUtilsService {
   constructor(private JwtService: JwtService) {}
 
-  async tokenize(id?: string, email?: string): Promise<string> {
-    const payload = { sub: id, email };
+  async tokenize(
+    _id?: string,
+    email?: string,
+    schoolId?: string,
+  ): Promise<string> {
+    const payload = {
+      sub: {
+        _id,
+        schoolId,
+      },
+      email,
+    };
     return this.JwtService.sign(payload);
   }
 

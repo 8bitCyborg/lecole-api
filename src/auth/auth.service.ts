@@ -45,13 +45,17 @@ export class AuthService {
         });
       }
 
-      const jwt = await this.AuthUtilsService.tokenize(user._id, user.email);
+      const jwt = await this.AuthUtilsService.tokenize(
+        user._id,
+        user.email,
+        user.schoolId,
+      );
 
-      // res.cookie('lecole_token', jwt, {
-      //   httpOnly: true,
-      //   secure: process.env.NODE_ENV === 'production',
-      //   maxAge: 24 * 60 * 60 * 1000, // 1 day
-      // });
+      res.cookie('lecole_token', jwt, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
+      });
 
       return res.status(200).send({
         message: 'Login successful',
@@ -113,6 +117,7 @@ export class AuthService {
           access_token: await this.AuthUtilsService.tokenize(
             user._id,
             user.email,
+            user.schoolId,
           ),
         },
       });
