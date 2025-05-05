@@ -19,7 +19,7 @@ export class Payment {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Student',
-    required: true,
+    // required: true,
   })
   studentId: Types.ObjectId;
 

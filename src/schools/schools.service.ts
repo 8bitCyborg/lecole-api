@@ -22,6 +22,7 @@ export class SchoolsService {
       // });
       return school;
     } catch (error) {
+      // console.log('School details: ', schoolDetails);
       console.log('Error creating school: ', error);
     }
   }

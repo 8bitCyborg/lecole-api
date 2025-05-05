@@ -10,13 +10,19 @@ export class AuthController {
   @Public()
   @Post(ROUTES.auth.login)
   login(@Body() body: any, @Res() res: Response) {
+    console.log('login');
+    res.cookie('lecole_token', 'kkjkjjjkj', {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 24 * 60 * 60 * 1000, // 1 day\
+      path: '/',
+    });
     return this.authService.Login(body, res);
   }
 
   @Public()
   @Post(ROUTES.auth.register)
   register(@Body() body: any, @Res() res: Response) {
-    console.log('register');
     return this.authService.Register(body, res);
   }
 }

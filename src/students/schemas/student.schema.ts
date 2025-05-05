@@ -1,9 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { School } from '../../schools/schemas/school.schema';
+import { User } from 'src/users/schemas/user.schema';
 
 @Schema({ timestamps: true })
 export class Student extends Document {
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
+  userId: User;
+
   @Prop({ required: true })
   firstName: string;
 
@@ -26,7 +30,7 @@ export class Student extends Document {
   @Prop({ required: true })
   age: number;
 
-  @Prop({ default: 'JSS2' })
+  @Prop({})
   class: string;
 
   @Prop({ required: true, unique: true })
@@ -42,10 +46,10 @@ export class Student extends Document {
   address: string;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'School' })
-  school: School;
+  schoolId: School;
 
-  createdAt: Date;
-  updatedAt: Date;
+  @Prop()
+  recordsId: string;
 }
 
 export const StudentSchema = SchemaFactory.createForClass(Student);

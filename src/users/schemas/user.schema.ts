@@ -1,10 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Schema as MongooseSchema } from 'mongoose';
+import { Schema as MongooseSchema } from 'mongoose';
 import { School } from '../../schools/schemas/school.schema';
 
 export enum UserRole {
   SUPERADMIN = 'superadmin',
   ADMIN = 'admin',
+  STUDENT = 'student',
   SUBADMIN = 'subadmin',
   FINANCE = 'finance',
   EXAMS = 'exam',
@@ -30,7 +31,6 @@ export class User {
   @Prop({
     type: String,
     enum: UserRole,
-    default: UserRole.SUPERADMIN,
   })
   role: UserRole;
 

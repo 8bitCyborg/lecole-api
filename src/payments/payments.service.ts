@@ -11,10 +11,10 @@ export class PaymentsService {
     try {
       const payment = await this.paymentModel.create(paymentDetails);
       console.log('Payment: ', payment);
+      return payment;
     } catch (error) {
       console.log('error creating payment: ', error);
     }
-    return 'This action adds a new payment';
   }
 
   async findAll(schoolId: string) {

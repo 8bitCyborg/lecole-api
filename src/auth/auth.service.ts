@@ -45,17 +45,33 @@ export class AuthService {
         });
       }
 
+      const jwt = await this.AuthUtilsService.tokenize(user._id, user.email);
+
+      // res.cookie('lecole_token', jwt, {
+      //   httpOnly: true,
+      //   secure: process.env.NODE_ENV === 'production',
+      //   maxAge: 24 * 60 * 60 * 1000, // 1 day
+      // });
+
       return res.status(200).send({
         message: 'Login successful',
         status: 200,
         data: {
           ...user,
-          access_token: await this.AuthUtilsService.tokenize(
-            user._id,
-            user.email,
-          ),
+          access_token: jwt,
         },
       });
+      // return res.status(200).send({
+      //   message: 'Login successful',
+      //   status: 200,
+      //   data: {
+      //     ...user,
+      //     access_token: await this.AuthUtilsService.tokenize(
+      //       user._id,
+      //       user.email,
+      //     ),
+      //   },
+      // });
     } catch (error) {
       console.log('Error logging in', error);
       return res.status(500).send({
@@ -67,7 +83,7 @@ export class AuthService {
 
   async Register(data: any, res: Response) {
     try {
-      console.log('Data: ', data);
+      console.log('Data Registered: ', data);
 
       const school = await this.schoolService.createSchool({
         ...data,
@@ -90,7 +106,7 @@ export class AuthService {
       }
 
       return res.status(200).send({
-        message: 'Register successful',
+        message: 'Registration successful',
         status: 200,
         data: {
           ...user,
