@@ -25,12 +25,6 @@ export class SchoolsController {
   @Public()
   @Get()
   findAll() {
-    console.log('Request made');
-    // return 'Jello';
-    return {
-      name: 'Hello world',
-    };
-
     return this.schoolsService.findAll();
   }
 
