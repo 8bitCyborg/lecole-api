@@ -41,6 +41,8 @@ export class SessionsService {
       await this.schoolModel.findByIdAndUpdate(
         schoolId,
         {
+          currentSessionId: session._id,
+          currentTermId: terms[0]._id,
           $push: { sessionIds: session._id },
         },
         { new: true },
