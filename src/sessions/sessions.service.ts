@@ -3,12 +3,14 @@ import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { UpdateSessionDto } from './dto/update-session.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { School } from 'src/schools/schemas/school.schema';
+import { Term } from 'src/terms/schemas/term.schema';
 @Injectable()
 export class SessionsService {
   private readonly logger = new Logger(SessionsService.name);
   constructor(
     @InjectModel(Session.name) private sessionModel,
     @InjectModel(School.name) private schoolModel,
+    @InjectModel(Term.name) private termModel,
   ) {}
 
   async createSession(schoolId, sessioData: { year: string }) {
@@ -21,12 +23,22 @@ export class SessionsService {
       if (sessionExists) {
         throw new HttpException('Invalid ID', HttpStatus.BAD_REQUEST);
       }
+
       const session: Session = await this.sessionModel.create({
         schoolId: schoolId,
         year: sessioData.year,
       });
 
-      const school = await this.schoolModel.findByIdAndUpdate(
+      const terms = await this.termModel.insertMany([
+        { sessionId: session._id, schoolId: schoolId, termIndex: 1 },
+        { sessionId: session._id, schoolId: schoolId, termIndex: 2 },
+        { sessionId: session._id, schoolId: schoolId, termIndex: 3 },
+      ]);
+
+      session.currentTermId = terms[0]._id;
+      await session.save();
+
+      await this.schoolModel.findByIdAndUpdate(
         schoolId,
         {
           $push: { sessionIds: session._id },
