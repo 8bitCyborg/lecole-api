@@ -31,7 +31,17 @@ export class SchoolsService {
     return `This action returns all schools`;
   }
 
-  findOne(id: number) {
+  async findOne(id: string) {
+    try {
+      const school = await this.schoolModel.findById(id);
+      console.log('School found: ', school);
+      if (!school) {
+        return `School with id ${id} not found`;
+      }
+      return school;
+    } catch (error) {
+      console.log('Error finding school: ', error);
+    }
     return `This action returns a #${id} school`;
   }
 

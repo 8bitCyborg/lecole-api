@@ -16,8 +16,11 @@ export class SessionsController {
   constructor(private readonly sessionsService: SessionsService) {}
 
   @Post(':schoolId')
-  create(@Param('schoolId') schoolId) {
-    return this.sessionsService.createSession(schoolId);
+  create(
+    @Param('schoolId') schoolId,
+    @Body() createSessionData: { year: string },
+  ) {
+    return this.sessionsService.createSession(schoolId, createSessionData);
   }
 
   @Get()

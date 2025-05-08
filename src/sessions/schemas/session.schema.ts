@@ -14,7 +14,7 @@ export class Session extends Document {
   @Prop({ type: [MongooseSchema.Types.ObjectId], ref: 'Term' })
   termsId: MongooseSchema.Types.ObjectId[];
 
-  @Prop()
+  @Prop({ required: true })
   year: string;
 }
 

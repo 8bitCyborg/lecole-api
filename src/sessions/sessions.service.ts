@@ -1,9 +1,8 @@
 import { Session } from './schemas/session.schema';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { UpdateSessionDto } from './dto/update-session.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { School } from 'src/schools/schemas/school.schema';
-
 @Injectable()
 export class SessionsService {
   private readonly logger = new Logger(SessionsService.name);
@@ -12,13 +11,20 @@ export class SessionsService {
     @InjectModel(School.name) private schoolModel,
   ) {}
 
-  async createSession(schoolId) {
+  async createSession(schoolId, sessioData: { year: string }) {
+    console.log('Year: ', sessioData);
     try {
+      const sessionExists = await this.sessionModel.findOne({
+        schoolId: schoolId,
+        year: sessioData.year,
+      });
+      if (sessionExists) {
+        throw new HttpException('Invalid ID', HttpStatus.BAD_REQUEST);
+      }
       const session: Session = await this.sessionModel.create({
         schoolId: schoolId,
+        year: sessioData.year,
       });
-
-      console.log('Session created: ', session);
 
       const school = await this.schoolModel.findByIdAndUpdate(
         schoolId,
@@ -28,7 +34,6 @@ export class SessionsService {
         { new: true },
       );
 
-      console.log('School found: ', school);
       return session;
     } catch (error) {
       console.log('error creating session: ', error);
