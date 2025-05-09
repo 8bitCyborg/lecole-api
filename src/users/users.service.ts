@@ -43,7 +43,6 @@ export class UsersService {
         email: data.email,
       });
 
-      console.log('Hello world');
       console.log(checkIfUserExists);
 
       if (checkIfUserExists) return false;
