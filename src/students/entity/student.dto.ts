@@ -46,11 +46,6 @@ export class StudentDto {
   @Min(1)
   age: number;
 
-  @ApiProperty({ description: 'Current class of the student' })
-  @IsNotEmpty()
-  @IsString()
-  class: string;
-
   @ApiProperty({ description: 'Phone number of the student or guardian' })
   @IsNotEmpty()
   @IsString()
