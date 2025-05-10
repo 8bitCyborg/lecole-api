@@ -15,7 +15,7 @@ export class Student extends Document {
   lastName: string;
 
   @Prop({ required: true })
-  initialClassAtAdmission: string;
+  admissionClass: string;
 
   @Prop({
     type: String,
@@ -33,7 +33,7 @@ export class Student extends Document {
   @Prop({})
   class: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true })
   phone: string;
 
   @Prop({ required: true })

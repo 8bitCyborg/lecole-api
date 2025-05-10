@@ -22,7 +22,12 @@ export class StudentDto {
   @ApiProperty({ description: 'Initial class at admission' })
   @IsNotEmpty()
   @IsString()
-  initialClassAtAdmission: string;
+  admissionClass: string;
+
+  @ApiProperty({ description: 'Initial class at admission' })
+  @IsNotEmpty()
+  @IsString()
+  class: string;
 
   @ApiProperty({
     description: 'Current status of the student',

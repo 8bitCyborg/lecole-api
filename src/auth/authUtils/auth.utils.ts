@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { Types } from 'mongoose';
+import { School } from 'src/schools/schemas/school.schema';
 
 @Injectable()
 export class AuthUtilsService {
   constructor(private JwtService: JwtService) {}
 
   async tokenize(
-    _id?: string,
+    _id?: Types.ObjectId,
     email?: string,
-    schoolId?: string,
+    schoolId?: School,
   ): Promise<string> {
     const payload = {
       sub: {

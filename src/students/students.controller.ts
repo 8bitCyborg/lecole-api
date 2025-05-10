@@ -6,19 +6,15 @@ import { StudentDto } from './entity/student.dto';
 export class StudentsController {
   constructor(private studentService: StudentsService) {}
 
-  //   @Post(@Params() id )
-  //   addStudent() {
-  //     return this.studentService.addStudent();
-  //   }
-
-  @Get(':id')
-  getAllStudents(@Param('id') schoolId: string) {
+  @Get(':schoolId')
+  getAllStudents(@Param('schoolId') schoolId: string) {
+    console.log('Schoolid:', schoolId);
     return this.studentService.getAllStudents(schoolId);
   }
 
   @Post(':id')
-  addStudent(@Param('id') schoolId: string, @Body() student: StudentDto) {
-    console.log('Add student: ', student);
-    return this.studentService.addStudent(student);
+  addStudent(@Param('id') schoolId: string, @Body() studentData: StudentDto) {
+    console.log('Add student: ', studentData);
+    return this.studentService.addStudent(schoolId, studentData);
   }
 }

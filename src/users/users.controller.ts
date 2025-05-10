@@ -7,6 +7,7 @@ export class UsersController {
 
   @Get(':email')
   findUser(@Param('email') email: string) {
+    console.log('email: ', email);
     return this.usersSevice.findUser(email);
   }
 }

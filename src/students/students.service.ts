@@ -1,37 +1,48 @@
 import { Injectable } from '@nestjs/common';
-import { Students } from './entity/student.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 import { StudentDto } from './entity/student.dto';
 import { validate } from 'class-validator';
 import { InjectModel } from '@nestjs/mongoose';
 import { Student } from './schemas/student.schema';
+import { User } from 'src/users/schemas/user.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class StudentsService {
   constructor(
-    // @InjectRepository(Students) private studentRepository: Repository<Students>,
-    @InjectModel(Student.name) private studentModel,
+    @InjectModel(Student.name) private studentModel: Model<Student>,
+    @InjectModel(User.name) private userModel: Model<User>,
   ) {}
 
-  async addStudent(studentData: StudentDto) {
+  async addStudent(schoolId, studentData: StudentDto) {
     try {
-      const error = await validate(studentData);
+      const { email, phone, firstName, lastName } = studentData;
+      const user = await this.userModel.create({
+        email,
+        firstName,
+        lastName,
+        phone,
+        schoolId,
+        password: '0987',
+        role: 'student',
+      });
 
-      console.log('Error: ', error);
-
-      const student = this.studentModel.create(studentData);
-      console.log('Student created: ', student);
-      // return this.studentRepository.save(student);
+      await this.studentModel.create({
+        ...studentData,
+        class: studentData.admissionClass,
+        userId: user._id,
+        schoolId,
+      });
     } catch (error: any) {
       console.log('error creating student: ', error);
       return false;
     }
   }
 
-  getAllStudents(schooId: string) {
+  async getAllStudents(schooId: string) {
     try {
-      return this.studentModel.find();
+      const students = await this.studentModel.find({ schoolId: schooId });
+      console.log('students: ', students);
+      return students;
     } catch (error) {
       console.log('error getting students: ', error);
       return false;

@@ -7,7 +7,7 @@ export enum UserRole {
   ADMIN = 'admin',
   STUDENT = 'student',
   SUBADMIN = 'subadmin',
-  FINANCE = 'finance',
+  TEACHER = 'teacher',
   EXAMS = 'exam',
 }
 
@@ -34,7 +34,7 @@ export class User {
   })
   role: UserRole;
 
-  @Prop({ default: false })
+  @Prop({ default: true })
   isActive: boolean;
 
   @Prop({ required: true })
