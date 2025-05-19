@@ -16,7 +16,7 @@ import { Public } from 'src/auth/authUtils/auth.guard';
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
-  @Public()
+  // @Public()
   @Post(':schoolId')
   create(
     @Param('schoolId') schoolId,
@@ -27,8 +27,19 @@ export class PaymentsController {
 
   @Get(':schoolId')
   findAll(@Param('schoolId') schoolId: string) {
-    console.log('School id:', schoolId);
     return this.paymentsService.findAll(schoolId);
+  }
+
+  @Get('/details/:id')
+  async findOne(@Param('id') id: string) {
+    console.log('id', id);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    return this.paymentsService.findOne(id);
+  }
+
+  @Get(':termId')
+  findTermPayments(@Param('termId') termId: string) {
+    return this.paymentsService.findTermPayments(termId);
   }
 
   // @Get(':id')

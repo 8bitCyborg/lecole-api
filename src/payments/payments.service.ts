@@ -18,12 +18,18 @@ export class PaymentsService {
   }
 
   async findAll(schoolId: string) {
-    const payments = await this.paymentModel.find({ schoolId });
+    const payments = await this.paymentModel.find({ schoolId: schoolId });
     return payments;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} payment`;
+  async findTermPayments(termId: string) {
+    const payments = await this.paymentModel.find({ termId: termId });
+    return payments;
+  }
+
+  async findOne(id: string) {
+    const payments = await this.paymentModel.findById(id);
+    return payments;
   }
 
   update(id: number, updatePaymentDto: UpdatePaymentDto) {

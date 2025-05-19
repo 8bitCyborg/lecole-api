@@ -13,13 +13,23 @@ export class SchoolsService {
   ) {}
 
   async createSchool(schoolDetails: CreateSchoolDto) {
+    function getInitials(str) {
+      return str
+        .split(/\s+/) // split by spaces
+        .filter(Boolean) // remove empty strings
+        .map((word) => word[0].toUpperCase()) // get first letter and capitalize
+        .join('');
+    }
+
     try {
-      const school = await this.schoolModel.create(schoolDetails);
+      const school = await this.schoolModel.create({
+        ...schoolDetails,
+        phone: [schoolDetails.phone],
+      });
       console.log('School created: ', school);
-      // const user = await this.userModel.createUserData({
-      //   ...schoolDetails,
-      //   schoolId: school._id,
-      // });
+      school.shortCode =
+        getInitials(school.name) + school._id.toString().slice(-3);
+      school.save();
       return school;
     } catch (error) {
       // console.log('School details: ', schoolDetails);

@@ -12,9 +12,17 @@ export class StudentsController {
     return this.studentService.getAllStudents(schoolId);
   }
 
+  @Get('/student/:studentId')
+  getStudent(@Param('studentId') studentId: string) {
+    console.log('studentId:', studentId);
+    return this.studentService.getStudent(studentId);
+  }
+
   @Post(':id')
-  addStudent(@Param('id') schoolId: string, @Body() studentData: StudentDto) {
-    console.log('Add student: ', studentData);
+  async addStudent(
+    @Param('id') schoolId: string,
+    @Body() studentData: StudentDto,
+  ) {
     return this.studentService.addStudent(schoolId, studentData);
   }
 }

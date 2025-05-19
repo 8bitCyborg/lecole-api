@@ -26,12 +26,14 @@ export class StudentsService {
         role: 'student',
       });
 
-      await this.studentModel.create({
+      const student = await this.studentModel.create({
         ...studentData,
         class: studentData.admissionClass,
         userId: user._id,
         schoolId,
       });
+
+      return student;
     } catch (error: any) {
       console.log('error creating student: ', error);
       return false;
@@ -45,6 +47,16 @@ export class StudentsService {
       return students;
     } catch (error) {
       console.log('error getting students: ', error);
+      return false;
+    }
+  }
+
+  async getStudent(studentId: string) {
+    try {
+      const student = await this.studentModel.findById(studentId);
+      return student;
+    } catch (error) {
+      console.log('error getting student: ', error);
       return false;
     }
   }

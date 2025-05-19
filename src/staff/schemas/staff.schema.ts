@@ -11,6 +11,9 @@ export class Staff extends Document {
   position: string;
 
   @Prop({ required: true })
+  type: 'teaching' | 'non-teaching';
+
+  @Prop({ required: true })
   qualification: string;
 
   @Prop({ required: true })
@@ -18,9 +21,6 @@ export class Staff extends Document {
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'School' })
   school: School;
-
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export const StaffSchema = SchemaFactory.createForClass(Staff);

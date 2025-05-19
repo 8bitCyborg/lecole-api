@@ -14,11 +14,17 @@ export class School extends Document {
   @Prop({ required: true })
   name: string;
 
+  @Prop()
+  shortCode: string;
+
   @Prop({ required: true })
   founderFirstName: string;
 
   @Prop({ required: true })
   founderLastName: string;
+
+  @Prop()
+  dataFonuded: Date;
 
   @Prop()
   address?: string;
@@ -27,10 +33,13 @@ export class School extends Document {
   email?: string;
 
   @Prop()
-  phone?: string;
+  phone?: string[];
 
   @Prop()
   logoUrl?: string;
+
+  @Prop()
+  motto?: string;
 
   @Prop({
     type: String,

@@ -1,1 +1,3 @@
-export class CreateSchoolDto {}
+export class CreateSchoolDto {
+  phone: string[];
+}
