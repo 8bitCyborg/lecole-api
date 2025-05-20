@@ -15,9 +15,9 @@ import { UpdateStaffDto } from './dto/update-staff.dto';
 export class StaffController {
   constructor(private readonly staffService: StaffService) {}
 
-  @Post()
-  create(@Body() createStaffDto: CreateStaffDto) {
-    return this.staffService.create(createStaffDto);
+  @Post(':id')
+  create(@Param('id') schoolid: string, @Body() createStaffDto) {
+    return this.staffService.create(schoolid, createStaffDto);
   }
 
   @Get()

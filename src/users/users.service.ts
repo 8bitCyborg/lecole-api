@@ -4,10 +4,15 @@ import { UserDto } from './dto/user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
+import { ObjectId } from 'mongodb';
+import { AuthUtilsService } from 'src/auth/authUtils/auth.utils';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {} // private usersRepository: Repository<Users>, // @InjectRepository(Users)
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    // private AuthUtilsService: AuthUtilsService,
+  ) {} // private usersRepository: Repository<Users>, // @InjectRepository(Users)
 
   async findUser(login_id: string) {
     try {
@@ -28,6 +33,12 @@ export class UsersService {
 
       if (checkIfUserExists) return false;
 
+      // const newId = new ObjectId();
+      // const newUser = {
+      //   ...data,
+      //   _id: newId,
+      //   loginId: newId.toString().slice(-5).toUpperCase(),
+      // };
       const user = await this.userModel.create(data);
       return user;
     } catch (error) {

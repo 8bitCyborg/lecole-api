@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Student } from './schemas/student.schema';
 import { User } from 'src/users/schemas/user.schema';
 import { Model } from 'mongoose';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class StudentsService {
@@ -16,6 +17,8 @@ export class StudentsService {
   async addStudent(schoolId, studentData: StudentDto) {
     try {
       const { email, phone, firstName, lastName } = studentData;
+
+      const newId = new ObjectId();
       const user = await this.userModel.create({
         email,
         firstName,
@@ -24,6 +27,7 @@ export class StudentsService {
         schoolId,
         password: '0987',
         role: 'student',
+        loginId: 'STU-' + newId.toString().slice(-5).toUpperCase(),
       });
 
       const student = await this.studentModel.create({

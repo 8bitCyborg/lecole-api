@@ -20,7 +20,7 @@ export class Staff extends Document {
   employmentDate: Date;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'School' })
-  school: School;
+  schoolId: School;
 }
 
 export const StaffSchema = SchemaFactory.createForClass(Staff);

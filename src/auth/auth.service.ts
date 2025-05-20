@@ -9,6 +9,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/users/schemas/user.schema';
 import { School } from 'src/schools/schemas/school.schema';
 import { SchoolsService } from 'src/schools/schools.service';
+import { ObjectId } from 'mongodb';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -94,16 +96,22 @@ export class AuthService {
         founderFirstName: data.firstName,
         founderLastName: data.lastName,
       });
-      console.log('School created: ', school);
+
+      const newId = new ObjectId();
 
       const user = await this.userService.createUser({
         ...data,
+        _id: newId,
         schoolId: school._id,
         email: data.email.toLowerCase(),
         password: await this.AuthUtilsService.hashPassword(data.password),
+        loginId:
+          data.role.slice(0, 3).toUpperCase() +
+          '-' +
+          school.shortCode +
+          '-' +
+          newId.toString().slice(-3).toUpperCase(),
       });
-
-      console.log('User created: ', user);
 
       if (!user) {
         throw new UnauthorizedException('User already exists');

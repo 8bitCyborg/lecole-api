@@ -8,6 +8,7 @@ export enum UserRole {
   STUDENT = 'student',
   SUBADMIN = 'subadmin',
   TEACHER = 'teacher',
+  STAFF = 'staff',
   EXAMS = 'exam',
 }
 
@@ -16,8 +17,11 @@ export class User {
   @Prop({ required: false })
   username: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true })
   email: string;
+
+  @Prop()
+  loginId: string;
 
   @Prop({ required: true })
   phone: string;
@@ -28,11 +32,13 @@ export class User {
   @Prop({ required: true })
   lastName: string;
 
-  @Prop({
-    type: String,
-    enum: UserRole,
-  })
+  @Prop({ required: true, default: 'student' })
   role: UserRole;
+  // @Prop({
+  //   type: String,
+  //   enum: UserRole,
+  // })
+  // role: UserRole;
 
   @Prop({ default: true })
   isActive: boolean;
