@@ -16,8 +16,9 @@ export class StaffController {
   constructor(private readonly staffService: StaffService) {}
 
   @Post(':id')
-  create(@Param('id') schoolid: string, @Body() createStaffDto) {
-    return this.staffService.create(schoolid, createStaffDto);
+  create(@Param('id') schoolId: string, @Body() createStaffDto) {
+    console.log('staff request :', schoolId, createStaffDto);
+    return this.staffService.create(schoolId, createStaffDto);
   }
 
   @Get()

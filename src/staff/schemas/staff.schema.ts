@@ -16,7 +16,7 @@ export class Staff extends Document {
   @Prop({ required: true })
   qualification: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, default: Date.now })
   employmentDate: Date;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'School' })
