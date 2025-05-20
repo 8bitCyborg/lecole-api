@@ -26,7 +26,6 @@ export class SchoolsService {
         ...schoolDetails,
         phone: [schoolDetails.phone],
       });
-      console.log('School created: ', school);
       school.shortCode =
         getInitials(school.name) + school._id.toString().slice(-3);
       school.save();

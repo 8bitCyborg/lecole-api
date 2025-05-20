@@ -25,7 +25,7 @@ export class AuthService {
     try {
       const { email, password } = data;
       const user: any = await this.userService.findUser(email);
-      console.log('User: ', user);
+
       if (!user) {
         return res.status(401).send({
           message: 'Incorrect Username or Password',

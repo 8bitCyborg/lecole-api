@@ -10,7 +10,6 @@ export class PaymentsService {
   async createPayment(paymentDetails: CreatePaymentDto) {
     try {
       const payment = await this.paymentModel.create(paymentDetails);
-      console.log('Payment: ', payment);
       return payment;
     } catch (error) {
       console.log('error creating payment: ', error);

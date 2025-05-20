@@ -32,7 +32,7 @@ export class StaffService {
         schoolId,
         userId: user._id,
       });
-      return [staff];
+      return staff;
     } catch (error) {
       console.log('Error creating staff: ', error);
       return false;
@@ -41,6 +41,15 @@ export class StaffService {
 
   findAll() {
     return `This action returns all staff`;
+  }
+
+  async getAllStaff(schoolId: string) {
+    try {
+      const staff = await this.staffModel.find({ schoolId }).populate('userId');
+      return staff;
+    } catch (error) {
+      console.log('Error getting staff: ', error);
+    }
   }
 
   findOne(id: number) {

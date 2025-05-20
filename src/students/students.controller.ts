@@ -8,13 +8,11 @@ export class StudentsController {
 
   @Get(':schoolId')
   getAllStudents(@Param('schoolId') schoolId: string) {
-    console.log('Schoolid:', schoolId);
     return this.studentService.getAllStudents(schoolId);
   }
 
   @Get('/student/:studentId')
   getStudent(@Param('studentId') studentId: string) {
-    console.log('studentId:', studentId);
     return this.studentService.getStudent(studentId);
   }
 

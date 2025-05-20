@@ -14,7 +14,6 @@ export class SessionsService {
   ) {}
 
   async createSession(schoolId, sessioData: { year: string }) {
-    console.log('Year: ', sessioData);
     try {
       const sessionExists = await this.sessionModel.findOne({
         schoolId: schoolId,
@@ -64,7 +63,6 @@ export class SessionsService {
       const session = await this.sessionModel
         .find({ _id: sessionId })
         .populate('schoolId');
-      console.log('Session retrieved: ', session);
 
       return session;
     } catch (error) {

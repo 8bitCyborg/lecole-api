@@ -10,7 +10,6 @@ export class AuthController {
   @Public()
   @Post(ROUTES.auth.login)
   login(@Body() body: any, @Res() res: Response) {
-    console.log('login');
     res.cookie('lecole_token', 'kkjkjjjkj', {
       httpOnly: false,
       secure: process.env.NODE_ENV === 'production',

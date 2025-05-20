@@ -21,14 +21,14 @@ export class StaffController {
     return this.staffService.create(schoolId, createStaffDto);
   }
 
-  @Get()
-  findAll() {
-    return this.staffService.findAll();
-  }
+  // @Get(':schoolId')
+  // findAll() {
+  //   return this.staffService.findAll();
+  // }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.staffService.findOne(+id);
+  @Get(':schoolId')
+  findAll(@Param('schoolId') schoolId: string) {
+    return this.staffService.getAllStaff(schoolId);
   }
 
   @Patch(':id')

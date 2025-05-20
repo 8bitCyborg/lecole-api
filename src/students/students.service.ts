@@ -47,7 +47,6 @@ export class StudentsService {
   async getAllStudents(schooId: string) {
     try {
       const students = await this.studentModel.find({ schoolId: schooId });
-      console.log('students: ', students);
       return students;
     } catch (error) {
       console.log('error getting students: ', error);
