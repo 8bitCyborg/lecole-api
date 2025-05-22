@@ -23,8 +23,13 @@ export class ClassesService {
     return `This action returns a #${id} class`;
   }
 
-  update(id: number, updateClassDto: UpdateClassDto) {
-    return `This action updates a #${id} class`;
+  async update(id: string, updateClassDto: UpdateClassDto) {
+    const updatedClass = await this.classModel.findByIdAndUpdate(
+      id,
+      updateClassDto,
+    );
+    console.log('Updated class: ', updatedClass);
+    return updatedClass;
   }
 
   remove(id: number) {

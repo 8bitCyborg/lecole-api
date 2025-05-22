@@ -31,9 +31,12 @@ export class ClassesController {
   //   return this.classesService.findOne(+id);
   // }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateClassDto: UpdateClassDto) {
-    return this.classesService.update(+id, updateClassDto);
+  @Patch('update:classId')
+  update(
+    @Param('classId') classId: string,
+    @Body() updateClassDto: UpdateClassDto,
+  ) {
+    return this.classesService.update(classId, updateClassDto);
   }
 
   @Delete(':id')
