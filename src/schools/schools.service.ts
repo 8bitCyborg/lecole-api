@@ -52,7 +52,7 @@ export class SchoolsService {
 
       const classDocs = defaultClasses.map((className) => ({
         name: className,
-        school: school._id,
+        schoolId: school._id,
       }));
 
       await this.classModel.insertMany(classDocs);

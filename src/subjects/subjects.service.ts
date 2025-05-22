@@ -1,26 +1,52 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Subject } from './schemas/subject.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class SubjectsService {
-  create(createSubjectDto: CreateSubjectDto) {
-    return 'This action adds a new subject';
+  constructor(
+    @InjectModel(Subject.name) private subjectModel: Model<Subject>,
+  ) {}
+
+  async create(schoolId: string, createSubject: CreateSubjectDto) {
+    return this.subjectModel.create({
+      ...createSubject,
+      schoolId,
+    });
   }
 
-  findAll() {
-    return `This action returns all subjects`;
+  async findAll(schoolId: string) {
+    return this.subjectModel.find({ schoolId });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} subject`;
+  async findOne(id: string) {
+    const subject = await this.subjectModel.findById(id);
+    if (!subject) {
+      throw new NotFoundException(`Subject with ID ${id} not found`);
+    }
+    return subject;
   }
 
-  update(id: number, updateSubjectDto: UpdateSubjectDto) {
-    return `This action updates a #${id} subject`;
+  async update(id: string, updateSubjectDto: UpdateSubjectDto) {
+    const updatedSubject = await this.subjectModel.findByIdAndUpdate(
+      id,
+      updateSubjectDto,
+      { new: true },
+    );
+    if (!updatedSubject) {
+      throw new NotFoundException(`Subject with ID ${id} not found`);
+    }
+    return updatedSubject;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} subject`;
+  async remove(id: string) {
+    const deletedSubject = await this.subjectModel.findByIdAndDelete(id);
+    if (!deletedSubject) {
+      throw new NotFoundException(`Subject with ID ${id} not found`);
+    }
+    return deletedSubject;
   }
 }
