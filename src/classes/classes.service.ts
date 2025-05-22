@@ -19,8 +19,12 @@ export class ClassesService {
     return classes;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} class`;
+  async findClass(classId: string) {
+    const classData = await this.classModel
+      .findById(classId)
+      .populate('subjects');
+    console.log('Class: ', classId, classData);
+    return classData;
   }
 
   async update(id: string, updateClassDto: UpdateClassDto) {

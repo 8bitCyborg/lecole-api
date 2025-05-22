@@ -10,7 +10,10 @@ export class Class {
   schoolId: MongooseSchema.Types.ObjectId;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Staff' })
-  teacher: MongooseSchema.Types.ObjectId;
+  classTeacher: MongooseSchema.Types.ObjectId;
+
+  @Prop()
+  descroption: string;
 
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Subject' }] })
   subjects: MongooseSchema.Types.ObjectId[];

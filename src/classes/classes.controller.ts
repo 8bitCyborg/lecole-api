@@ -25,19 +25,20 @@ export class ClassesController {
   findAll(@Param('schoolId') schoolId: string) {
     return this.classesService.findAll(schoolId);
   }
+  @Post(':classId')
+  updateClass(@Param('classId') classId: string) {
+    return this.classesService.findAll(classId);
+  }
+
+  @Get('details/:classId')
+  findOne(@Param('classId') classId: string) {
+    return this.classesService.findClass(classId);
+  }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {
   //   return this.classesService.findOne(+id);
   // }
-
-  @Patch('update:classId')
-  update(
-    @Param('classId') classId: string,
-    @Body() updateClassDto: UpdateClassDto,
-  ) {
-    return this.classesService.update(classId, updateClassDto);
-  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
