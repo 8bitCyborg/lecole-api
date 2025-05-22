@@ -32,6 +32,9 @@ export class User {
   @Prop({ required: true })
   lastName: string;
 
+  @Prop()
+  profilePicture: string;
+
   @Prop({ required: true, default: 'student' })
   role: UserRole;
   // @Prop({

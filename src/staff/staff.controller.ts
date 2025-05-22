@@ -31,6 +31,11 @@ export class StaffController {
     return this.staffService.getAllStaff(schoolId);
   }
 
+  @Get('one/:staffId')
+  findStaff(@Param('staffId') staffId: string) {
+    return this.staffService.findOne(staffId);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateStaffDto: UpdateStaffDto) {
     return this.staffService.update(+id, updateStaffDto);

@@ -15,6 +15,9 @@ import { PaymentsModule } from './payments/payments.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './users/schemas/user.schema';
 import { Student, StudentSchema } from './students/schemas/student.schema';
+import { SubjectsModule } from './subjects/subjects.module';
+import { ClassesModule } from './classes/classes.module';
+import { AssessmentRecordsModule } from './assessment-records/assessment-records.module';
 
 @Module({
   imports: [
@@ -45,6 +48,9 @@ import { Student, StudentSchema } from './students/schemas/student.schema';
     StaffModule,
     SchoolsModule,
     PaymentsModule,
+    SubjectsModule,
+    ClassesModule,
+    AssessmentRecordsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

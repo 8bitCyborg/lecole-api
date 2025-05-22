@@ -8,6 +8,9 @@ export class Student extends Document {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
   userId: User;
 
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Class' })
+  classId: User;
+
   @Prop({ required: true })
   firstName: string;
 
@@ -19,7 +22,7 @@ export class Student extends Document {
 
   @Prop({
     type: String,
-    enum: ['active', 'graduated', 'transferred'],
+    enum: ['active', 'graduated', 'transferred', 'suspended'],
     default: 'active',
   })
   currentStatus: 'active' | 'graduated' | 'transferred';

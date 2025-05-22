@@ -52,8 +52,13 @@ export class StaffService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} staff`;
+  async findOne(staffId: string) {
+    try {
+      const staff = await this.staffModel.findById(staffId).populate('userId');
+      return staff;
+    } catch (error) {
+      console.log('error getting staff details', error);
+    }
   }
 
   update(id: number, updateStaffDto: UpdateStaffDto) {

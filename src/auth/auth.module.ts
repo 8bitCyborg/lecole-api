@@ -13,6 +13,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/users/schemas/user.schema';
 import { School, SchoolSchema } from 'src/schools/schemas/school.schema';
+import { Class, ClassSchema } from 'src/classes/schemas/classes.schema';
 import { SchoolsService } from 'src/schools/schools.service';
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { SchoolsService } from 'src/schools/schools.service';
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
       { name: School.name, schema: SchoolSchema },
+      { name: Class.name, schema: ClassSchema },
     ]),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => {

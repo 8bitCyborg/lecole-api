@@ -4,12 +4,14 @@ import { UpdateSchoolDto } from './dto/update-school.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { School } from './schemas/school.schema';
 import { User } from 'src/users/schemas/user.schema';
+import { Class } from 'src/classes/schemas/classes.schema';
 
 @Injectable()
 export class SchoolsService {
   constructor(
     @InjectModel(School.name) private schoolModel,
     @InjectModel(User.name) private userModel,
+    @InjectModel(Class.name) private classModel,
   ) {}
 
   async createSchool(schoolDetails: CreateSchoolDto) {
@@ -29,6 +31,32 @@ export class SchoolsService {
       school.shortCode =
         getInitials(school.name) + school._id.toString().slice(-3);
       school.save();
+
+      const defaultClasses = [
+        'Nursery 1',
+        'Nursery 2',
+        'Nursery 3',
+        'Primary 1',
+        'Primary 2',
+        'Primary 3',
+        'Primary 4',
+        'Primary 5',
+        'Primary 6',
+        'JSS 1',
+        'JSS 2',
+        'JSS 3',
+        'SS 1',
+        'SS 2',
+        'SS 3',
+      ];
+
+      const classDocs = defaultClasses.map((className) => ({
+        name: className,
+        school: school._id,
+      }));
+
+      await this.classModel.insertMany(classDocs);
+
       return school;
     } catch (error) {
       // console.log('School details: ', schoolDetails);
