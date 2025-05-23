@@ -22,8 +22,16 @@ export class AssessmentRecordsController {
     return this.assessmentRecordsService.create(createAssessmentRecordDto);
   }
 
-  @Post(':recordId')
+  @Patch(':recordId')
   updateRecord(@Param('recordId') recordId: string, @Body() record) {
+    return 'hello';
+  }
+
+  @Post(':studentId')
+  createRecord(
+    @Param('studentId') studentId: string,
+    @Body() record: { classId: string; termId: string; sessionId: string },
+  ) {
     return 'hello';
   }
 

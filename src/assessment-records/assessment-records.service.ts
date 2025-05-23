@@ -3,11 +3,13 @@ import { CreateAssessmentRecordDto } from './dto/create-assessment-record.dto';
 import { UpdateAssessmentRecordDto } from './dto/update-assessment-record.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { AssessmentRecord } from './schemas/assessment-records.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class AssessmentRecordsService {
   constructor(
-    @InjectModel(AssessmentRecord.name) private assessmentRecordModel,
+    @InjectModel(AssessmentRecord.name)
+    private assessmentRecordModel: Model<AssessmentRecord>,
   ) {}
   create(createAssessmentRecordDto: CreateAssessmentRecordDto) {
     return 'This action adds a new assessmentRecord';
@@ -15,8 +17,27 @@ export class AssessmentRecordsService {
 
   async updateRecord(recordId, recordData) {
     try {
+      const record = await this.assessmentRecordModel.findOneAndUpdate(
+        {
+          classId: recordId.classId,
+          termId: recordId.termId,
+          sessionId: recordId.sessionId,
+          studentId: recordId.studentId,
+        },
+        recordData,
+        { upsert: true, new: true },
+      );
+      console.log('Record: ', record);
+      return record;
+    } catch (error) {
+      console.log('error', error);
+      throw error;
+    }
+  }
+  async createRecord(studentId, recordData) {
+    try {
       const record = await this.assessmentRecordModel.findByIdAndUpdate(
-        recordId,
+        studentId,
         recordData,
         { upsert: true, new: true },
       );
