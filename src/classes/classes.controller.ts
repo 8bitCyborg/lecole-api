@@ -25,9 +25,12 @@ export class ClassesController {
   findAll(@Param('schoolId') schoolId: string) {
     return this.classesService.findAll(schoolId);
   }
-  @Post(':classId')
-  updateClass(@Param('classId') classId: string) {
-    return this.classesService.findAll(classId);
+  @Post('update/:classId')
+  updateClass(
+    @Param('classId') classId: string,
+    @Body() updateClassDto: UpdateClassDto,
+  ) {
+    return this.classesService.update(classId, updateClassDto);
   }
 
   @Get('details/:classId')

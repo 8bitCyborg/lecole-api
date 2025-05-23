@@ -15,6 +15,10 @@ export class StudentsController {
   getStudent(@Param('studentId') studentId: string) {
     return this.studentService.getStudent(studentId);
   }
+  @Get('/class/:classId')
+  getClassStudents(@Param('classId') classId: string) {
+    return this.studentService.getStudentsByClassId(classId);
+  }
 
   @Post(':id')
   async addStudent(

@@ -46,7 +46,9 @@ export class StudentsService {
 
   async getAllStudents(schooId: string) {
     try {
-      const students = await this.studentModel.find({ schoolId: schooId });
+      const students = await this.studentModel
+        .find({ schoolId: schooId })
+        .populate('classId');
       return students;
     } catch (error) {
       console.log('error getting students: ', error);
@@ -56,7 +58,19 @@ export class StudentsService {
 
   async getStudent(studentId: string) {
     try {
-      const student = await this.studentModel.findById(studentId);
+      const student = await this.studentModel
+        .findById(studentId)
+        .populate('classId');
+      return student;
+    } catch (error) {
+      console.log('error getting student: ', error);
+      return false;
+    }
+  }
+
+  async getStudentsByClassId(classId: string) {
+    try {
+      const student = await this.studentModel.findOne({ classId: classId });
       return student;
     } catch (error) {
       console.log('error getting student: ', error);

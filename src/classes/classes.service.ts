@@ -14,15 +14,16 @@ export class ClassesService {
   // }
 
   async findAll(schoolId: string) {
-    const classes = await this.classModel.find({ schoolId: schoolId });
-    console.log('Classes: ', schoolId, classes);
+    const classes = await this.classModel
+      .find({ schoolId: schoolId })
+      .populate('subjects');
+    // .console.log('Classes: ', schoolId, classes);
     return classes;
   }
 
   async findClass(classId: string) {
-    const classData = await this.classModel
-      .findById(classId)
-      .populate('subjects');
+    const classData = await this.classModel.findById(classId);
+    // .populate('subjects');
     console.log('Class: ', classId, classData);
     return classData;
   }

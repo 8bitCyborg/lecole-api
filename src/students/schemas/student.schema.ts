@@ -9,7 +9,7 @@ export class Student extends Document {
   userId: User;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Class' })
-  classId: User;
+  classId: MongooseSchema.Types.ObjectId;
 
   @Prop({ required: true })
   firstName: string;
@@ -17,8 +17,8 @@ export class Student extends Document {
   @Prop({ required: true })
   lastName: string;
 
-  @Prop({ required: true })
-  admissionClass: string;
+  // @Prop({ required: true })
+  // admissionClass: string;
 
   @Prop({
     type: String,
