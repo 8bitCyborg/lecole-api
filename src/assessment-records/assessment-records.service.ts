@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Body, Injectable, Param, Post } from '@nestjs/common';
 import { CreateAssessmentRecordDto } from './dto/create-assessment-record.dto';
 import { UpdateAssessmentRecordDto } from './dto/update-assessment-record.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -11,6 +11,21 @@ export class AssessmentRecordsService {
   ) {}
   create(createAssessmentRecordDto: CreateAssessmentRecordDto) {
     return 'This action adds a new assessmentRecord';
+  }
+
+  async updateRecord(recordId, recordData) {
+    try {
+      const record = await this.assessmentRecordModel.findByIdAndUpdate(
+        recordId,
+        recordData,
+        { upsert: true, new: true },
+      );
+      console.log('Record: ', record);
+      return record;
+    } catch (error) {
+      console.log('error', error);
+      throw error;
+    }
   }
 
   findAll() {

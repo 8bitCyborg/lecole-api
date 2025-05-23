@@ -72,16 +72,20 @@ export class AssessmentRecord {
   studentId: Types.ObjectId;
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'School', required: true })
   schoolId: Types.ObjectId;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class' })
   classId: Types.ObjectId;
+
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Session',
     required: true,
   })
   sessionId: Types.ObjectId;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Term', required: true })
   termId: Types.ObjectId;
+
   @Prop([
     {
       subjectId: {
@@ -89,8 +93,7 @@ export class AssessmentRecord {
         ref: 'Subject',
         required: true,
       },
-      ca1: { type: Number, default: 0 },
-      ca2: { type: Number, default: 0 },
+      ca: { type: Number, default: 0 },
       exam: { type: Number, default: 0 },
       total: { type: Number },
       grade: { type: String },
@@ -99,8 +102,7 @@ export class AssessmentRecord {
   ])
   subjectScores: {
     subjectId: Types.ObjectId;
-    ca1?: number;
-    ca2?: number;
+    ca?: number;
     exam?: number;
     total?: number; // optional: can be auto-calculated
     grade?: string;

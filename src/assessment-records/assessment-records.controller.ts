@@ -22,6 +22,11 @@ export class AssessmentRecordsController {
     return this.assessmentRecordsService.create(createAssessmentRecordDto);
   }
 
+  @Post(':recordId')
+  updateRecord(@Param('recordId') recordId: string, @Body() record) {
+    return 'hello';
+  }
+
   @Get()
   findAll() {
     return this.assessmentRecordsService.findAll();
