@@ -3,6 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Staff } from 'src/staff/schemas/staff.schema';
 import { Student } from 'src/students/schemas/student.schema';
+import { GradingScheme } from './grading.schama';
 
 export enum SubscriptionStatus {
   ACTIVE = 'active',
@@ -62,6 +63,9 @@ export class School extends Document {
 
   @Prop([{ type: MongooseSchema.Types.ObjectId, ref: 'Term' }])
   sessionIds: Session[];
+
+  @Prop({ type: GradingScheme, default: () => ({}) })
+  gradingScheme: GradingScheme;
 }
 
 export const SchoolSchema = SchemaFactory.createForClass(School);

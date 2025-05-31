@@ -15,6 +15,47 @@ export class AssessmentRecordsService {
     return 'This action adds a new assessmentRecord';
   }
 
+  async getStudentRecords(recordDetails) {
+    const records = await this.assessmentRecordModel
+      .findOne({
+        studentId: recordDetails.studentId,
+        classId: recordDetails.classId,
+        termId: recordDetails.termId,
+        sessionId: recordDetails.sessionId,
+        schoolId: recordDetails.schoolId,
+      })
+      .populate('subjectScores.subjectId');
+
+    console.log('Records: ', records);
+    if (!records) {
+      const subjects = recordDetails.subjectScores.map((subject) => {
+        return {
+          subjectId: subject,
+          ca: 0,
+          exam: 0,
+        };
+      });
+
+      const newRecord = await this.assessmentRecordModel.create({
+        studentId: recordDetails.studentId,
+        classId: recordDetails.classId,
+        termId: recordDetails.termId,
+        sessionId: recordDetails.sessionId,
+        schoolId: recordDetails.schoolId,
+        subjectScores: subjects,
+      });
+      // .populate('subjectScores.subjectId');
+
+      const populatedResult = await this.assessmentRecordModel
+        .findById(newRecord._id)
+        .populate('subjectScores.subjectId');
+
+      console.log('New Record: ', populatedResult);
+      return populatedResult;
+    }
+    return records;
+  }
+
   async updateRecord(recordId, recordData) {
     try {
       const record = await this.assessmentRecordModel.findOneAndUpdate(

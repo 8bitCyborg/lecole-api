@@ -60,7 +60,8 @@ export class StudentsService {
     try {
       const student = await this.studentModel
         .findById(studentId)
-        .populate('classId');
+        .populate('classId')
+        .populate('schoolId');
       return student;
     } catch (error) {
       console.log('error getting student: ', error);

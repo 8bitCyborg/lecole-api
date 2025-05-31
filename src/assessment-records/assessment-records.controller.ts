@@ -11,7 +11,7 @@ import { AssessmentRecordsService } from './assessment-records.service';
 import { CreateAssessmentRecordDto } from './dto/create-assessment-record.dto';
 import { UpdateAssessmentRecordDto } from './dto/update-assessment-record.dto';
 
-@Controller('assessment-records')
+@Controller('assessment')
 export class AssessmentRecordsController {
   constructor(
     private readonly assessmentRecordsService: AssessmentRecordsService,
@@ -20,6 +20,32 @@ export class AssessmentRecordsController {
   @Post()
   create(@Body() createAssessmentRecordDto: CreateAssessmentRecordDto) {
     return this.assessmentRecordsService.create(createAssessmentRecordDto);
+  }
+
+  // @Get('student/:studentId/:classId/:termId/:sessionId/:schoolId')
+  // getStudentRecords(
+  //   @Param('studentId') studentId: string,
+  //   @Param('classId') classId: string,
+  //   @Param('termId') termId: string,
+  //   @Param('sessionId') sessionId: string,
+  //   @Param('schoolId') schoolId: string,
+  // ) {
+  //   console.log(studentId, classId, termId, sessionId, schoolId);
+  //   return this.assessmentRecordsService.getStudentRecords(
+  //     studentId,
+  //     classId,
+  //     termId,
+  //     sessionId,
+  //     schoolId,
+  //   );
+  // }
+
+  @Post('student/:studentId')
+  getStudentRecordsA(
+    @Body() recordDetails,
+    @Param('studentId') studentId: string,
+  ) {
+    return this.assessmentRecordsService.getStudentRecords(recordDetails);
   }
 
   @Patch(':recordId')

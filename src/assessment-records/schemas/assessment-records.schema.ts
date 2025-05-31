@@ -9,8 +9,7 @@ export interface IAssessmentRecord extends Document {
   termId: Types.ObjectId;
   subjectScores: {
     subjectId: Types.ObjectId;
-    ca1?: number;
-    ca2?: number;
+    ca?: number;
     exam?: number;
     total?: number; // optional: can be auto-calculated
     grade?: string;
@@ -70,6 +69,7 @@ export class AssessmentRecord {
     required: true,
   })
   studentId: Types.ObjectId;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'School', required: true })
   schoolId: Types.ObjectId;
 
@@ -91,22 +91,22 @@ export class AssessmentRecord {
       subjectId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Subject',
-        required: true,
+        // required: true,
       },
       ca: { type: Number, default: 0 },
       exam: { type: Number, default: 0 },
-      total: { type: Number },
-      grade: { type: String },
-      remark: { type: String },
+      // total: { type: Number },
+      // grade: { type: String },
+      // remark: { type: String },
     },
   ])
   subjectScores: {
     subjectId: Types.ObjectId;
     ca?: number;
     exam?: number;
-    total?: number; // optional: can be auto-calculated
-    grade?: string;
-    remark?: string;
+    // total?: number; // optional: can be auto-calculated
+    // grade?: string;
+    // remark?: string;
   }[];
 }
 

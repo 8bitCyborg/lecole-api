@@ -4,6 +4,7 @@ import { UpdateSessionDto } from './dto/update-session.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { School } from 'src/schools/schemas/school.schema';
 import { Term } from 'src/terms/schemas/term.schema';
+
 @Injectable()
 export class SessionsService {
   private readonly logger = new Logger(SessionsService.name);
