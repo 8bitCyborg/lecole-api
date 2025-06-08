@@ -5,13 +5,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { School } from './schemas/school.schema';
 import { User } from 'src/users/schemas/user.schema';
 import { Class } from 'src/classes/schemas/classes.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class SchoolsService {
   constructor(
     @InjectModel(School.name) private schoolModel,
-    @InjectModel(User.name) private userModel,
-    @InjectModel(Class.name) private classModel,
+    @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(Class.name) private classModel: Model<Class>,
   ) {}
 
   async createSchool(schoolDetails: CreateSchoolDto) {

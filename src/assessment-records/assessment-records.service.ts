@@ -1,5 +1,5 @@
-import { Body, Injectable, Param, Post } from '@nestjs/common';
-import { CreateAssessmentRecordDto } from './dto/create-assessment-record.dto';
+import { ObjectId } from 'mongodb';
+import { Injectable } from '@nestjs/common';
 import { UpdateAssessmentRecordDto } from './dto/update-assessment-record.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { AssessmentRecord } from './schemas/assessment-records.schema';
@@ -11,11 +11,15 @@ export class AssessmentRecordsService {
     @InjectModel(AssessmentRecord.name)
     private assessmentRecordModel: Model<AssessmentRecord>,
   ) {}
-  create(createAssessmentRecordDto: CreateAssessmentRecordDto) {
-    return 'This action adds a new assessmentRecord';
-  }
 
-  async getStudentRecords(recordDetails) {
+  async getStudentRecords(recordDetails: {
+    studentId: string;
+    classId: string;
+    termId: string;
+    sessionId: string;
+    schoolId: string;
+    subjectScores: string[];
+  }) {
     const records = await this.assessmentRecordModel
       .findOne({
         studentId: recordDetails.studentId,
@@ -26,7 +30,6 @@ export class AssessmentRecordsService {
       })
       .populate('subjectScores.subjectId');
 
-    console.log('Records: ', records);
     if (!records) {
       const subjects = recordDetails.subjectScores.map((subject) => {
         return {
@@ -58,17 +61,11 @@ export class AssessmentRecordsService {
 
   async updateRecord(recordId, recordData) {
     try {
-      const record = await this.assessmentRecordModel.findOneAndUpdate(
-        {
-          classId: recordId.classId,
-          termId: recordId.termId,
-          sessionId: recordId.sessionId,
-          studentId: recordId.studentId,
-        },
-        recordData,
-        { upsert: true, new: true },
+      const record = await this.assessmentRecordModel.findByIdAndUpdate(
+        recordId,
+        { subjectScores: recordData },
+        { new: true },
       );
-      console.log('Record: ', record);
       return record;
     } catch (error) {
       console.log('error', error);
@@ -98,11 +95,31 @@ export class AssessmentRecordsService {
     return `This action returns a #${id} assessmentRecord`;
   }
 
-  update(id: number, updateAssessmentRecordDto: UpdateAssessmentRecordDto) {
-    return `This action updates a #${id} assessmentRecord`;
-  }
+  // update(id: number, updateAssessmentRecordDto: UpdateAssessmentRecordDto) {
+  //   return `This action updates a #${id} assessmentRecord`;
+  // }
 
   remove(id: number) {
     return `This action removes a #${id} assessmentRecord`;
+  }
+
+  async getRecordsBySubjects(
+    termId: string,
+    subjectId: string,
+    classId: string,
+  ) {
+    console.log('subject', termId, subjectId, classId);
+    try {
+      const records = await this.assessmentRecordModel.find({
+        termId: termId,
+        classId: classId,
+        'subjectScores.subjectId': subjectId,
+      });
+      console.log('records: ', records);
+      return records;
+    } catch (error) {
+      console.log('Error', error);
+      return error;
+    }
   }
 }

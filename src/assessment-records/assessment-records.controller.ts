@@ -1,15 +1,5 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { AssessmentRecordsService } from './assessment-records.service';
-import { CreateAssessmentRecordDto } from './dto/create-assessment-record.dto';
-import { UpdateAssessmentRecordDto } from './dto/update-assessment-record.dto';
 
 @Controller('assessment')
 export class AssessmentRecordsController {
@@ -17,10 +7,10 @@ export class AssessmentRecordsController {
     private readonly assessmentRecordsService: AssessmentRecordsService,
   ) {}
 
-  @Post()
-  create(@Body() createAssessmentRecordDto: CreateAssessmentRecordDto) {
-    return this.assessmentRecordsService.create(createAssessmentRecordDto);
-  }
+  // @Post()
+  // create(@Body() createAssessmentRecordDto: CreateAssessmentRecordDto) {
+  //   return this.assessmentRecordsService.create(createAssessmentRecordDto);
+  // }
 
   // @Get('student/:studentId/:classId/:termId/:sessionId/:schoolId')
   // getStudentRecords(
@@ -41,42 +31,41 @@ export class AssessmentRecordsController {
   // }
 
   @Post('student/:studentId')
-  getStudentRecordsA(
-    @Body() recordDetails,
-    @Param('studentId') studentId: string,
+  getStudentRecords(
+    @Body() recordDetails: any,
+    // @Param('studentId') studentId: string,
   ) {
     return this.assessmentRecordsService.getStudentRecords(recordDetails);
   }
 
-  @Patch(':recordId')
-  updateRecord(@Param('recordId') recordId: string, @Body() record) {
-    return 'hello';
-  }
+  // @Patch(':recordId')
+  // updateRecord(@Param('recordId') recordId: string, @Body() record) {
+  //   return 'hello';
+  // }
 
-  @Post(':studentId')
-  createRecord(
-    @Param('studentId') studentId: string,
-    @Body() record: { classId: string; termId: string; sessionId: string },
+  @Post('student/save/:recordId')
+  updateRecord(
+    @Param('recordId') recordId: string,
+    @Body() subjectScores: { ca: number; exam: number }[],
   ) {
-    return 'hello';
+    console.log('Updating record with ID:', recordId, subjectScores);
+    return this.assessmentRecordsService.updateRecord(recordId, subjectScores);
   }
 
-  @Get()
-  findAll() {
-    return this.assessmentRecordsService.findAll();
+  @Get('subject/:termId/:subjectId/:classId')
+  getSubjectRecords(@Param() termId, @Param() subjectId, @Param() classId) {
+    console.log('SubjectId: ', subjectId.subjectId);
+    console.log('TermId: ', termId.termId);
+    return this.assessmentRecordsService.getRecordsBySubjects(
+      termId.termId,
+      subjectId.subjectId,
+      classId.classId,
+    );
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.assessmentRecordsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateAssessmentRecordDto: UpdateAssessmentRecordDto,
-  ) {
-    return this.assessmentRecordsService.update(+id, updateAssessmentRecordDto);
   }
 
   @Delete(':id')

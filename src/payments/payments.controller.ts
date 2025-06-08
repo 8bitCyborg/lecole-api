@@ -33,7 +33,7 @@ export class PaymentsController {
   @Get('/details/:id')
   async findOne(@Param('id') id: string) {
     console.log('id', id);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    // await new Promise((resolve) => setTimeout(resolve, 2000));
     return this.paymentsService.findOne(id);
   }
 
@@ -41,11 +41,6 @@ export class PaymentsController {
   findTermPayments(@Param('termId') termId: string) {
     return this.paymentsService.findTermPayments(termId);
   }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.paymentsService.findOne(+id);
-  // }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePaymentDto: UpdatePaymentDto) {
