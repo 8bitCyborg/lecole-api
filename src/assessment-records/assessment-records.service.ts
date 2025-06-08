@@ -110,11 +110,13 @@ export class AssessmentRecordsService {
   ) {
     console.log('subject', termId, subjectId, classId);
     try {
-      const records = await this.assessmentRecordModel.find({
-        termId: termId,
-        classId: classId,
-        'subjectScores.subjectId': subjectId,
-      });
+      const records = await this.assessmentRecordModel
+        .find({
+          termId: termId,
+          classId: classId,
+          'subjectScores.subjectId': subjectId,
+        })
+        .populate('studentId');
       console.log('records: ', records);
       return records;
     } catch (error) {
