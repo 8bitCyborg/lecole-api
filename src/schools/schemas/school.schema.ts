@@ -25,7 +25,7 @@ export class School extends Document {
   founderLastName: string;
 
   @Prop()
-  dataFonuded: Date;
+  dataFounded: Date;
 
   @Prop()
   address?: string;

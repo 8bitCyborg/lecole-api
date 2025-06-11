@@ -36,21 +36,6 @@ export class Subject extends Document {
 
   @Prop({ default: 100 })
   maxScore: number;
-
-  // @Prop({
-  //   type: {
-  //     exam: { type: Number, default: 70 },
-  //     ca1: { type: Number, default: 10 },
-  //     ca2: { type: Number, default: 10 },
-  //     ca3: { type: Number, default: 10 },
-  //   },
-  // })
-  // scoreDistribution: {
-  //   exam: number;
-  //   ca1: number;
-  //   ca2: number;
-  //   ca3: number;
-  // };
 }
 
 export const SubjectSchema = SchemaFactory.createForClass(Subject);

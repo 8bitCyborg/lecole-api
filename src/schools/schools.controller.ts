@@ -11,6 +11,7 @@ import { SchoolsService } from './schools.service';
 import { CreateSchoolDto } from './dto/create-school.dto';
 import { UpdateSchoolDto } from './dto/update-school.dto';
 import { Public } from 'src/auth/authUtils/auth.guard';
+import { GradingScheme } from './schemas/grading.schama';
 
 @Controller('schools')
 export class SchoolsController {
@@ -32,6 +33,11 @@ export class SchoolsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.schoolsService.findOne(id);
+  }
+
+  @Patch('gradingScheme/:schoolId')
+  updateGrade(@Param('schoolId') schoolId: string, @Body() gradeUpdate) {
+    return this.schoolsService.updateGrade(schoolId, gradeUpdate);
   }
 
   @Patch(':id')

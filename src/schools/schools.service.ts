@@ -87,6 +87,21 @@ export class SchoolsService {
     return `This action updates a #${id} school`;
   }
 
+  async updateGrade(schoolId: string, gradeUpdate: any) {
+    try {
+      const schoolUpdate = await this.schoolModel.findByIdAndUpdate(
+        schoolId,
+        { gradingScheme: gradeUpdate },
+        { new: true },
+      );
+
+      return schoolUpdate.gradingScheme;
+    } catch (error) {
+      console.log('Error updating grade: ', error);
+      return `Error updating grade for school with id ${schoolId}`;
+    }
+  }
+
   remove(id: number) {
     return `This action removes a #${id} school`;
   }
