@@ -8,18 +8,18 @@ export class Staff extends Document {
   userId: MongooseSchema.Types.ObjectId;
 
   @Prop({ required: true })
-  position: string;
+  gender: 'male' | 'female';
 
-  @Prop({ required: true })
+  @Prop()
   type: 'teaching' | 'non-teaching';
 
-  @Prop({ required: true })
-  gender: 'male' | 'female';
+  @Prop()
+  position: string;
 
   @Prop()
   qualification: string;
 
-  @Prop({ required: true })
+  @Prop()
   employmentDate: Date;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'School' })

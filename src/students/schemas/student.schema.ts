@@ -17,6 +17,9 @@ export class Student extends Document {
   @Prop({ required: true })
   lastName: string;
 
+  @Prop()
+  middleName: string;
+
   // @Prop({ required: true })
   // admissionClass: string;
 
@@ -42,10 +45,10 @@ export class Student extends Document {
   @Prop({ required: true })
   email: string;
 
-  @Prop({ required: true })
+  @Prop()
   guardianName: string;
 
-  @Prop({ required: true })
+  @Prop()
   address: string;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'School' })
