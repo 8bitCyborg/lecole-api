@@ -9,7 +9,7 @@ import { Request, Response, NextFunction } from 'express';
 @Injectable()
 export class DelayMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // 1000ms = 1 second
+    await new Promise((resolve) => setTimeout(resolve, 500)); // 1000ms = 1 second
     next();
   }
 }
