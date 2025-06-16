@@ -22,9 +22,9 @@ export class SessionsController {
     return this.sessionsService.createSession(schoolId, createSessionData);
   }
 
-  @Get()
-  findAll() {
-    return this.sessionsService.findAll();
+  @Get(`:schoolId`)
+  findAll(@Param('schoolId') schoolId: string) {
+    return this.sessionsService.findAll(schoolId);
   }
 
   @Get(':sessionId')

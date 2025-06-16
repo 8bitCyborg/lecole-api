@@ -1,22 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document, Types } from 'mongoose';
 
-export interface IAssessmentRecord extends Document {
-  studentId: Types.ObjectId;
-  schoolId: Types.ObjectId;
-  classId: Types.ObjectId;
-  sessionId: Types.ObjectId;
-  termId: Types.ObjectId;
-  subjectScores: {
-    subjectId: Types.ObjectId;
-    ca?: number;
-    exam?: number;
-    total?: number; // optional: can be auto-calculated
-    grade?: string;
-    remark?: string;
-  }[];
-}
-
 // export const AssessmentRecordSchema = new Schema<IAssessmentRecord>(
 //   {
 //     studentId: { type: Schema.Types.ObjectId, ref: 'Student', required: true },
@@ -104,9 +88,7 @@ export class AssessmentRecord {
     subjectId: Types.ObjectId;
     ca?: number;
     exam?: number;
-    // total?: number; // optional: can be auto-calculated
-    // grade?: string;
-    // remark?: string;
+    remark?: string;
   }[];
 }
 

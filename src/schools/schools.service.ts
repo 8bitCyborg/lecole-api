@@ -71,8 +71,11 @@ export class SchoolsService {
 
   async findOne(id: string) {
     try {
-      const school = await this.schoolModel.findById(id);
-      console.log('School found: ', school);
+      const school = await this.schoolModel
+        .findById(id)
+        .populate('currentSessionId')
+        .populate('currentTermId');
+      // console.log('School found: ', school);
       if (!school) {
         return `School with id ${id} not found`;
       }

@@ -42,6 +42,14 @@ export class SubjectsService {
     return updatedSubject;
   }
 
+  async bulkCreate(schoolId: string, subjects: CreateSubjectDto[]) {
+    const subjectDocuments = subjects.map((subject) => ({
+      ...subject,
+      schoolId,
+    }));
+    return this.subjectModel.insertMany(subjectDocuments);
+  }
+
   async remove(id: string) {
     const deletedSubject = await this.subjectModel.findByIdAndDelete(id);
     if (!deletedSubject) {

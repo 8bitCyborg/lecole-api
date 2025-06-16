@@ -23,6 +23,15 @@ export class SubjectsController {
     return this.subjectsService.create(schoolId, createSubjectDto);
   }
 
+  @Post('bulk/:schoolId')
+  bulkEntry(
+    @Body() createSubjectDto: CreateSubjectDto[],
+    @Param('schoolId') schoolId: string,
+  ) {
+    console.log('Subjects', createSubjectDto);
+    return this.subjectsService.bulkCreate(schoolId, createSubjectDto);
+  }
+
   @Get(`all/:schoolId`)
   findAll(@Param('schoolId') schoolId: string) {
     return this.subjectsService.findAll(schoolId);

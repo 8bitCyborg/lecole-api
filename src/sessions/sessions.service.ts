@@ -30,12 +30,28 @@ export class SessionsService {
       });
 
       const terms = await this.termModel.insertMany([
-        { sessionId: session._id, schoolId: schoolId, termIndex: 1 },
-        { sessionId: session._id, schoolId: schoolId, termIndex: 2 },
-        { sessionId: session._id, schoolId: schoolId, termIndex: 3 },
+        {
+          sessionId: session._id,
+          schoolId: schoolId,
+          termIndex: 1,
+          name: 'first',
+        },
+        {
+          sessionId: session._id,
+          schoolId: schoolId,
+          termIndex: 2,
+          name: 'second',
+        },
+        {
+          sessionId: session._id,
+          schoolId: schoolId,
+          termIndex: 3,
+          name: 'third',
+        },
       ]);
 
       session.currentTermId = terms[0]._id;
+      session.termsId = terms;
       await session.save();
 
       await this.schoolModel.findByIdAndUpdate(
@@ -55,8 +71,16 @@ export class SessionsService {
     }
   }
 
-  findAll() {
-    return `This action returns all sessions`;
+  async findAll(schoolId: string) {
+    try {
+      const sessions = await this.sessionModel
+        .find({ schoolId: schoolId })
+        .populate('termsId');
+      console.log('Schoolid sessions', schoolId, sessions);
+      return sessions;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findOne(sessionId: string) {
@@ -64,6 +88,7 @@ export class SessionsService {
       const session = await this.sessionModel
         .find({ _id: sessionId })
         .populate('schoolId');
+      // .populate('termsId');
 
       return session;
     } catch (error) {

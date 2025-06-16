@@ -25,12 +25,13 @@ export class ClassesController {
   findAll(@Param('schoolId') schoolId: string) {
     return this.classesService.findAll(schoolId);
   }
-  @Post('update/:classId')
+  @Post('update/:classId/:termId')
   updateClass(
     @Param('classId') classId: string,
+    @Param('termId') termId: string,
     @Body() updateClassDto: UpdateClassDto,
   ) {
-    return this.classesService.update(classId, updateClassDto);
+    return this.classesService.update(classId, termId, updateClassDto);
   }
 
   @Get('details/:classId')

@@ -12,6 +12,9 @@ export class Term extends Document {
   @Prop({ required: true })
   termIndex: number; // 1, 2 or 3
 
+  @Prop({ required: true })
+  name: string; // first, second or third
+
   @Prop()
   startDate: Date;
 
