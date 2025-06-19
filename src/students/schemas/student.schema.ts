@@ -33,10 +33,10 @@ export class Student extends Document {
   @Prop({ required: true })
   gender: string;
 
-  @Prop({ required: true })
+  @Prop()
   age: number;
 
-  @Prop({})
+  @Prop({ required: true })
   class: string;
 
   @Prop({ required: true })
