@@ -38,6 +38,12 @@ export class ClassesService {
       updateClassDto,
       { new: true },
     );
+    
+    
+    if (!termId || termId == undefined) {
+      return updatedClass;
+    }
+    console.log('Updated class: ', updatedClass, termId);
 
     const assessmentRecords = await this.assessmentRecordModel.find({
       classId: id,

@@ -6,17 +6,26 @@ import { Student } from './schemas/student.schema';
 import { User } from 'src/users/schemas/user.schema';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
+import { AssessmentRecord } from 'src/assessment-records/schemas/assessment-records.schema';
+import { Class } from 'src/classes/schemas/classes.schema';
 
 @Injectable()
 export class StudentsService {
   constructor(
     @InjectModel(Student.name) private studentModel: Model<Student>,
-    @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(User.name) private userModel: Model<User>, 
+    @InjectModel(AssessmentRecord.name)
+    private assessmentRecordModel: Model<AssessmentRecord>,
+    @InjectModel(Class.name)
+    private classModel: Model<Class>,
+
   ) {}
 
-  async addStudent(schoolId, studentData: StudentDto) {
+  async addStudent(schoolId, studentData) {
     try {
       const { email, phone, firstName, lastName } = studentData;
+
+      console.log("Stuent data: ", studentData)
 
       const newId = new ObjectId();
       const user = await this.userModel.create({
@@ -32,10 +41,29 @@ export class StudentsService {
 
       const student = await this.studentModel.create({
         ...studentData,
-        class: studentData.admissionClass,
+        class: studentData.classId,
         userId: user._id,
         schoolId,
       });
+
+      const classInfo = await this.classModel.findById(studentData.classId)
+      const subjects = classInfo?.subjects.map((subject) => {
+        return {
+          subjectId: subject,
+          ca: 0,
+          exam: 0,
+        };
+      });
+
+      const newRecord = await this.assessmentRecordModel.create({
+        studentId: student._id,
+        classId: studentData.classId,
+        termId: studentData.termId,
+        sessionId: studentData.sessionId,
+        schoolId: student.schoolId,
+        subjectScores: subjects,
+      });
+              
 
       return student;
     } catch (error: any) {

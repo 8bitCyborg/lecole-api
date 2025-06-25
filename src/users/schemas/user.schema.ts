@@ -17,13 +17,13 @@ export class User {
   @Prop({ required: false })
   username: string;
 
-  @Prop({ required: true })
+  @Prop()
   email: string;
 
   @Prop()
   loginId: string;
 
-  @Prop({ required: true })
+  @Prop()
   phone: string;
 
   @Prop({ required: true })
