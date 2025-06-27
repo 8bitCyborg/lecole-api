@@ -35,7 +35,7 @@ export class SchoolsController {
     return this.schoolsService.findOne(id);
   }
 
-  @Patch('gradingScheme/:schoolId')
+  @Post('gradingScheme/:schoolId')
   updateGrade(@Param('schoolId') schoolId: string, @Body() gradeUpdate) {
     return this.schoolsService.updateGrade(schoolId, gradeUpdate);
   }

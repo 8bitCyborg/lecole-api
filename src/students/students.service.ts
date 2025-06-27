@@ -107,6 +107,8 @@ export class StudentsService {
         schoolId: student.schoolId,
         subjectScores: subjects,
       });
+
+      return student
     });
 
     await Promise.all(operations);

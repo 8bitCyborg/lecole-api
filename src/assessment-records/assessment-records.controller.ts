@@ -1,5 +1,7 @@
 import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { AssessmentRecordsService } from './assessment-records.service';
+import { AssessmentRecord } from './schemas/assessment-records.schema';
+import { AssessmentRecordType } from 'types';
 
 @Controller('assessment')
 export class AssessmentRecordsController {
@@ -50,6 +52,14 @@ export class AssessmentRecordsController {
   ) {
     console.log('Updating record with ID:', recordId, subjectScores);
     return this.assessmentRecordsService.updateRecord(recordId, subjectScores);
+  }
+
+  @Post('bulk/save')
+  buikUpdate(
+    @Body() records: AssessmentRecordType[],
+  ) {
+    // console.log('Bulk updating records:', records);
+    return this.assessmentRecordsService.bulkSave(records);
   }
 
   @Get('subject/:termId/:subjectId/:classId')
