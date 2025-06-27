@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { StudentDto } from './entity/student.dto';
-import { validate } from 'class-validator';
 import { InjectModel } from '@nestjs/mongoose';
 import { Student } from './schemas/student.schema';
 import { User } from 'src/users/schemas/user.schema';
@@ -24,9 +22,6 @@ export class StudentsService {
   async addStudent(schoolId, studentData) {
     try {
       const { email, phone, firstName, lastName } = studentData;
-
-      console.log("Stuent data: ", studentData)
-
       const newId = new ObjectId();
       const user = await this.userModel.create({
         email,
@@ -70,6 +65,51 @@ export class StudentsService {
       console.log('error creating student: ', error);
       return false;
     }
+  }
+
+  async bulkEntry (schoolId, students) {
+    const data = students
+    const operations = data.map(async (studentData) => {
+      const { email, phone, firstName, lastName } = studentData;
+      const newId = new ObjectId();
+      const user = await this.userModel.create({
+        email,
+        firstName,
+        lastName,
+        phone,
+        schoolId,
+        password: '0987',
+        role: 'student',
+        loginId: 'STU-' + newId.toString().slice(-5).toUpperCase(),
+      });
+
+      const student = await this.studentModel.create({
+        ...studentData,
+        class: studentData.classId,
+        userId: user._id,
+        schoolId,
+      });
+
+      const classInfo = await this.classModel.findById(studentData.classId)
+      const subjects = classInfo?.subjects.map((subject) => {
+        return {
+          subjectId: subject,
+          ca: 0,
+          exam: 0,
+        };
+      });
+
+      const newRecord = await this.assessmentRecordModel.create({
+        studentId: student._id,
+        classId: studentData.classId,
+        termId: studentData.termId,
+        sessionId: studentData.sessionId,
+        schoolId: student.schoolId,
+        subjectScores: subjects,
+      });
+    });
+
+    await Promise.all(operations);
   }
 
   async getAllStudents(schooId: string) {

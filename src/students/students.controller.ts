@@ -27,4 +27,12 @@ export class StudentsController {
   ) {
     return this.studentService.addStudent(schoolId, studentData);
   }
+
+  @Post('/bulk/:id')
+  async bulkEntry(
+    @Param('id') schoolId: string,
+    @Body() studentData: StudentDto[],
+  ) {
+    return this.studentService.bulkEntry(schoolId, studentData);
+  }
 }
