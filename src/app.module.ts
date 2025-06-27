@@ -18,6 +18,7 @@ import { Student, StudentSchema } from './students/schemas/student.schema';
 import { SubjectsModule } from './subjects/subjects.module';
 import { ClassesModule } from './classes/classes.module';
 import { AssessmentRecordsModule } from './assessment-records/assessment-records.module';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { AssessmentRecordsModule } from './assessment-records/assessment-records
     SubjectsModule,
     ClassesModule,
     AssessmentRecordsModule,
+    SettingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

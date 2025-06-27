@@ -89,8 +89,6 @@ export class AuthService {
 
   async Register(data: any, res: Response) {
     try {
-      console.log('Data Registered: ', data);
-
       const school = await this.schoolService.createSchool({
         ...data,
         founderFirstName: data.firstName,

@@ -6,6 +6,7 @@ import { School } from './entities/school.entity';
 import { SchoolSchema } from './schemas/school.schema';
 import { User, UserSchema } from 'src/users/schemas/user.schema';
 import { Class, ClassSchema } from 'src/classes/schemas/classes.schema';
+import { Term, TermSchema } from 'src/terms/schemas/term.schema';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { Class, ClassSchema } from 'src/classes/schemas/classes.schema';
       { name: School.name, schema: SchoolSchema },
       { name: User.name, schema: UserSchema },
       { name: Class.name, schema: ClassSchema },
+      { name: Term.name, schema: TermSchema },
     ]),
   ],
   controllers: [SchoolsController],

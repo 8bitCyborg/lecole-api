@@ -6,6 +6,7 @@ import { School } from './schemas/school.schema';
 import { User } from 'src/users/schemas/user.schema';
 import { Class } from 'src/classes/schemas/classes.schema';
 import { Model } from 'mongoose';
+import { Term } from 'src/terms/schemas/term.schema';
 
 @Injectable()
 export class SchoolsService {
@@ -13,6 +14,7 @@ export class SchoolsService {
     @InjectModel(School.name) private schoolModel,
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Class.name) private classModel: Model<Class>,
+    @InjectModel(Term.name) private termModel: Model<Term>,
   ) {}
 
   async createSchool(schoolDetails: CreateSchoolDto) {
@@ -34,6 +36,7 @@ export class SchoolsService {
       school.save();
 
       const defaultClasses = [
+        'Creche',
         'Nursery 1',
         'Nursery 2',
         'Nursery 3',
@@ -47,8 +50,8 @@ export class SchoolsService {
         'JSS 2',
         'JSS 3',
         'SS 1',
-        'SS 2',
-        'SS 3',
+        'SS 2A',
+        'SS 3A',
       ];
 
       const classDocs = defaultClasses.map((className) => ({
@@ -74,8 +77,7 @@ export class SchoolsService {
       const school = await this.schoolModel
         .findById(id)
         .populate('currentSessionId')
-        .populate('currentTermId');
-      // console.log('School found: ', school);
+        .populate('currentTermId')
       if (!school) {
         return `School with id ${id} not found`;
       }
@@ -107,5 +109,37 @@ export class SchoolsService {
 
   remove(id: number) {
     return `This action removes a #${id} school`;
+  }
+
+async  endTerm(schoolId: string, termId) {
+  console.log("SchoolD: ", schoolId, "TermId: ", termId);
+   const term = await this.termModel.findByIdAndUpdate(
+      termId,
+      { status: "ended" },
+      { new: true },
+    );
+    const school = await this.schoolModel.findByIdAndUpdate(
+      schoolId,
+      { currentTermId: null, },
+      { new: true },
+    );
+
+    return school
+  }
+
+async  beginTerm(schoolId: string, termId) {
+  console.log("SchoolD: ", schoolId, "TermId: ", termId);
+   const term = await this.termModel.findByIdAndUpdate(
+      termId,
+      { status: "active" },
+      { new: true },
+    );
+    const school = await this.schoolModel.findByIdAndUpdate(
+      schoolId,
+      { currentTermId: termId, },
+      { new: true },
+    );
+
+    return school
   }
 }

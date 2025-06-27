@@ -23,10 +23,10 @@ export class Term extends Document {
 
   @Prop({
     type: String,
-    enum: ['active', 'archived'],
-    default: 'active',
+    enum: [ 'inactive', 'active', 'ended'],
+    default: 'inactive',
   })
-  status: 'active' | 'archived';
+  status: 'inactive' | 'active' | 'archived';
 }
 
 export const TermSchema = SchemaFactory.createForClass(Term);

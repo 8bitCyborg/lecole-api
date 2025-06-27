@@ -35,6 +35,7 @@ export class SessionsService {
           schoolId: schoolId,
           termIndex: 1,
           name: 'first',
+          status: "active"
         },
         {
           sessionId: session._id,

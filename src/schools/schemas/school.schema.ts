@@ -66,6 +66,9 @@ export class School extends Document {
 
   @Prop({ type: GradingScheme, default: () => ({}) })
   gradingScheme: GradingScheme;
+
+  @Prop({default: "all"})
+  promotionCriteria: "all" | "performance";
 }
 
 export const SchoolSchema = SchemaFactory.createForClass(School);

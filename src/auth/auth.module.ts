@@ -15,6 +15,7 @@ import { User, UserSchema } from 'src/users/schemas/user.schema';
 import { School, SchoolSchema } from 'src/schools/schemas/school.schema';
 import { Class, ClassSchema } from 'src/classes/schemas/classes.schema';
 import { SchoolsService } from 'src/schools/schools.service';
+import { Term, TermSchema } from 'src/terms/schemas/term.schema';
 @Module({
   imports: [
     // TypeOrmModule.forFeature([Users]),
@@ -22,6 +23,7 @@ import { SchoolsService } from 'src/schools/schools.service';
       { name: User.name, schema: UserSchema },
       { name: School.name, schema: SchoolSchema },
       { name: Class.name, schema: ClassSchema },
+      { name: Term.name, schema: TermSchema },
     ]),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => {

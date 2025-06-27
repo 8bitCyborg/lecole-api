@@ -49,4 +49,20 @@ export class SchoolsController {
   remove(@Param('id') id: string) {
     return this.schoolsService.remove(+id);
   }
+
+  @Post('/endTerm/:schoolId/:termId')
+  endTerm(
+    @Param('schoolId') schoolId: string,
+    @Param('termId') termId: string,
+  ) {
+    return this.schoolsService.endTerm(schoolId, termId);
+  }
+
+  @Post('/beginTerm/:schoolId/:termId')
+  beginTerm(
+    @Param('schoolId') schoolId: string,
+    @Param('termId') termId: string,
+  ) {
+    return this.schoolsService.beginTerm(schoolId, termId);
+  }
 }
