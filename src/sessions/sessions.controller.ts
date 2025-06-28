@@ -5,7 +5,6 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
 } from '@nestjs/common';
 import { SessionsService } from './sessions.service';
 import { UpdateSessionDto } from './dto/update-session.dto';
@@ -32,13 +31,8 @@ export class SessionsController {
     return this.sessionsService.findOne(sessionId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSessionDto: UpdateSessionDto) {
-    return this.sessionsService.update(+id, updateSessionDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.sessionsService.remove(+id);
+  @Post('end/:schoolId')
+  endSession(@Param('schoolId') schoolId: string) {
+    return this.sessionsService.endSession(schoolId);
   }
 }

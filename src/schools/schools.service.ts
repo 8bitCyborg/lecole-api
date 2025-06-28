@@ -7,6 +7,9 @@ import { User } from 'src/users/schemas/user.schema';
 import { Class } from 'src/classes/schemas/classes.schema';
 import { Model } from 'mongoose';
 import { Term } from 'src/terms/schemas/term.schema';
+import { AssessmentRecord } from 'src/assessment-records/schemas/assessment-records.schema';
+import { Subject } from 'src/subjects/schemas/subject.schema';
+import { Student } from 'src/students/schemas/student.schema';
 
 @Injectable()
 export class SchoolsService {
@@ -15,6 +18,9 @@ export class SchoolsService {
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Class.name) private classModel: Model<Class>,
     @InjectModel(Term.name) private termModel: Model<Term>,
+    @InjectModel(AssessmentRecord.name) private assessmentRecordModel: Model<Term>,
+    @InjectModel(Subject.name) private subjectModel: Model<Term>,
+    @InjectModel(Student.name) private studentModel: Model<Term>,
   ) {}
 
   async createSchool(schoolDetails: CreateSchoolDto) {
@@ -140,6 +146,31 @@ async  beginTerm(schoolId: string, termId) {
       { new: true },
     );
 
+  const schoolData = await this.schoolModel.findById(schoolId)
+  const classes = await this.classModel.find({schoolId: schoolId})
+
+ const operations = classes.map(async (classItem) => {
+    const students = await this.studentModel.find({classId: classItem._id})
+    const subjects = classItem?.subjects.map((subject) => {
+        return {
+          subjectId: subject,
+          ca: 0,
+          exam: 0,
+        };
+      });
+
+      students.forEach( async(student) => {
+         await this.assessmentRecordModel.create({
+          studentId: student._id,
+          classId: classItem.id,
+          termId: termId,
+          sessionId: schoolData.currentSessionId,
+          schoolId: schoolId,
+          subjectScores: subjects,
+        });
+      })
+    });
+    await Promise.all(operations)
     return school
   }
 }

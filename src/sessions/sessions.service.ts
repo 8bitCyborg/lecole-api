@@ -4,6 +4,10 @@ import { UpdateSessionDto } from './dto/update-session.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { School } from 'src/schools/schemas/school.schema';
 import { Term } from 'src/terms/schemas/term.schema';
+import { AssessmentRecord } from 'src/assessment-records/schemas/assessment-records.schema';
+import { Class } from 'src/classes/schemas/classes.schema';
+import { Subject } from 'src/subjects/schemas/subject.schema';
+import { SchoolsService } from 'src/schools/schools.service';
 
 @Injectable()
 export class SessionsService {
@@ -12,6 +16,10 @@ export class SessionsService {
     @InjectModel(Session.name) private sessionModel,
     @InjectModel(School.name) private schoolModel,
     @InjectModel(Term.name) private termModel,
+    @InjectModel(AssessmentRecord.name) private assessmentRecordModel,
+    @InjectModel(Class.name) private classModel,
+    @InjectModel(Subject.name) private subjectModel,
+    private readonly schoolService: SchoolsService
   ) {}
 
   async createSession(schoolId, sessioData: { year: string }) {
@@ -21,7 +29,7 @@ export class SessionsService {
         year: sessioData.year,
       });
       if (sessionExists) {
-        throw new HttpException('Invalid ID', HttpStatus.BAD_REQUEST);
+        throw new HttpException('Session already exists', HttpStatus.BAD_REQUEST);
       }
 
       const session: Session = await this.sessionModel.create({
@@ -65,6 +73,8 @@ export class SessionsService {
         { new: true },
       );
 
+      this.schoolService.beginTerm(schoolId, session.currentTermId)
+
       return session;
     } catch (error) {
       console.log('error creating session: ', error);
@@ -99,106 +109,13 @@ export class SessionsService {
     }
   }
 
-  update(id: number, updateSessionDto: UpdateSessionDto) {
-    return `This action updates a #${id} session`;
+  async endSession(schoolId: string) {
+    const school = await this.schoolModel.findByIdAndUpdate(schoolId, {currentSessionId: null, currentTermId: null}, {new: true})
+    console.log("School: ", school)
+    return school;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} session`;
-  }
 }
 
-// import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-// import { InjectModel } from '@nestjs/mongoose';
-// import { Model } from 'mongoose';
-// import { Session } from './schemas/session.schema';
-// import { UpdateSessionDto } from './dto/update-session.dto';
 
-// @Injectable()
-// export class SessionsService {
-//   private readonly logger = new Logger(SessionsService.name);
 
-//   constructor(
-//     @InjectModel(Session.name)
-//     private readonly sessionModel: Model<SessionDocument>,
-//   ) {}
-
-//   async createSession(schoolId: string): Promise<Session> {
-//     try {
-//       const newSession = new this.sessionModel({ schoolId });
-//       const session = await newSession.save();
-
-//       this.logger.log(`Session created: ${session._id}`);
-//       return session;
-//     } catch (error) {
-//       this.logger.error('Error creating session', error.stack);
-//       throw error;
-//     }
-//   }
-
-//   async findAll(): Promise<Session[]> {
-//     try {
-//       return await this.sessionModel.find().populate('schoolId').exec();
-//     } catch (error) {
-//       this.logger.error('Error retrieving all sessions', error.stack);
-//       throw error;
-//     }
-//   }
-
-//   async findOne(sessionId: string): Promise<Session> {
-//     try {
-//       const session = await this.sessionModel
-//         .findById(sessionId)
-//         .populate('schoolId')
-//         .exec();
-
-//       if (!session) {
-//         throw new NotFoundException(`Session with ID ${sessionId} not found`);
-//       }
-
-//       return session;
-//     } catch (error) {
-//       this.logger.error(`Error fetching session: ${sessionId}`, error.stack);
-//       throw error;
-//     }
-//   }
-
-//   async update(
-//     sessionId: string,
-//     updateSessionDto: UpdateSessionDto,
-//   ): Promise<Session> {
-//     try {
-//       const updatedSession = await this.sessionModel
-//         .findByIdAndUpdate(sessionId, updateSessionDto, { new: true })
-//         .exec();
-
-//       if (!updatedSession) {
-//         throw new NotFoundException(`Session with ID ${sessionId} not found`);
-//       }
-
-//       this.logger.log(`Session updated: ${sessionId}`);
-//       return updatedSession;
-//     } catch (error) {
-//       this.logger.error(`Error updating session: ${sessionId}`, error.stack);
-//       throw error;
-//     }
-//   }
-
-//   async remove(sessionId: string): Promise<{ deleted: boolean }> {
-//     try {
-//       const result = await this.sessionModel
-//         .deleteOne({ _id: sessionId })
-//         .exec();
-
-//       if (result.deletedCount === 0) {
-//         throw new NotFoundException(`Session with ID ${sessionId} not found`);
-//       }
-
-//       this.logger.log(`Session deleted: ${sessionId}`);
-//       return { deleted: true };
-//     } catch (error) {
-//       this.logger.error(`Error deleting session: ${sessionId}`, error.stack);
-//       throw error;
-//     }
-//   }
-// }
