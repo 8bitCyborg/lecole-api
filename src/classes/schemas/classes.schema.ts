@@ -13,13 +13,24 @@ export class Class {
   classTeacher: MongooseSchema.Types.ObjectId;
 
   @Prop()
-  descroption: string;
+  description: string;
 
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Subject' }] })
   subjects: MongooseSchema.Types.ObjectId[];
 
   @Prop({default: "A"})
   subClass: string;
+
+  @Prop()
+  order: number;
+
+  @Prop()
+  arm: string;
+
+  @Prop()
+  alt: string;
+
+
 }
 
 export const ClassSchema = SchemaFactory.createForClass(Class);

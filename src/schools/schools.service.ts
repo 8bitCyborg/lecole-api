@@ -41,27 +41,49 @@ export class SchoolsService {
         getInitials(school.name) + school._id.toString().slice(-3);
       school.save();
 
-      const defaultClasses = [
-        'Creche',
-        'Nursery 1',
-        'Nursery 2',
-        'Nursery 3',
-        'Primary 1',
-        'Primary 2',
-        'Primary 3',
-        'Primary 4',
-        'Primary 5',
-        'Primary 6',
-        'JSS 1',
-        'JSS 2',
-        'JSS 3',
-        'SS 1',
-        'SS 2A',
-        'SS 3A',
-      ];
+      // const defaultClasses = [
+      //   'Creche',
+      //   'Nursery 1',
+      //   'Nursery 2',
+      //   'Nursery 3',
+      //   'Primary 1',
+      //   'Primary 2',
+      //   'Primary 3',
+      //   'Primary 4',
+      //   'Primary 5',
+      //   'Primary 6',
+      //   'JSS 1',
+      //   'JSS 2',
+      //   'JSS 3',
+      //   'SS 1',
+      //   'SS 2A',
+      //   'SS 3A',
+      // ];
 
-      const classDocs = defaultClasses.map((className) => ({
-        name: className,
+      const defaultClasses = [
+        {name: "Creche", order: 1, arm: "A"},
+        {name: "Nursery 1", order: 2, arm: "A"},
+        {name: "Nursery 2", order: 3, arm: "A"},
+        {name: "Nursery 3", order: 4, arm: "A"},
+        {name: "Primary 1", alt: "Grade 1", order: 5, arm: "A"},
+        {name: "Primary 2", alt: "Grade 2", order: 6, arm: "A"},
+        {name: "Primary 3", alt: "Grade 3", order: 7, arm: "A"},
+        {name: "Primary 4", alt: "Grade 4", order: 8, arm: "A"},
+        {name: "Primary 5", alt: "Grade 5", order: 9, arm: "A"},
+        {name: "Primary 6", alt: "Grade 6", order: 10, arm: "A"},
+        {name: "JSS 1", alt: "Grade 7", order: 11, arm: "A"},
+        {name: "JSS 2", alt: "Grade 8", order: 12, arm: "A"},
+        {name: "JSS 3", alt: "Grade 9", order: 13, arm: "A"},
+        {name: "SSS 1", alt: "Grade 10", order: 14, arm: "A"},
+        {name: "SSS 2", alt: "Grade 11", order: 15, arm: "A"},
+        {name: "SSS 3", alt: "Grade 12", order: 16, arm: "A"},      
+      ]
+
+      const classDocs = defaultClasses.map((classItem) => ({
+        name: classItem.name,
+        alt: classItem.alt,
+        order: classItem.order,
+        arm: classItem.arm,
         schoolId: school._id,
       }));
 
@@ -160,14 +182,23 @@ async  beginTerm(schoolId: string, termId) {
       });
 
       students.forEach( async(student) => {
-         await this.assessmentRecordModel.create({
-          studentId: student._id,
-          classId: classItem.id,
-          termId: termId,
-          sessionId: schoolData.currentSessionId,
-          schoolId: schoolId,
-          subjectScores: subjects,
-        });
+        const record = await this.assessmentRecordModel.find({
+          studentId: student._id, 
+          classId: classItem.id, 
+          termId: termId, 
+          sessionId: schoolData.currentSessionId, 
+          schoolId: schoolId
+        })
+        if (!record || record?.length == 0) {
+          await this.assessmentRecordModel.create({
+           studentId: student._id,
+           classId: classItem.id,
+           termId: termId,
+           sessionId: schoolData.currentSessionId,
+           schoolId: schoolId,
+           subjectScores: subjects,
+         });
+        }
       })
     });
     await Promise.all(operations)

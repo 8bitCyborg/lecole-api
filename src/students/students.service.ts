@@ -148,4 +148,20 @@ export class StudentsService {
       return false;
     }
   }
+
+  async promoteAll(schoolId: string) {
+    const classes = await this.classModel.find({schoolId: schoolId})
+
+    classes.forEach(async (currentClass) => {
+      const nextClass = classes.find(cls => cls.order == currentClass.order + 1 && cls.arm == currentClass.arm)
+      if (!nextClass) {
+        const graduatedStudents = await this.studentModel.updateMany({classId: currentClass._id}, {$set: {currentStatus: "graduated"}})
+        return;
+      }
+      const students = await this.studentModel.find({classId: currentClass._id})
+      students.map(async (student) => {
+       const currentStudent = await this.studentModel.findByIdAndUpdate(student._id, {classId: nextClass._id}) 
+      })
+    })
+  }
 }

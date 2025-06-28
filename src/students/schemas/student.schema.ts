@@ -25,10 +25,10 @@ export class Student extends Document {
 
   @Prop({
     type: String,
-    enum: ['active', 'graduated', 'transferred', 'suspended'],
+    enum: ['active', 'graduated', 'transferred', 'suspended', "suspended", "expelled", "inactive"],
     default: 'active',
   })
-  currentStatus: 'active' | 'graduated' | 'transferred';
+  currentStatus: 'active' | 'graduated' | 'transferred' | "suspended" | "expelled" | "inactive"
 
   @Prop({ required: true })
   gender: string;

@@ -35,4 +35,12 @@ export class StudentsController {
   ) {
     return this.studentService.bulkEntry(schoolId, studentData);
   }
+
+  @Post("promote/all/:schoolId")
+  async promoteAll(
+    @Param('schoolId') schoolId: string,
+ 
+  ) {
+    return this.studentService.promoteAll(schoolId);
+  }
 }
