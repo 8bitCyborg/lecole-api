@@ -37,34 +37,14 @@ export class SchoolsService {
         ...schoolDetails,
         phone: [schoolDetails.phone],
       });
-      school.shortCode =
-        getInitials(school.name) + school._id.toString().slice(-3);
+      school.shortCode = `${getInitials(school.name)}-${school._id.toString().slice(-3)}`;
       school.save();
 
-      // const defaultClasses = [
-      //   'Creche',
-      //   'Nursery 1',
-      //   'Nursery 2',
-      //   'Nursery 3',
-      //   'Primary 1',
-      //   'Primary 2',
-      //   'Primary 3',
-      //   'Primary 4',
-      //   'Primary 5',
-      //   'Primary 6',
-      //   'JSS 1',
-      //   'JSS 2',
-      //   'JSS 3',
-      //   'SS 1',
-      //   'SS 2A',
-      //   'SS 3A',
-      // ];
-
       const defaultClasses = [
-        {name: "Creche", order: 1, arm: "A"},
-        {name: "Nursery 1", order: 2, arm: "A"},
-        {name: "Nursery 2", order: 3, arm: "A"},
-        {name: "Nursery 3", order: 4, arm: "A"},
+        {name: "Creche", alt: "Day Care",order: 1, arm: "A"},
+        {name: "Nursery 1", alt: "Kindergarten 1", order: 2, arm: "A"},
+        {name: "Nursery 2", alt: "Kindergarten 2", order: 3, arm: "A"},
+        {name: "Nursery 3", alt: "Kindergarten 3", order: 4, arm: "A"},
         {name: "Primary 1", alt: "Grade 1", order: 5, arm: "A"},
         {name: "Primary 2", alt: "Grade 2", order: 6, arm: "A"},
         {name: "Primary 3", alt: "Grade 3", order: 7, arm: "A"},
@@ -86,12 +66,12 @@ export class SchoolsService {
         arm: classItem.arm,
         schoolId: school._id,
       }));
-
       await this.classModel.insertMany(classDocs);
 
       return school;
     } catch (error) {
       // console.log('School details: ', schoolDetails);
+      return error;
       console.log('Error creating school: ', error);
     }
   }

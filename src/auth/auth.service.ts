@@ -19,6 +19,7 @@ export class AuthService {
     private schoolService: SchoolsService,
     // @InjectRepository(Users) private userRepository: Repository<Users>,
     @InjectModel(User.name) private userModel,
+    @InjectModel(School.name) private schoolModel,
   ) {}
 
   async Login(data: any, res: Response) {
@@ -89,31 +90,44 @@ export class AuthService {
 
   async Register(data: any, res: Response) {
     try {
+      const checkIfSchoolExists = await this.schoolModel.findOne({
+        name: data.name, 
+        founderFirstName: data.firstName, 
+        founderLastName: data.lastName
+      });
+      if(checkIfSchoolExists) {
+        return res.status(400).send({
+          message: 'School already exists',
+          status: 400,
+        });
+      };
+
       const school = await this.schoolService.createSchool({
         ...data,
         founderFirstName: data.firstName,
         founderLastName: data.lastName,
       });
 
-      const newId = new ObjectId();
-
-      const user = await this.userService.createUser({
-        ...data,
-        _id: newId,
-        schoolId: school._id,
+      let user = await this.userModel.findOne({
         email: data.email.toLowerCase(),
-        password: await this.AuthUtilsService.hashPassword(data.password),
-        loginId:
-          data.role.slice(0, 3).toUpperCase() +
-          '-' +
-          school.shortCode +
-          '-' +
-          newId.toString().slice(-3).toUpperCase(),
       });
 
-      if (!user) {
-        throw new UnauthorizedException('User already exists');
-      }
+      if(!user) {
+        const newId = new ObjectId();
+        user = await this.userService.createUser({
+          ...data,
+          _id: newId,
+          schoolId: school._id,
+          email: data.email.toLowerCase(),
+          password: await this.AuthUtilsService.hashPassword(data.password),
+          loginId:
+            data.role.slice(0, 3).toUpperCase() +
+            '-' +
+            school.shortCode +
+            '-' +
+            newId.toString().slice(-3).toUpperCase(),
+        });
+      };
 
       return res.status(200).send({
         message: 'Registration successful',
@@ -129,6 +143,6 @@ export class AuthService {
       });
     } catch (error) {
       throw new UnauthorizedException(error);
-    }
-  }
-}
+    };
+  };
+};
