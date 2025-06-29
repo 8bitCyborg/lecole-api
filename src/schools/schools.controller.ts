@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Res,
 } from '@nestjs/common';
 import { SchoolsService } from './schools.service';
 import { CreateSchoolDto } from './dto/create-school.dto';
@@ -17,9 +18,11 @@ import { GradingScheme } from './schemas/grading.schama';
 export class SchoolsController {
   constructor(private readonly schoolsService: SchoolsService) {}
 
-  @Public()
+  // @Public()
   @Post()
-  create(@Body() createSchoolDto: CreateSchoolDto) {
+  create(
+    @Body() createSchoolDto: CreateSchoolDto, 
+    @Res() res?: Response) {
     return this.schoolsService.createSchool(createSchoolDto);
   }
 
