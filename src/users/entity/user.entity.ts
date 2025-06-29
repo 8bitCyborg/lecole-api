@@ -65,6 +65,9 @@ export class Users {
   @Column()
   password: string;
 
+  @Column({ nullable: true })
+  loginId: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

@@ -16,6 +16,9 @@ export class School extends Document {
   @Prop({ required: true })
   name: string;
 
+  @Prop({ required: true })
+  superVisorId: string;
+
   @Prop()
   shortCode: string;
 

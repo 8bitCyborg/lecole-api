@@ -10,6 +10,7 @@ import { Term } from 'src/terms/schemas/term.schema';
 import { AssessmentRecord } from 'src/assessment-records/schemas/assessment-records.schema';
 import { Subject } from 'src/subjects/schemas/subject.schema';
 import { Student } from 'src/students/schemas/student.schema';
+import { Response } from 'express';
 
 @Injectable()
 export class SchoolsService {
@@ -23,7 +24,7 @@ export class SchoolsService {
     @InjectModel(Student.name) private studentModel: Model<Term>,
   ) {}
 
-  async createSchool(schoolDetails: CreateSchoolDto) {
+  async createSchool(schoolDetails: CreateSchoolDto, res?: Response) {
     function getInitials(str) {
       return str
         .split(/\s+/) // split by spaces
@@ -33,6 +34,18 @@ export class SchoolsService {
     }
 
     try {
+      const checkIfSchoolExists = await this.schoolModel.findOne({
+        name: schoolDetails.name,
+        founderFirstName: schoolDetails.founderFirstName, 
+        founderLastName: schoolDetails.founderLastName
+      });
+      if(checkIfSchoolExists) {
+        return res?.status(400).send({
+          message: 'School already exists',
+          status: 400,
+        });
+      };
+
       const school = await this.schoolModel.create({
         ...schoolDetails,
         phone: [schoolDetails.phone],
@@ -70,9 +83,8 @@ export class SchoolsService {
 
       return school;
     } catch (error) {
-      // console.log('School details: ', schoolDetails);
-      return error;
       console.log('Error creating school: ', error);
+      return error;
     }
   }
 
