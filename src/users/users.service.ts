@@ -16,7 +16,13 @@ export class UsersService {
 
   async findUser(login_id: string) {
     try {
-      const user = await this.userModel.findOne({ email: login_id });
+      // const user = await this.userModel.findOne({ email: login_id });
+      const user = await this.userModel.findOne({
+          $or: [
+          { email: login_id },
+         { loginId: login_id  }
+        ]
+      });
 
       return user;
     } catch (error) {

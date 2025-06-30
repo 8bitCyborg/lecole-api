@@ -73,6 +73,9 @@ export class School extends Document {
 
   @Prop({default: "all"})
   promotionCriteria: "all" | "performance";
+
+  @Prop()
+  promotionScore: number
 }
 
 export const SchoolSchema = SchemaFactory.createForClass(School);

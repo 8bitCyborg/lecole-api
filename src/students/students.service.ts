@@ -6,6 +6,7 @@ import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { AssessmentRecord } from 'src/assessment-records/schemas/assessment-records.schema';
 import { Class } from 'src/classes/schemas/classes.schema';
+import { AuthUtilsService } from 'src/auth/authUtils/auth.utils';
 
 @Injectable()
 export class StudentsService {
@@ -16,6 +17,7 @@ export class StudentsService {
     private assessmentRecordModel: Model<AssessmentRecord>,
     @InjectModel(Class.name)
     private classModel: Model<Class>,
+    private AuthUtilsService: AuthUtilsService,
 
   ) {}
 
@@ -78,7 +80,7 @@ export class StudentsService {
         lastName,
         phone,
         schoolId,
-        password: '0987',
+        password: await this.AuthUtilsService.hashPassword("0000"),
         role: 'student',
         loginId: 'STU-' + newId.toString().slice(-5).toUpperCase(),
       });
