@@ -89,12 +89,12 @@ export class AuthService {
       const checkIfUserExists = await this.userModel.findOne({
         email: data.email.toLowerCase(),
       });
-      if(checkIfUserExists) {
+      if (checkIfUserExists) {
         return res.status(400).send({
           message: 'User already exists',
           status: 400,
         });
-      };
+      }
 
       const user = await this.userService.createUser({
         ...data,
@@ -107,7 +107,7 @@ export class AuthService {
           message: 'Failed to create user',
           status: 500,
         });
-      };
+      }
 
       const school = await this.schoolService.createSchool({
         ...data,
@@ -120,7 +120,12 @@ export class AuthService {
         _id: user._id.toString(),
         email: user.email,
         schoolId: school._id,
-        loginId: data.role.slice(0, 3).toUpperCase() + '-' + school.shortCode + '-' + user._id.toString().slice(-3).toUpperCase(),
+        loginId:
+          data.role.slice(0, 3).toUpperCase() +
+          '-' +
+          school.shortCode +
+          '-' +
+          user._id.toString().slice(-3).toUpperCase(),
       });
 
       return res.status(200).send({
@@ -131,17 +136,15 @@ export class AuthService {
           access_token: await this.AuthUtilsService.tokenize(
             user._id,
             user.email,
-            user.schoolId,
+            school._id,
           ),
         },
       });
-
     } catch (error) {
       return res.status(500).send({
         message: error,
         status: 500,
       });
-    };
-
-  };
-};
+    }
+  }
+}
