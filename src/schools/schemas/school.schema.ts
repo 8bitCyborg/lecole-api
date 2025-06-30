@@ -8,12 +8,16 @@ import { GradingScheme } from './grading.schama';
 export enum SubscriptionStatus {
   ACTIVE = 'active',
   EXPIRED = 'expired',
+  INACTIVE = 'inactive',
 }
 
 @Schema({ timestamps: true })
 export class School extends Document {
   @Prop({ required: true })
   name: string;
+
+  @Prop({ required: true })
+  superVisorId: string;
 
   @Prop()
   shortCode: string;
@@ -45,7 +49,7 @@ export class School extends Document {
   @Prop({
     type: String,
     enum: SubscriptionStatus,
-    default: SubscriptionStatus.ACTIVE,
+    default: SubscriptionStatus.INACTIVE,
   })
   subscriptionStatus: SubscriptionStatus;
 

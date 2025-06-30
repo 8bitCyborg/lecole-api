@@ -2,9 +2,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthUtilsService } from './authUtils/auth.utils';
 import { UsersService } from 'src/users/users.service';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from 'src/users/entity/user.entity';
-import { Repository } from 'typeorm';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/users/schemas/user.schema';
 import { School } from 'src/schools/schemas/school.schema';
@@ -17,8 +14,8 @@ export class AuthService {
     private AuthUtilsService: AuthUtilsService,
     private userService: UsersService,
     private schoolService: SchoolsService,
-    // @InjectRepository(Users) private userRepository: Repository<Users>,
     @InjectModel(User.name) private userModel,
+    @InjectModel(School.name) private schoolModel,
   ) {}
 
   async Login(data: any, res: Response) {
@@ -89,31 +86,42 @@ export class AuthService {
 
   async Register(data: any, res: Response) {
     try {
+      const checkIfUserExists = await this.userModel.findOne({
+        email: data.email.toLowerCase(),
+      });
+      if(checkIfUserExists) {
+        return res.status(400).send({
+          message: 'User already exists',
+          status: 400,
+        });
+      };
+
+      const user = await this.userService.createUser({
+        ...data,
+        _id: new ObjectId(),
+        email: data.email.toLowerCase(),
+        password: await this.AuthUtilsService.hashPassword(data.password),
+      });
+      if (!user) {
+        return res.status(500).send({
+          message: 'Failed to create user',
+          status: 500,
+        });
+      };
+
       const school = await this.schoolService.createSchool({
         ...data,
         founderFirstName: data.firstName,
         founderLastName: data.lastName,
+        superVisorId: user._id,
       });
 
-      const newId = new ObjectId();
-
-      const user = await this.userService.createUser({
-        ...data,
-        _id: newId,
+      await this.userService.updateUser({
+        _id: user._id.toString(),
+        email: user.email,
         schoolId: school._id,
-        email: data.email.toLowerCase(),
-        password: await this.AuthUtilsService.hashPassword(data.password),
-        loginId:
-          data.role.slice(0, 3).toUpperCase() +
-          '-' +
-          school.shortCode +
-          '-' +
-          newId.toString().slice(-3).toUpperCase(),
+        loginId: data.role.slice(0, 3).toUpperCase() + '-' + school.shortCode + '-' + user._id.toString().slice(-3).toUpperCase(),
       });
-
-      if (!user) {
-        throw new UnauthorizedException('User already exists');
-      }
 
       return res.status(200).send({
         message: 'Registration successful',
@@ -127,8 +135,13 @@ export class AuthService {
           ),
         },
       });
+
     } catch (error) {
-      throw new UnauthorizedException(error);
-    }
-  }
-}
+      return res.status(500).send({
+        message: error,
+        status: 500,
+      });
+    };
+
+  };
+};
