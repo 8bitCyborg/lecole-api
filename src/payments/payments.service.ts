@@ -3,16 +3,24 @@ import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Payment } from './schemas/payment.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class PaymentsService {
   constructor(
     @InjectModel(Payment.name) private paymentModel: Model<Payment>,
   ) {}
-  async createPayment(paymentDetails: CreatePaymentDto) {
+  async createPayment(paymentDetails) {
     try {
-      const payment = await this.paymentModel.create(paymentDetails);
+      const studentId =
+        paymentDetails.studentId === ''
+          ? undefined
+          : new Types.ObjectId(paymentDetails.studentId);
+
+      const payment = await this.paymentModel.create({
+        ...paymentDetails,
+        studentId: studentId,
+      });
       return payment;
     } catch (error) {
       console.log('error creating payment: ', error);

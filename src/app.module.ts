@@ -19,6 +19,7 @@ import { SubjectsModule } from './subjects/subjects.module';
 import { ClassesModule } from './classes/classes.module';
 import { AssessmentRecordsModule } from './assessment-records/assessment-records.module';
 import { SettingsModule } from './settings/settings.module';
+import { ExpensesModule } from './expenses/expenses.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { SettingsModule } from './settings/settings.module';
     ClassesModule,
     AssessmentRecordsModule,
     SettingsModule,
+    ExpensesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
