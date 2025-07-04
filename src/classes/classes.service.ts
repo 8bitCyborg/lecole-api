@@ -38,8 +38,7 @@ export class ClassesService {
       updateClassDto,
       { new: true },
     );
-    
-    
+
     if (!termId || termId == undefined) {
       return updatedClass;
     }

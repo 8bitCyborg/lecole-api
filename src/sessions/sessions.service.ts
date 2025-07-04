@@ -19,7 +19,7 @@ export class SessionsService {
     @InjectModel(AssessmentRecord.name) private assessmentRecordModel,
     @InjectModel(Class.name) private classModel,
     @InjectModel(Subject.name) private subjectModel,
-    private readonly schoolService: SchoolsService
+    private readonly schoolService: SchoolsService,
   ) {}
 
   async createSession(schoolId, sessioData: { year: string }) {
@@ -29,7 +29,10 @@ export class SessionsService {
         year: sessioData.year,
       });
       if (sessionExists) {
-        throw new HttpException('Session already exists', HttpStatus.BAD_REQUEST);
+        throw new HttpException(
+          'Session already exists',
+          HttpStatus.BAD_REQUEST,
+        );
       }
 
       const session: Session = await this.sessionModel.create({
@@ -43,7 +46,7 @@ export class SessionsService {
           schoolId: schoolId,
           termIndex: 1,
           name: 'first',
-          status: "active"
+          status: 'active',
         },
         {
           sessionId: session._id,
@@ -73,7 +76,7 @@ export class SessionsService {
         { new: true },
       );
 
-      this.schoolService.beginTerm(schoolId, session.currentTermId)
+      this.schoolService.beginTerm(schoolId, session.currentTermId);
 
       return session;
     } catch (error) {
@@ -110,12 +113,12 @@ export class SessionsService {
   }
 
   async endSession(schoolId: string) {
-    const school = await this.schoolModel.findByIdAndUpdate(schoolId, {currentSessionId: null, currentTermId: null}, {new: true})
-    console.log("School: ", school)
+    const school = await this.schoolModel.findByIdAndUpdate(
+      schoolId,
+      { currentSessionId: null, currentTermId: null },
+      { new: true },
+    );
+    console.log('School: ', school);
     return school;
   }
-
 }
-
-
-

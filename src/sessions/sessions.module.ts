@@ -6,7 +6,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { School, SchoolSchema } from 'src/schools/schemas/school.schema';
 import { Term, TermSchema } from 'src/terms/schemas/term.schema';
 import { Class, ClassSchema } from 'src/classes/schemas/classes.schema';
-import { AssessmentRecord, AssessmentRecordSchema } from 'src/assessment-records/schemas/assessment-records.schema';
+import {
+  AssessmentRecord,
+  AssessmentRecordSchema,
+} from 'src/assessment-records/schemas/assessment-records.schema';
 import { Subject, SubjectSchema } from 'src/subjects/schemas/subject.schema';
 import { SchoolsService } from 'src/schools/schools.service';
 import { User, UserSchema } from 'src/users/schemas/user.schema';

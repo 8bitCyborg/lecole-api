@@ -23,7 +23,7 @@ export class Term extends Document {
 
   @Prop({
     type: String,
-    enum: [ 'inactive', 'active', 'ended'],
+    enum: ['inactive', 'active', 'ended'],
     default: 'inactive',
   })
   status: 'inactive' | 'active' | 'archived';

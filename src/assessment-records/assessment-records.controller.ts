@@ -55,9 +55,7 @@ export class AssessmentRecordsController {
   }
 
   @Post('bulk/save')
-  buikUpdate(
-    @Body() records: AssessmentRecordType[],
-  ) {
+  buikUpdate(@Body() records: AssessmentRecordType[]) {
     // console.log('Bulk updating records:', records);
     return this.assessmentRecordsService.bulkSave(records);
   }

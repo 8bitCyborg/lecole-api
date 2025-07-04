@@ -129,15 +129,15 @@ export class AssessmentRecordsService {
   async bulkSave(records) {
     const data = Object.values(records);
     const operations = data.map(async (record: any) => {
-        const recordItem = await this.assessmentRecordModel.findByIdAndUpdate(
+      const recordItem = await this.assessmentRecordModel.findByIdAndUpdate(
         record._id,
         { subjectScores: record.subjectScores },
         { new: true },
       );
-    })
+    });
 
     await Promise.all(operations);
 
-    return operations    
+    return operations;
   }
 }

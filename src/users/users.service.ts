@@ -18,10 +18,7 @@ export class UsersService {
     try {
       // const user = await this.userModel.findOne({ email: login_id });
       const user = await this.userModel.findOne({
-          $or: [
-          { email: login_id },
-         { loginId: login_id  }
-        ]
+        $or: [{ email: login_id }, { loginId: login_id }],
       });
 
       return user;
@@ -37,8 +34,8 @@ export class UsersService {
       return user;
     } catch (error) {
       console.log('Error updating user: ', error);
-    };
-  };
+    }
+  }
 
   async createUser(data: UserDto) {
     try {
@@ -53,7 +50,6 @@ export class UsersService {
     } catch (error) {
       console.log('Error creating user: ', error);
       return false;
-    };
-  };
-
-};
+    }
+  }
+}

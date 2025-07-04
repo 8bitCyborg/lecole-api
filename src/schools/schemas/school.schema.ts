@@ -4,6 +4,7 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Staff } from 'src/staff/schemas/staff.schema';
 import { Student } from 'src/students/schemas/student.schema';
 import { GradingScheme } from './grading.schama';
+import { AnnouncementsSchema } from './announcement.schema';
 
 export enum SubscriptionStatus {
   ACTIVE = 'active',
@@ -71,11 +72,14 @@ export class School extends Document {
   @Prop({ type: GradingScheme, default: () => ({}) })
   gradingScheme: GradingScheme;
 
-  @Prop({default: "all"})
-  promotionCriteria: "all" | "performance";
+  @Prop({ default: 'all' })
+  promotionCriteria: 'all' | 'performance';
 
   @Prop()
-  promotionScore: number
+  promotionScore: number;
+
+  @Prop({ type: [AnnouncementsSchema] })
+  announcements: AnnouncementsSchema[];
 }
 
 export const SchoolSchema = SchemaFactory.createForClass(School);

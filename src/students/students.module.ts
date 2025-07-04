@@ -4,7 +4,10 @@ import { StudentsService } from './students.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Student, StudentSchema } from './schemas/student.schema';
 import { User, UserSchema } from 'src/users/schemas/user.schema';
-import { AssessmentRecord, AssessmentRecordSchema } from 'src/assessment-records/schemas/assessment-records.schema';
+import {
+  AssessmentRecord,
+  AssessmentRecordSchema,
+} from 'src/assessment-records/schemas/assessment-records.schema';
 import { Class, ClassSchema } from 'src/classes/schemas/classes.schema';
 import { AuthUtilsService } from 'src/auth/authUtils/auth.utils';
 import { JwtModule } from '@nestjs/jwt';
@@ -25,9 +28,9 @@ import { ConfigService } from '@nestjs/config';
         return {
           secret: config.jwtSecret,
           signOptions: {
-          expiresIn: config.jwtExpiresIn,
-        },
-        global: true,
+            expiresIn: config.jwtExpiresIn,
+          },
+          global: true,
         };
       },
       inject: [ConfigService],

@@ -12,13 +12,12 @@ import { AuthUtilsService } from 'src/auth/authUtils/auth.utils';
 export class StudentsService {
   constructor(
     @InjectModel(Student.name) private studentModel: Model<Student>,
-    @InjectModel(User.name) private userModel: Model<User>, 
+    @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(AssessmentRecord.name)
     private assessmentRecordModel: Model<AssessmentRecord>,
     @InjectModel(Class.name)
     private classModel: Model<Class>,
     private AuthUtilsService: AuthUtilsService,
-
   ) {}
 
   async addStudent(schoolId, studentData) {
@@ -43,7 +42,7 @@ export class StudentsService {
         schoolId,
       });
 
-      const classInfo = await this.classModel.findById(studentData.classId)
+      const classInfo = await this.classModel.findById(studentData.classId);
       const subjects = classInfo?.subjects.map((subject) => {
         return {
           subjectId: subject,
@@ -60,7 +59,6 @@ export class StudentsService {
         schoolId: student.schoolId,
         subjectScores: subjects,
       });
-              
 
       return student;
     } catch (error: any) {
@@ -69,8 +67,8 @@ export class StudentsService {
     }
   }
 
-  async bulkEntry (schoolId, students) {
-    const data = students
+  async bulkEntry(schoolId, students) {
+    const data = students;
     const operations = data.map(async (studentData) => {
       const { email, phone, firstName, lastName } = studentData;
       const newId = new ObjectId();
@@ -80,7 +78,7 @@ export class StudentsService {
         lastName,
         phone,
         schoolId,
-        password: await this.AuthUtilsService.hashPassword("0000"),
+        password: await this.AuthUtilsService.hashPassword('0000'),
         role: 'student',
         loginId: 'STU-' + newId.toString().slice(-5).toUpperCase(),
       });
@@ -92,7 +90,7 @@ export class StudentsService {
         schoolId,
       });
 
-      const classInfo = await this.classModel.findById(studentData.classId)
+      const classInfo = await this.classModel.findById(studentData.classId);
       const subjects = classInfo?.subjects.map((subject) => {
         return {
           subjectId: subject,
@@ -110,7 +108,7 @@ export class StudentsService {
         subjectScores: subjects,
       });
 
-      return student
+      return student;
     });
 
     await Promise.all(operations);
@@ -152,18 +150,40 @@ export class StudentsService {
   }
 
   async promoteAll(schoolId: string) {
-    const classes = await this.classModel.find({schoolId: schoolId})
+    const classes = await this.classModel.find({ schoolId: schoolId });
 
     classes.forEach(async (currentClass) => {
-      const nextClass = classes.find(cls => cls.order == currentClass.order + 1 && cls.arm == currentClass.arm)
+      const nextClass = classes.find(
+        (cls) =>
+          cls.order == currentClass.order + 1 && cls.arm == currentClass.arm,
+      );
       if (!nextClass) {
-        const graduatedStudents = await this.studentModel.updateMany({classId: currentClass._id}, {$set: {currentStatus: "graduated"}})
+        const graduatedStudents = await this.studentModel.updateMany(
+          { classId: currentClass._id },
+          { $set: { currentStatus: 'graduated' } },
+        );
         return;
       }
-      const students = await this.studentModel.find({classId: currentClass._id})
+      const students = await this.studentModel.find({
+        classId: currentClass._id,
+      });
       students.map(async (student) => {
-       const currentStudent = await this.studentModel.findByIdAndUpdate(student._id, {classId: nextClass._id}) 
-      })
-    })
+        const currentStudent = await this.studentModel.findByIdAndUpdate(
+          student._id,
+          { classId: nextClass._id },
+        );
+      });
+    });
+  }
+
+  async getStudentByUserId(userId: string) {
+    return await this.studentModel
+      .findOne({ userId: userId })
+      .populate('classId')
+      .populate('schoolId');
+  }
+
+  async updateStudentProfile(studentId: string, updateData: Student) {
+    return await this.studentModel.findByIdAndUpdate(studentId, updateData);
   }
 }
