@@ -7,7 +7,10 @@ import { SchoolSchema } from './schemas/school.schema';
 import { User, UserSchema } from 'src/users/schemas/user.schema';
 import { Class, ClassSchema } from 'src/classes/schemas/classes.schema';
 import { Term, TermSchema } from 'src/terms/schemas/term.schema';
-import { AssessmentRecord, AssessmentRecordSchema } from 'src/assessment-records/schemas/assessment-records.schema';
+import {
+  AssessmentRecord,
+  AssessmentRecordSchema,
+} from 'src/assessment-records/schemas/assessment-records.schema';
 import { Subject, SubjectSchema } from 'src/subjects/schemas/subject.schema';
 import { Student, StudentSchema } from 'src/students/schemas/student.schema';
 

@@ -3,7 +3,10 @@ import { TermsService } from './terms.service';
 import { TermsController } from './terms.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Term, TermSchema } from './schemas/term.schema';
-import { AssessmentRecord, AssessmentRecordSchema } from 'src/assessment-records/schemas/assessment-records.schema';
+import {
+  AssessmentRecord,
+  AssessmentRecordSchema,
+} from 'src/assessment-records/schemas/assessment-records.schema';
 import { Class, ClassSchema } from 'src/classes/schemas/classes.schema';
 import { Subject, SubjectSchema } from 'src/subjects/schemas/subject.schema';
 

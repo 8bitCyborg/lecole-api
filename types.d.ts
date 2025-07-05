@@ -17,3 +17,7 @@ export interface AssessmentRecordType {
   createdAt?: string;
   updatedAt?: string;
 }
+
+// export interfact School {
+
+// }

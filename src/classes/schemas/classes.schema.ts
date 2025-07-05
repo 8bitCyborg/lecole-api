@@ -18,7 +18,7 @@ export class Class {
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Subject' }] })
   subjects: MongooseSchema.Types.ObjectId[];
 
-  @Prop({default: "A"})
+  @Prop({ default: 'A' })
   subClass: string;
 
   @Prop()
@@ -29,8 +29,6 @@ export class Class {
 
   @Prop()
   alt: string;
-
-
 }
 
 export const ClassSchema = SchemaFactory.createForClass(Class);
