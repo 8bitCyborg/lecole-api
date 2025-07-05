@@ -10,9 +10,7 @@ export class TermsService {
   constructor(@InjectModel(Term.name) private termModel: Model<Term>) {}
 
   async findAll(sessionId: string) {
-    console.log('Finding all terms for sessionId:', sessionId);
     const terms = await this.termModel.find({ sessionId: sessionId });
-    console.log('Terms found:', terms);
     return terms;
   }
 }

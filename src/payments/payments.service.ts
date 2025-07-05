@@ -45,7 +45,6 @@ export class PaymentsService {
       .populate('studentId')
       .populate('sessionId');
 
-    console.log('Payments: ', payments);
     return payments;
   }
 

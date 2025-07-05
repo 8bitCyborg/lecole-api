@@ -9,7 +9,6 @@ export class Payment {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Session',
-    // required: true,
   })
   sessionId: Types.ObjectId;
 
@@ -19,7 +18,6 @@ export class Payment {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Student',
-    // required: true,
   })
   studentId: Types.ObjectId;
 

@@ -21,6 +21,7 @@ export class AssessmentRecordsService {
     schoolId: string;
     subjectScores: string[];
   }) {
+    console.log('Service record: ', recordDetails);
     const records = await this.assessmentRecordModel
       .findOne({
         studentId: recordDetails.studentId,
@@ -30,6 +31,8 @@ export class AssessmentRecordsService {
         schoolId: recordDetails.schoolId,
       })
       .populate('subjectScores.subjectId');
+
+    console.log('Records Returned: ', records);
 
     if (!records) {
       const subjects = recordDetails.subjectScores.map((subject) => {
@@ -57,6 +60,7 @@ export class AssessmentRecordsService {
       console.log('New Record: ', populatedResult);
       return populatedResult;
     }
+    console.log('Records: ', records);
     return records;
   }
 
@@ -96,14 +100,6 @@ export class AssessmentRecordsService {
     return `This action returns a #${id} assessmentRecord`;
   }
 
-  // update(id: number, updateAssessmentRecordDto: UpdateAssessmentRecordDto) {
-  //   return `This action updates a #${id} assessmentRecord`;
-  // }
-
-  remove(id: number) {
-    return `This action removes a #${id} assessmentRecord`;
-  }
-
   async getRecordsBySubjects(
     termId: string,
     subjectId: string,
@@ -139,5 +135,34 @@ export class AssessmentRecordsService {
     await Promise.all(operations);
 
     return operations;
+  }
+
+  async getAllRecords(schoolId: string) {
+    return await this.assessmentRecordModel
+      .find({ schoolId: schoolId })
+      .populate('studentId')
+      .populate('classId')
+      .populate('termId')
+      .populate('sessionId');
+  }
+
+  async findByStudentIdTermId(studentId: string, termId: string) {
+    console.log('Student ', studentId);
+    console.log('Term', termId);
+    const record = await this.assessmentRecordModel.findOne({
+      studentId: studentId,
+      termId: termId,
+    });
+    return record;
+  }
+
+  async findByRecordId(recordId: string) {
+    return await this.assessmentRecordModel
+      .findById(recordId)
+      .populate('studentId')
+      .populate('classId')
+      .populate('termId')
+      .populate('sessionId')
+      .populate('subjectScores.subjectId');
   }
 }

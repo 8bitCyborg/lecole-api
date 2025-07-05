@@ -9,54 +9,22 @@ export class AssessmentRecordsController {
     private readonly assessmentRecordsService: AssessmentRecordsService,
   ) {}
 
-  // @Post()
-  // create(@Body() createAssessmentRecordDto: CreateAssessmentRecordDto) {
-  //   return this.assessmentRecordsService.create(createAssessmentRecordDto);
-  // }
-
-  // @Get('student/:studentId/:classId/:termId/:sessionId/:schoolId')
-  // getStudentRecords(
-  //   @Param('studentId') studentId: string,
-  //   @Param('classId') classId: string,
-  //   @Param('termId') termId: string,
-  //   @Param('sessionId') sessionId: string,
-  //   @Param('schoolId') schoolId: string,
-  // ) {
-  //   console.log(studentId, classId, termId, sessionId, schoolId);
-  //   return this.assessmentRecordsService.getStudentRecords(
-  //     studentId,
-  //     classId,
-  //     termId,
-  //     sessionId,
-  //     schoolId,
-  //   );
-  // }
-
   @Post('student/:studentId')
-  getStudentRecords(
-    @Body() recordDetails: any,
-    // @Param('studentId') studentId: string,
-  ) {
+  getStudentRecords(@Body() recordDetails: any) {
+    console.log('Record details: ', recordDetails);
     return this.assessmentRecordsService.getStudentRecords(recordDetails);
   }
-
-  // @Patch(':recordId')
-  // updateRecord(@Param('recordId') recordId: string, @Body() record) {
-  //   return 'hello';
-  // }
 
   @Post('student/save/:recordId')
   updateRecord(
     @Param('recordId') recordId: string,
     @Body() subjectScores: { ca: number; exam: number }[],
   ) {
-    console.log('Updating record with ID:', recordId, subjectScores);
     return this.assessmentRecordsService.updateRecord(recordId, subjectScores);
   }
 
   @Post('bulk/save')
   buikUpdate(@Body() records: AssessmentRecordType[]) {
-    // console.log('Bulk updating records:', records);
     return this.assessmentRecordsService.bulkSave(records);
   }
 
@@ -71,13 +39,29 @@ export class AssessmentRecordsController {
     );
   }
 
+  @Get('/all/:schoolId')
+  getAll(@Param() schoolId) {
+    return this.assessmentRecordsService.getAllRecords(schoolId.schoolId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.assessmentRecordsService.findOne(+id);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.assessmentRecordsService.remove(+id);
+  @Get('/unique/:studentId/:termId')
+  findRecord(
+    @Param('studentId') studentId: string,
+    @Param('termId') termId: string,
+  ) {
+    return this.assessmentRecordsService.findByStudentIdTermId(
+      studentId,
+      termId,
+    );
+  }
+
+  @Get('/recordId/:recordId')
+  findByRecordId(@Param('recordId') recordId: string) {
+    return this.assessmentRecordsService.findByRecordId(recordId);
   }
 }

@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ExpensesService } from './expenses.service';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
@@ -7,19 +15,22 @@ import { UpdateExpenseDto } from './dto/update-expense.dto';
 export class ExpensesController {
   constructor(private readonly expensesService: ExpensesService) {}
 
-  @Post()
-  create(@Body() createExpenseDto: CreateExpenseDto) {
-    return this.expensesService.create(createExpenseDto);
+  @Post(':schoolId')
+  create(
+    @Param('schoolId') schoolId,
+    @Body() createPaymentDto: CreateExpenseDto,
+  ) {
+    return this.expensesService.create(createPaymentDto);
   }
 
-  @Get()
-  findAll() {
-    return this.expensesService.findAll();
+  @Get(':schoolId')
+  findAll(@Param('schoolId') schoolId: string) {
+    return this.expensesService.findAll(schoolId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.expensesService.findOne(+id);
+  @Get('/details/:expenseId')
+  findOne(@Param('expenseId') expenseId: string) {
+    return this.expensesService.findOne(expenseId);
   }
 
   @Patch(':id')
