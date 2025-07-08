@@ -149,31 +149,150 @@ export class StudentsService {
     }
   }
 
+  // async promoteAll(schoolId: string) {
+  //   const classes = await this.classModel.find({ schoolId: schoolId });
+
+  //   classes.forEach(async (currentClass) => {
+  //     const nextClass = classes.find(
+  //       (cls) =>
+  //         cls.order == currentClass.order + 1 && cls.arm == currentClass.arm,
+  //     );
+  //     if (!nextClass) {
+  //       const graduatedStudents = await this.studentModel.updateMany(
+  //         { classId: currentClass._id },
+  //         { $set: { currentStatus: 'graduated' } },
+  //       );
+  //       return;
+  //     }
+  //     const students = await this.studentModel.find({
+  //       classId: currentClass._id,
+  //     });
+  //     students.map(async (student) => {
+  //       const currentStudent = await this.studentModel.findByIdAndUpdate(
+  //         student._id,
+  //         { classId: nextClass._id },
+  //       );
+  //     });
+  //   });
+  // }
+
   async promoteAll(schoolId: string) {
     const classes = await this.classModel.find({ schoolId: schoolId });
 
-    classes.forEach(async (currentClass) => {
+    // Sort classes by order descending to process highest classes first
+    const sortedClasses = classes.sort((a, b) => b.order - a.order);
+
+    for (const currentClass of sortedClasses) {
       const nextClass = classes.find(
         (cls) =>
           cls.order == currentClass.order + 1 && cls.arm == currentClass.arm,
       );
       if (!nextClass) {
-        const graduatedStudents = await this.studentModel.updateMany(
+        await this.studentModel.updateMany(
           { classId: currentClass._id },
           { $set: { currentStatus: 'graduated' } },
         );
-        return;
+        continue;
       }
       const students = await this.studentModel.find({
         classId: currentClass._id,
       });
-      students.map(async (student) => {
-        const currentStudent = await this.studentModel.findByIdAndUpdate(
-          student._id,
-          { classId: nextClass._id },
-        );
+      for (const student of students) {
+        await this.studentModel.findByIdAndUpdate(student._id, {
+          classId: nextClass._id,
+        });
+      }
+    }
+  }
+
+  async promoteByCriteria(
+    schoolId: string,
+    promotionCriteria: number,
+    sessionId: string,
+  ) {
+    const classes = await this.classModel.find({ schoolId: schoolId });
+
+    // Sort classes by order descending to process highest classes first
+    const sortedClasses = classes.sort((a, b) => b.order - a.order);
+
+    for (const currentClass of sortedClasses) {
+      const nextClass = classes.find(
+        (cls) =>
+          cls.order == currentClass.order + 1 && cls.arm == currentClass.arm,
+      );
+      if (!nextClass) {
+        const students = await this.studentModel.find({
+          classId: currentClass._id,
+        });
+
+        for (const student of students) {
+          const assessmentRecords = await this.assessmentRecordModel.find({
+            sessionId,
+            studentId: student._id,
+          });
+
+          if (assessmentRecords.length > 0) {
+            let totalScore = 0;
+            let totalSubjects = 0;
+
+            assessmentRecords.forEach((record) => {
+              record.subjectScores.forEach((subjectScore) => {
+                const ca = subjectScore.ca || 0;
+                const exam = subjectScore.exam || 0;
+                totalScore += ca + exam;
+                totalSubjects++;
+              });
+            });
+
+            const averageScore =
+              totalSubjects > 0 ? totalScore / totalSubjects : 0;
+
+            if (averageScore >= promotionCriteria) {
+              const graduatedStudents =
+                await this.studentModel.findByIdAndUpdate(student._id, {
+                  $set: { currentStatus: 'graduated' },
+                });
+            }
+          }
+        }
+        continue;
+      }
+
+      const students = await this.studentModel.find({
+        classId: currentClass._id,
       });
-    });
+
+      for (const student of students) {
+        const assessmentRecords = await this.assessmentRecordModel.find({
+          sessionId,
+          studentId: student._id,
+        });
+
+        if (assessmentRecords.length > 0) {
+          let totalScore = 0;
+          let totalSubjects = 0;
+
+          assessmentRecords.forEach((record) => {
+            record.subjectScores.forEach((subjectScore) => {
+              const ca = subjectScore.ca || 0;
+              const exam = subjectScore.exam || 0;
+              totalScore += ca + exam;
+              totalSubjects++;
+            });
+          });
+
+          const averageScore =
+            totalSubjects > 0 ? totalScore / totalSubjects : 0;
+
+          if (averageScore >= promotionCriteria) {
+            const currentStudent = await this.studentModel.findByIdAndUpdate(
+              student._id,
+              { classId: nextClass._id },
+            );
+          }
+        }
+      }
+    }
   }
 
   async getStudentByUserId(userId: string) {

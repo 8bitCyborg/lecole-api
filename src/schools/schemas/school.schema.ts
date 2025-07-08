@@ -75,7 +75,7 @@ export class School extends Document {
   @Prop({ default: 'all' })
   promotionCriteria: 'all' | 'performance';
 
-  @Prop()
+  @Prop({ default: 40 })
   promotionScore: number;
 
   @Prop({ type: [AnnouncementsSchema] })

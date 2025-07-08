@@ -48,6 +48,18 @@ export class StudentsController {
     return this.studentService.promoteAll(schoolId);
   }
 
+  @Post('promote/criteria/:schoolId')
+  async promoteByCriteria(
+    @Param('schoolId') schoolId: string,
+    @Body() promotionDto: { promotionCriteria: number; sessionId: string },
+  ) {
+    return this.studentService.promoteByCriteria(
+      schoolId,
+      promotionDto.promotionCriteria,
+      promotionDto.sessionId,
+    );
+  }
+
   @Post('update-profile/:studentId')
   async updateStudentProfile(
     @Param('studentId') studentId: string,
