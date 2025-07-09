@@ -18,6 +18,25 @@ export class Class {
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Subject' }] })
   subjects: MongooseSchema.Types.ObjectId[];
 
+  @Prop([
+    {
+      subjectId: {
+        type: MongooseSchema.Types.ObjectId,
+        ref: 'Subject',
+        required: true,
+      },
+      teacherId: {
+        type: MongooseSchema.Types.ObjectId,
+        ref: 'Staff',
+        default: null,
+      },
+    },
+  ])
+  subjectGroups: {
+    subjectId: MongooseSchema.Types.ObjectId;
+    teacherId?: MongooseSchema.Types.ObjectId;
+  }[];
+
   @Prop({ default: 'A' })
   subClass: string;
 

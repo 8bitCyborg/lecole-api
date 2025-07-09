@@ -28,4 +28,9 @@ export class SessionsController {
   endSession(@Param('schoolId') schoolId: string) {
     return this.sessionsService.endSession(schoolId);
   }
+
+  @Post('advance/:schoolId')
+  advanceSession(@Param('schoolId') schoolId: string) {
+    return this.sessionsService.advanceSession(schoolId);
+  }
 }

@@ -30,7 +30,7 @@ export class StudentsService {
         lastName,
         phone,
         schoolId,
-        password: '0987',
+        password: await this.AuthUtilsService.hashPassword('0000'),
         role: 'student',
         loginId: 'STU-' + newId.toString().slice(-5).toUpperCase(),
       });
@@ -43,21 +43,30 @@ export class StudentsService {
       });
 
       const classInfo = await this.classModel.findById(studentData.classId);
-      const subjects = classInfo?.subjects.map((subject) => {
+      // const subjects = classInfo?.subjects.map((subject) => {
+      //   return {
+      //     subjectId: subject,
+      //     ca: 0,
+      //     exam: 0,
+      //   };
+      // });
+
+      const subjectGroups = classInfo?.subjectGroups.map((group) => {
         return {
-          subjectId: subject,
+          subjectId: group.subjectId,
           ca: 0,
           exam: 0,
         };
       });
 
-      const newRecord = await this.assessmentRecordModel.create({
+      await this.assessmentRecordModel.create({
         studentId: student._id,
         classId: studentData.classId,
         termId: studentData.termId,
         sessionId: studentData.sessionId,
         schoolId: student.schoolId,
-        subjectScores: subjects,
+        subjectScores: subjectGroups,
+        // subjectScores: subjects,
       });
 
       return student;
@@ -99,13 +108,22 @@ export class StudentsService {
         };
       });
 
+      const subjectGroups = classInfo?.subjectGroups.map((group) => {
+        return {
+          subjectId: group.subjectId,
+          ca: 0,
+          exam: 0,
+        };
+      });
+
       const newRecord = await this.assessmentRecordModel.create({
         studentId: student._id,
         classId: studentData.classId,
         termId: studentData.termId,
         sessionId: studentData.sessionId,
         schoolId: student.schoolId,
-        subjectScores: subjects,
+        subjectScores: subjectGroups,
+        // subjectScores: subjects,
       });
 
       return student;

@@ -167,9 +167,10 @@ export class SchoolsService {
 
     const operations = classes.map(async (classItem) => {
       const students = await this.studentModel.find({ classId: classItem._id });
-      const subjects = classItem?.subjects.map((subject) => {
+
+      const subjectGroups = classItem?.subjectGroups.map((group) => {
         return {
-          subjectId: subject,
+          subjectId: group.subjectId,
           ca: 0,
           exam: 0,
         };
@@ -190,7 +191,7 @@ export class SchoolsService {
             termId: termId,
             sessionId: schoolData?.currentSessionId,
             schoolId: schoolId,
-            subjectScores: subjects,
+            subjectScores: subjectGroups,
           });
         }
       });

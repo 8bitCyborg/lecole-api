@@ -20,6 +20,7 @@ export class AssessmentRecordsService {
     sessionId: string;
     schoolId: string;
     subjectScores: string[];
+    subjectGroups: { subjectId: string; teacherId: string }[];
   }) {
     console.log('Service record: ', recordDetails);
     const records = await this.assessmentRecordModel
@@ -31,17 +32,17 @@ export class AssessmentRecordsService {
         schoolId: recordDetails.schoolId,
       })
       .populate('subjectScores.subjectId');
-
     console.log('Records Returned: ', records);
-
     if (!records) {
-      const subjects = recordDetails.subjectScores.map((subject) => {
-        return {
-          subjectId: subject,
-          ca: 0,
-          exam: 0,
-        };
-      });
+      const subjectGroups = recordDetails?.subjectGroups.map(
+        (group: { subjectId: string; teacherId: string }) => {
+          return {
+            subjectId: group.subjectId,
+            ca: 0,
+            exam: 0,
+          };
+        },
+      );
 
       const newRecord = await this.assessmentRecordModel.create({
         studentId: recordDetails.studentId,
@@ -49,9 +50,8 @@ export class AssessmentRecordsService {
         termId: recordDetails.termId,
         sessionId: recordDetails.sessionId,
         schoolId: recordDetails.schoolId,
-        subjectScores: subjects,
+        subjectScores: subjectGroups,
       });
-      // .populate('subjectScores.subjectId');
 
       const populatedResult = await this.assessmentRecordModel
         .findById(newRecord._id)
@@ -147,8 +147,6 @@ export class AssessmentRecordsService {
   }
 
   async findByStudentIdTermId(studentId: string, termId: string) {
-    console.log('Student ', studentId);
-    console.log('Term', termId);
     const record = await this.assessmentRecordModel.findOne({
       studentId: studentId,
       termId: termId,

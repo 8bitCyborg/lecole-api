@@ -6,12 +6,14 @@ import { Staff } from './schemas/staff.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/users/schemas/user.schema';
 import { Model } from 'mongoose';
+import { AuthUtilsService } from 'src/auth/authUtils/auth.utils';
 
 @Injectable()
 export class StaffService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Staff.name) private staffModel: Model<Staff>,
+    private AuthUtilsService: AuthUtilsService,
   ) {}
   async create(schoolId, staffData: CreateStaffDto) {
     try {
@@ -23,7 +25,7 @@ export class StaffService {
         lastName,
         phone,
         schoolId,
-        password: '0987',
+        password: await this.AuthUtilsService.hashPassword('0000'),
         role: 'staff',
         loginId: 'STA-' + newId.toString().slice(-5).toUpperCase(),
       });

@@ -8,6 +8,7 @@ import { AssessmentRecord } from 'src/assessment-records/schemas/assessment-reco
 import { Class } from 'src/classes/schemas/classes.schema';
 import { Subject } from 'src/subjects/schemas/subject.schema';
 import { SchoolsService } from 'src/schools/schools.service';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class SessionsService {
@@ -76,7 +77,7 @@ export class SessionsService {
         { new: true },
       );
 
-      this.schoolService.beginTerm(schoolId, session.currentTermId);
+      await this.schoolService.beginTerm(schoolId, session.currentTermId);
 
       return session;
     } catch (error) {
@@ -86,15 +87,11 @@ export class SessionsService {
   }
 
   async findAll(schoolId: string) {
-    try {
-      const sessions = await this.sessionModel
-        .find({ schoolId: schoolId })
-        .populate('termsId');
-      console.log('Schoolid sessions', schoolId, sessions);
-      return sessions;
-    } catch (error) {
-      throw error;
-    }
+    const sessions = await this.sessionModel
+      .find({ schoolId: schoolId })
+      .populate('termsId');
+    console.log('Schoolid sessions', schoolId, sessions);
+    return sessions;
   }
 
   async findOne(sessionId: string) {
@@ -106,8 +103,7 @@ export class SessionsService {
 
       return session;
     } catch (error) {
-      // console.log('error fetching session: ', error);
-      this.logger.error('Error log: ', error.stack);
+      this.logger.error('Error log: ', error);
       throw error;
     }
   }
@@ -120,5 +116,31 @@ export class SessionsService {
     );
     console.log('School: ', school);
     return school;
+  }
+
+  async advanceSession(schoolId: string) {
+    const school = await this.schoolModel
+      .findById(schoolId)
+      .populate('currentSessionId');
+    if (!school) {
+      throw new HttpException('School not found', HttpStatus.NOT_FOUND);
+    }
+    if (!school.currentSessionId) {
+      throw new HttpException(
+        'No current session found for this school',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const [startStr, endStr] = school?.currentSessionId?.year.split('/');
+    const start = parseInt(startStr);
+    const end = parseInt(endStr);
+    const nextStart = start + 1;
+    const nextEnd = end + 1;
+
+    const nextSessionYear = `${nextStart}/${nextEnd}`;
+    const nextSession = await this.createSession(school._id, {
+      year: nextSessionYear,
+    });
+    return nextSession;
   }
 }
