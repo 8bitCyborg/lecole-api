@@ -35,8 +35,6 @@ export class AuthService {
         user.password,
       );
 
-      console.log('is password valid: ', isPasswordValid);
-
       if (!isPasswordValid) {
         return res.status(401).send({
           message: 'Incorrect Username or Password',
@@ -56,6 +54,7 @@ export class AuthService {
         maxAge: 24 * 60 * 60 * 1000, // 1 day
       });
 
+      delete user?.password;
       return res.status(200).send({
         message: 'Login successful',
         status: 200,
@@ -64,17 +63,6 @@ export class AuthService {
           access_token: jwt,
         },
       });
-      // return res.status(200).send({
-      //   message: 'Login successful',
-      //   status: 200,
-      //   data: {
-      //     ...user,
-      //     access_token: await this.AuthUtilsService.tokenize(
-      //       user._id,
-      //       user.email,
-      //     ),
-      //   },
-      // });
     } catch (error) {
       console.log('Error logging in', error);
       return res.status(500).send({

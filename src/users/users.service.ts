@@ -21,7 +21,7 @@ export class UsersService {
         $or: [{ email: login_id }, { loginId: login_id }],
       });
 
-      return user;
+      return user?.toObject();
     } catch (error) {
       console.log('Error finding user: ', error);
       return false;
