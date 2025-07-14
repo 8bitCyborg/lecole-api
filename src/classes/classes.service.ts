@@ -18,7 +18,13 @@ export class ClassesService {
     const classes = await this.classModel
       .find({ schoolId: schoolId })
       .populate('subjects')
-      .populate('subjectGroups.subjectId');
+      .populate('subjectGroups.subjectId')
+      .populate({
+        path: 'classTeacher',
+        populate: {
+          path: 'userId',
+        },
+      });
     return classes;
   }
 
@@ -89,64 +95,6 @@ export class ClassesService {
 
     return updatedClass;
   }
-  // async update(id: string, termId: string, updateClassDto: UpdateClassDto) {
-  //   console.log('Update dto: ', updateClassDto);
-  //   const updatedClass = await this.classModel.findByIdAndUpdate(
-  //     id,
-  //     updateClassDto,
-  //     { new: true },
-  //   );
-
-  //   if (!termId || termId == undefined) {
-  //     return updatedClass;
-  //   }
-
-  //   const assessmentRecords = await this.assessmentRecordModel.find({
-  //     classId: id,
-  //     termId: termId,
-  //   });
-
-  //   for (const record of assessmentRecords) {
-  //     const currentSubjectIds = record.subjectScores.map((a) =>
-  //       a.subjectId.toString(),
-  //     );
-
-  //     const toAdd = updatedClass?.subjects.filter(
-  //       (id) => !currentSubjectIds.includes(id.toString()),
-  //     );
-  //     console.log('Subjects to add: ', toAdd);
-  //     const updatedClassStringSubjectId = updatedClass?.subjects.map((id) =>
-  //       id.toString(),
-  //     );
-  //     console.log(
-  //       'Updated class subjects as strings: ',
-  //       updatedClassStringSubjectId,
-  //     );
-  //     const toRemove = currentSubjectIds?.filter((id) => {
-  //       return !updatedClassStringSubjectId?.includes(id);
-  //     });
-
-  //     // Remove subjects
-  //     record.subjectScores = record.subjectScores.filter(
-  //       (a) => !toRemove.includes(a.subjectId.toString()),
-  //     );
-
-  //     // Add subjectScores for new subjects
-  //     toAdd?.forEach((subjectId) => {
-  //       console.log('Adding subject score for: ', subjectId);
-  //       record.subjectScores.push({
-  //         subjectId: new mongoose.Types.ObjectId(subjectId.toString()),
-  //         ca: 0,
-  //         exam: 0,
-  //         remark: '',
-  //       });
-  //     });
-
-  //     await record.save();
-  //   }
-
-  //   return updatedClass;
-  // }
 
   remove(id: number) {
     return `This action removes a #${id} class`;
