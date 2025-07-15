@@ -1,10 +1,9 @@
-import { ObjectId } from 'mongodb';
 import { Injectable } from '@nestjs/common';
-import { UpdateAssessmentRecordDto } from './dto/update-assessment-record.dto';
+// import { UpdateAssessmentRecordDto } from './dto/update-assessment-record.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { AssessmentRecord } from './schemas/assessment-records.schema';
 import { Model } from 'mongoose';
-import { AssessmentRecordType } from 'types';
+import { AssessmentRecordType } from '../../types';
 
 @Injectable()
 export class AssessmentRecordsService {
@@ -118,14 +117,14 @@ export class AssessmentRecordsService {
       return records;
     } catch (error) {
       console.log('Error', error);
-      return error;
+      // return
     }
   }
 
-  async bulkSave(records) {
+  async bulkSave(records: AssessmentRecordType[]) {
     const data = Object.values(records);
-    const operations = data.map(async (record: any) => {
-      const recordItem = await this.assessmentRecordModel.findByIdAndUpdate(
+    const operations = data.map(async (record: AssessmentRecordType) => {
+      await this.assessmentRecordModel.findByIdAndUpdate(
         record._id,
         { subjectScores: record.subjectScores },
         { new: true },

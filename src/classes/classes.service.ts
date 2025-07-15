@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateClassDto } from './dto/create-class.dto';
 import { UpdateClassDto } from './dto/update-class.dto';
-import { Class, ClassSchema } from './schemas/classes.schema';
+import { Class } from './schemas/classes.schema';
 import mongoose, { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { AssessmentRecord } from 'src/assessment-records/schemas/assessment-records.schema';
@@ -35,9 +34,17 @@ export class ClassesService {
   }
 
   async update(id: string, termId: string, updateClassDto: UpdateClassDto) {
+    const cleanedDto = {
+      ...updateClassDto,
+      classTeacher:
+        updateClassDto.classTeacher === ''
+          ? undefined
+          : updateClassDto.classTeacher,
+    };
+
     const updatedClass = await this.classModel.findByIdAndUpdate(
       id,
-      updateClassDto,
+      cleanedDto,
       { new: true },
     );
 

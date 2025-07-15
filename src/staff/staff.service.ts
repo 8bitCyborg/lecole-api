@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateStaffDto } from './dto/create-staff.dto';
-import { UpdateStaffDto } from './dto/update-staff.dto';
+// import { UpdateStaffDto } from './dto/update-staff.dto';
 import { ObjectId } from 'mongodb';
 import { Staff } from './schemas/staff.schema';
 import { InjectModel } from '@nestjs/mongoose';
@@ -17,7 +17,7 @@ export class StaffService {
   ) {}
   async create(schoolId, staffData: CreateStaffDto) {
     try {
-      const { email, phone, firstName, lastName, position, type } = staffData;
+      const { email, phone, firstName, lastName } = staffData;
       const newId = new ObjectId();
       const user = await this.userModel.create({
         email,
@@ -41,10 +41,6 @@ export class StaffService {
     }
   }
 
-  findAll() {
-    return `This action returns all staff`;
-  }
-
   async getAllStaff(schoolId: string) {
     try {
       const staff = await this.staffModel.find({ schoolId }).populate('userId');
@@ -61,10 +57,6 @@ export class StaffService {
     } catch (error) {
       console.log('error getting staff details', error);
     }
-  }
-
-  update(id: number, updateStaffDto: UpdateStaffDto) {
-    return `This action updates a #${id} staff`;
   }
 
   remove(id: number) {
