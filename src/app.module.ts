@@ -20,6 +20,7 @@ import { ClassesModule } from './classes/classes.module';
 import { AssessmentRecordsModule } from './assessment-records/assessment-records.module';
 import { SettingsModule } from './settings/settings.module';
 import { ExpensesModule } from './expenses/expenses.module';
+import { AttendanceModule } from './attendance/attendance.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { ExpensesModule } from './expenses/expenses.module';
     AssessmentRecordsModule,
     SettingsModule,
     ExpensesModule,
+    AttendanceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
