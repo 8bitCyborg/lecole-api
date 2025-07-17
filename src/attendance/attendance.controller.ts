@@ -12,12 +12,12 @@ export class AttendanceController {
   }
 
   @Get('class/:classId/:termId/:date')
-  findAll(
+  findByClassAndDate(
     @Param('classId') classId: string,
     @Param('termId') termId: string,
     @Param('date') date: string,
   ) {
-    return this.attendanceService.findAll(classId, termId, date);
+    return this.attendanceService.findByClassAndDate(classId, termId, date);
   }
 
   // @Get(':id')

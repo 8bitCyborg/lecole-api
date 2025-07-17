@@ -37,13 +37,14 @@ export class AttendanceService {
    * @param date - The date for which attendance is being queried.
    * @returns An array of attendance records.
    */
-  async findAll(classId: string, termId: string, date: string) {
+  async findByClassAndDate(classId: string, termId: string, date: string) {
     try {
-      return await this.attendanceModel.find({
+      const attendanceList = await this.attendanceModel.find({
         classId,
-        date: new Date(date),
         termId,
+        date: new Date(date),
       });
+      return attendanceList;
     } catch (error) {
       throw new BadRequestException(`Error fetching attendance: ${error}`);
     }
