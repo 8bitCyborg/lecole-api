@@ -149,7 +149,8 @@ export class StudentsService {
       const student = await this.studentModel
         .findById(studentId)
         .populate('classId')
-        .populate('schoolId');
+        .populate('schoolId')
+        .populate('userId');
       return student;
     } catch (error) {
       console.log('error getting student: ', error);
@@ -317,7 +318,8 @@ export class StudentsService {
     return await this.studentModel
       .findOne({ userId: userId })
       .populate('classId')
-      .populate('schoolId');
+      .populate('schoolId')
+      .populate('userId');
   }
 
   async updateStudentProfile(studentId: string, updateData: Student) {
