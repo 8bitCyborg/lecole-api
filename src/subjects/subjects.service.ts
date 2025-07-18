@@ -32,7 +32,7 @@ export class SubjectsService {
 
   async update(id: string, updateSubjectDto: UpdateSubjectDto) {
     const updatedSubject = await this.subjectModel.findByIdAndUpdate(
-      id,
+      updateSubjectDto.id,
       updateSubjectDto,
       { new: true },
     );

@@ -14,12 +14,9 @@ import { UpdateTermDto } from './dto/update-term.dto';
 @Controller('terms')
 export class TermsController {
   constructor(private readonly termsService: TermsService) {}
-  
+
   @Get(':sessionId')
-  findAll(
-    @Param('sessionId') sessionId: string
-  ) {
+  findAll(@Param('sessionId') sessionId: string) {
     return this.termsService.findAll(sessionId);
   }
- 
 }

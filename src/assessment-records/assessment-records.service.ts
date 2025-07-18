@@ -1,10 +1,9 @@
-import { ObjectId } from 'mongodb';
 import { Injectable } from '@nestjs/common';
-import { UpdateAssessmentRecordDto } from './dto/update-assessment-record.dto';
+// import { UpdateAssessmentRecordDto } from './dto/update-assessment-record.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { AssessmentRecord } from './schemas/assessment-records.schema';
 import { Model } from 'mongoose';
-import { AssessmentRecordType } from 'types';
+import { AssessmentRecordType } from '../../types';
 
 @Injectable()
 export class AssessmentRecordsService {
@@ -20,7 +19,9 @@ export class AssessmentRecordsService {
     sessionId: string;
     schoolId: string;
     subjectScores: string[];
+    subjectGroups: { subjectId: string; teacherId: string }[];
   }) {
+    console.log('Service record: ', recordDetails);
     const records = await this.assessmentRecordModel
       .findOne({
         studentId: recordDetails.studentId,
@@ -30,15 +31,17 @@ export class AssessmentRecordsService {
         schoolId: recordDetails.schoolId,
       })
       .populate('subjectScores.subjectId');
-
+    console.log('Records Returned: ', records);
     if (!records) {
-      const subjects = recordDetails.subjectScores.map((subject) => {
-        return {
-          subjectId: subject,
-          ca: 0,
-          exam: 0,
-        };
-      });
+      const subjectGroups = recordDetails?.subjectGroups.map(
+        (group: { subjectId: string; teacherId: string }) => {
+          return {
+            subjectId: group.subjectId,
+            ca: 0,
+            exam: 0,
+          };
+        },
+      );
 
       const newRecord = await this.assessmentRecordModel.create({
         studentId: recordDetails.studentId,
@@ -46,9 +49,8 @@ export class AssessmentRecordsService {
         termId: recordDetails.termId,
         sessionId: recordDetails.sessionId,
         schoolId: recordDetails.schoolId,
-        subjectScores: subjects,
+        subjectScores: subjectGroups,
       });
-      // .populate('subjectScores.subjectId');
 
       const populatedResult = await this.assessmentRecordModel
         .findById(newRecord._id)
@@ -57,6 +59,7 @@ export class AssessmentRecordsService {
       console.log('New Record: ', populatedResult);
       return populatedResult;
     }
+    console.log('Records: ', records);
     return records;
   }
 
@@ -96,14 +99,6 @@ export class AssessmentRecordsService {
     return `This action returns a #${id} assessmentRecord`;
   }
 
-  // update(id: number, updateAssessmentRecordDto: UpdateAssessmentRecordDto) {
-  //   return `This action updates a #${id} assessmentRecord`;
-  // }
-
-  remove(id: number) {
-    return `This action removes a #${id} assessmentRecord`;
-  }
-
   async getRecordsBySubjects(
     termId: string,
     subjectId: string,
@@ -122,22 +117,49 @@ export class AssessmentRecordsService {
       return records;
     } catch (error) {
       console.log('Error', error);
-      return error;
+      // return
     }
   }
 
-  async bulkSave(records) {
+  async bulkSave(records: AssessmentRecordType[]) {
     const data = Object.values(records);
-    const operations = data.map(async (record: any) => {
-        const recordItem = await this.assessmentRecordModel.findByIdAndUpdate(
+    const operations = data.map(async (record: AssessmentRecordType) => {
+      await this.assessmentRecordModel.findByIdAndUpdate(
         record._id,
         { subjectScores: record.subjectScores },
         { new: true },
       );
-    })
+    });
 
     await Promise.all(operations);
 
-    return operations    
+    return operations;
+  }
+
+  async getAllRecords(schoolId: string) {
+    return await this.assessmentRecordModel
+      .find({ schoolId: schoolId })
+      .populate('studentId')
+      .populate('classId')
+      .populate('termId')
+      .populate('sessionId');
+  }
+
+  async findByStudentIdTermId(studentId: string, termId: string) {
+    const record = await this.assessmentRecordModel.findOne({
+      studentId: studentId,
+      termId: termId,
+    });
+    return record;
+  }
+
+  async findByRecordId(recordId: string) {
+    return await this.assessmentRecordModel
+      .findById(recordId)
+      .populate('studentId')
+      .populate('classId')
+      .populate('termId')
+      .populate('sessionId')
+      .populate('subjectScores.subjectId');
   }
 }

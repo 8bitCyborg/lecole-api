@@ -18,16 +18,22 @@ export class UsersService {
     try {
       // const user = await this.userModel.findOne({ email: login_id });
       const user = await this.userModel.findOne({
-          $or: [
-          { email: login_id },
-         { loginId: login_id  }
-        ]
+        $or: [{ email: login_id }, { loginId: login_id }],
       });
 
-      return user;
+      return user?.toObject();
     } catch (error) {
       console.log('Error finding user: ', error);
       return false;
+    }
+  }
+
+  async updateUser(data: UserDto) {
+    try {
+      const user = await this.userModel.updateOne({ _id: data._id }, data);
+      return user;
+    } catch (error) {
+      console.log('Error updating user: ', error);
     }
   }
 
@@ -36,19 +42,14 @@ export class UsersService {
       const checkIfUserExists = await this.userModel.findOne({
         email: data.email,
       });
-
       if (checkIfUserExists) return false;
 
-      // const newId = new ObjectId();
-      // const newUser = {
-      //   ...data,
-      //   _id: newId,
-      //   loginId: newId.toString().slice(-5).toUpperCase(),
-      // };
       const user = await this.userModel.create(data);
-      return user;
+      const { password, ...userDetails } = user.toObject();
+      return userDetails;
     } catch (error) {
       console.log('Error creating user: ', error);
+      return false;
     }
   }
 }

@@ -1,21 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { CreateStaffDto } from './dto/create-staff.dto';
-import { UpdateStaffDto } from './dto/update-staff.dto';
+// import { UpdateStaffDto } from './dto/update-staff.dto';
 import { ObjectId } from 'mongodb';
 import { Staff } from './schemas/staff.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/users/schemas/user.schema';
 import { Model } from 'mongoose';
+import { AuthUtilsService } from 'src/auth/authUtils/auth.utils';
 
 @Injectable()
 export class StaffService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Staff.name) private staffModel: Model<Staff>,
+    private AuthUtilsService: AuthUtilsService,
   ) {}
   async create(schoolId, staffData: CreateStaffDto) {
     try {
-      const { email, phone, firstName, lastName, position, type } = staffData;
+      const { email, phone, firstName, lastName } = staffData;
       const newId = new ObjectId();
       const user = await this.userModel.create({
         email,
@@ -23,7 +25,7 @@ export class StaffService {
         lastName,
         phone,
         schoolId,
-        password: '0987',
+        password: await this.AuthUtilsService.hashPassword('0000'),
         role: 'staff',
         loginId: 'STA-' + newId.toString().slice(-5).toUpperCase(),
       });
@@ -37,10 +39,6 @@ export class StaffService {
       console.log('Error creating staff: ', error);
       return false;
     }
-  }
-
-  findAll() {
-    return `This action returns all staff`;
   }
 
   async getAllStaff(schoolId: string) {
@@ -59,10 +57,6 @@ export class StaffService {
     } catch (error) {
       console.log('error getting staff details', error);
     }
-  }
-
-  update(id: number, updateStaffDto: UpdateStaffDto) {
-    return `This action updates a #${id} staff`;
   }
 
   remove(id: number) {

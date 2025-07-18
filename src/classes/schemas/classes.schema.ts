@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { model, Document, Schema as MongooseSchema } from 'mongoose';
+import { Schema as MongooseSchema } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Class {
@@ -9,8 +9,8 @@ export class Class {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'School', required: true })
   schoolId: MongooseSchema.Types.ObjectId;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Staff' })
-  classTeacher: MongooseSchema.Types.ObjectId;
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Staff', required: false })
+  classTeacher?: MongooseSchema.Types.ObjectId;
 
   @Prop()
   description: string;
@@ -18,7 +18,26 @@ export class Class {
   @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Subject' }] })
   subjects: MongooseSchema.Types.ObjectId[];
 
-  @Prop({default: "A"})
+  @Prop([
+    {
+      subjectId: {
+        type: MongooseSchema.Types.ObjectId,
+        ref: 'Subject',
+        required: true,
+      },
+      teacherId: {
+        type: MongooseSchema.Types.ObjectId,
+        ref: 'Staff',
+        default: null,
+      },
+    },
+  ])
+  subjectGroups: {
+    subjectId: MongooseSchema.Types.ObjectId;
+    teacherId?: MongooseSchema.Types.ObjectId;
+  }[];
+
+  @Prop({ default: 'A' })
   subClass: string;
 
   @Prop()
@@ -29,8 +48,6 @@ export class Class {
 
   @Prop()
   alt: string;
-
-
 }
 
 export const ClassSchema = SchemaFactory.createForClass(Class);

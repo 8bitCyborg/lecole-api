@@ -37,7 +37,7 @@ export class SubjectsController {
     return this.subjectsService.findAll(schoolId);
   }
 
-  @Get(':id')
+  @Get('/details/:id')
   findOne(@Param('id') id: string) {
     return this.subjectsService.findOne(id);
   }

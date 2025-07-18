@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
 import { SessionsService } from './sessions.service';
 import { UpdateSessionDto } from './dto/update-session.dto';
 
@@ -34,5 +27,10 @@ export class SessionsController {
   @Post('end/:schoolId')
   endSession(@Param('schoolId') schoolId: string) {
     return this.sessionsService.endSession(schoolId);
+  }
+
+  @Post('advance/:schoolId')
+  advanceSession(@Param('schoolId') schoolId: string) {
+    return this.sessionsService.advanceSession(schoolId);
   }
 }

@@ -6,20 +6,22 @@ import {
   Patch,
   Param,
   Delete,
+  Res,
 } from '@nestjs/common';
 import { SchoolsService } from './schools.service';
 import { CreateSchoolDto } from './dto/create-school.dto';
 import { UpdateSchoolDto } from './dto/update-school.dto';
 import { Public } from 'src/auth/authUtils/auth.guard';
 import { GradingScheme } from './schemas/grading.schama';
+import { AnnouncementsSchema } from './schemas/announcement.schema';
 
 @Controller('schools')
 export class SchoolsController {
   constructor(private readonly schoolsService: SchoolsService) {}
 
-  @Public()
+  // @Public()
   @Post()
-  create(@Body() createSchoolDto: CreateSchoolDto) {
+  create(@Body() createSchoolDto: CreateSchoolDto, @Res() res?: Response) {
     return this.schoolsService.createSchool(createSchoolDto);
   }
 
@@ -64,5 +66,22 @@ export class SchoolsController {
     @Param('termId') termId: string,
   ) {
     return this.schoolsService.beginTerm(schoolId, termId);
+  }
+
+  @Post('/announcement/create/:schoolId')
+  createAnnouncement(
+    @Param('schoolId') schoolId: string,
+    @Body() announcement: AnnouncementsSchema,
+  ) {
+    return this.schoolsService.addAnnouncement(schoolId, announcement);
+  }
+
+  @Delete('/announcement/delete/:schoolId/:itemId')
+  deleteAnnouncement(
+    @Param('schoolId') schoolId: string,
+    @Param('itemId') itemId: string,
+  ) {
+    console.log('SchoolId and Item: ', schoolId, itemId);
+    return this.schoolsService.deleteAnnouncement(schoolId, itemId);
   }
 }

@@ -12,13 +12,12 @@ import { AuthUtilsService } from 'src/auth/authUtils/auth.utils';
 export class StudentsService {
   constructor(
     @InjectModel(Student.name) private studentModel: Model<Student>,
-    @InjectModel(User.name) private userModel: Model<User>, 
+    @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(AssessmentRecord.name)
     private assessmentRecordModel: Model<AssessmentRecord>,
     @InjectModel(Class.name)
     private classModel: Model<Class>,
     private AuthUtilsService: AuthUtilsService,
-
   ) {}
 
   async addStudent(schoolId, studentData) {
@@ -31,7 +30,7 @@ export class StudentsService {
         lastName,
         phone,
         schoolId,
-        password: '0987',
+        password: await this.AuthUtilsService.hashPassword('0000'),
         role: 'student',
         loginId: 'STU-' + newId.toString().slice(-5).toUpperCase(),
       });
@@ -43,24 +42,32 @@ export class StudentsService {
         schoolId,
       });
 
-      const classInfo = await this.classModel.findById(studentData.classId)
-      const subjects = classInfo?.subjects.map((subject) => {
+      const classInfo = await this.classModel.findById(studentData.classId);
+      // const subjects = classInfo?.subjects.map((subject) => {
+      //   return {
+      //     subjectId: subject,
+      //     ca: 0,
+      //     exam: 0,
+      //   };
+      // });
+
+      const subjectGroups = classInfo?.subjectGroups.map((group) => {
         return {
-          subjectId: subject,
+          subjectId: group.subjectId,
           ca: 0,
           exam: 0,
         };
       });
 
-      const newRecord = await this.assessmentRecordModel.create({
+      await this.assessmentRecordModel.create({
         studentId: student._id,
         classId: studentData.classId,
         termId: studentData.termId,
         sessionId: studentData.sessionId,
         schoolId: student.schoolId,
-        subjectScores: subjects,
+        subjectScores: subjectGroups,
+        // subjectScores: subjects,
       });
-              
 
       return student;
     } catch (error: any) {
@@ -69,8 +76,8 @@ export class StudentsService {
     }
   }
 
-  async bulkEntry (schoolId, students) {
-    const data = students
+  async bulkEntry(schoolId, students) {
+    const data = students;
     const operations = data.map(async (studentData) => {
       const { email, phone, firstName, lastName } = studentData;
       const newId = new ObjectId();
@@ -80,7 +87,7 @@ export class StudentsService {
         lastName,
         phone,
         schoolId,
-        password: await this.AuthUtilsService.hashPassword("0000"),
+        password: await this.AuthUtilsService.hashPassword('0000'),
         role: 'student',
         loginId: 'STU-' + newId.toString().slice(-5).toUpperCase(),
       });
@@ -92,10 +99,18 @@ export class StudentsService {
         schoolId,
       });
 
-      const classInfo = await this.classModel.findById(studentData.classId)
+      const classInfo = await this.classModel.findById(studentData.classId);
       const subjects = classInfo?.subjects.map((subject) => {
         return {
           subjectId: subject,
+          ca: 0,
+          exam: 0,
+        };
+      });
+
+      const subjectGroups = classInfo?.subjectGroups.map((group) => {
+        return {
+          subjectId: group.subjectId,
           ca: 0,
           exam: 0,
         };
@@ -107,10 +122,11 @@ export class StudentsService {
         termId: studentData.termId,
         sessionId: studentData.sessionId,
         schoolId: student.schoolId,
-        subjectScores: subjects,
+        subjectScores: subjectGroups,
+        // subjectScores: subjects,
       });
 
-      return student
+      return student;
     });
 
     await Promise.all(operations);
@@ -133,7 +149,8 @@ export class StudentsService {
       const student = await this.studentModel
         .findById(studentId)
         .populate('classId')
-        .populate('schoolId');
+        .populate('schoolId')
+        .populate('userId');
       return student;
     } catch (error) {
       console.log('error getting student: ', error);
@@ -151,19 +168,161 @@ export class StudentsService {
     }
   }
 
-  async promoteAll(schoolId: string) {
-    const classes = await this.classModel.find({schoolId: schoolId})
+  // async promoteAll(schoolId: string) {
+  //   const classes = await this.classModel.find({ schoolId: schoolId });
 
-    classes.forEach(async (currentClass) => {
-      const nextClass = classes.find(cls => cls.order == currentClass.order + 1 && cls.arm == currentClass.arm)
+  //   classes.forEach(async (currentClass) => {
+  //     const nextClass = classes.find(
+  //       (cls) =>
+  //         cls.order == currentClass.order + 1 && cls.arm == currentClass.arm,
+  //     );
+  //     if (!nextClass) {
+  //       const graduatedStudents = await this.studentModel.updateMany(
+  //         { classId: currentClass._id },
+  //         { $set: { currentStatus: 'graduated' } },
+  //       );
+  //       return;
+  //     }
+  //     const students = await this.studentModel.find({
+  //       classId: currentClass._id,
+  //     });
+  //     students.map(async (student) => {
+  //       const currentStudent = await this.studentModel.findByIdAndUpdate(
+  //         student._id,
+  //         { classId: nextClass._id },
+  //       );
+  //     });
+  //   });
+  // }
+
+  async promoteAll(schoolId: string) {
+    const classes = await this.classModel.find({ schoolId: schoolId });
+
+    // Sort classes by order descending to process highest classes first
+    const sortedClasses = classes.sort((a, b) => b.order - a.order);
+
+    for (const currentClass of sortedClasses) {
+      const nextClass = classes.find(
+        (cls) =>
+          cls.order == currentClass.order + 1 && cls.arm == currentClass.arm,
+      );
       if (!nextClass) {
-        const graduatedStudents = await this.studentModel.updateMany({classId: currentClass._id}, {$set: {currentStatus: "graduated"}})
-        return;
+        await this.studentModel.updateMany(
+          { classId: currentClass._id },
+          { $set: { currentStatus: 'graduated' } },
+        );
+        continue;
       }
-      const students = await this.studentModel.find({classId: currentClass._id})
-      students.map(async (student) => {
-       const currentStudent = await this.studentModel.findByIdAndUpdate(student._id, {classId: nextClass._id}) 
-      })
-    })
+      const students = await this.studentModel.find({
+        classId: currentClass._id,
+      });
+      for (const student of students) {
+        await this.studentModel.findByIdAndUpdate(student._id, {
+          classId: nextClass._id,
+        });
+      }
+    }
+  }
+
+  async promoteByCriteria(
+    schoolId: string,
+    promotionCriteria: number,
+    sessionId: string,
+  ) {
+    const classes = await this.classModel.find({ schoolId: schoolId });
+
+    // Sort classes by order descending to process highest classes first
+    const sortedClasses = classes.sort((a, b) => b.order - a.order);
+
+    for (const currentClass of sortedClasses) {
+      const nextClass = classes.find(
+        (cls) =>
+          cls.order == currentClass.order + 1 && cls.arm == currentClass.arm,
+      );
+      if (!nextClass) {
+        const students = await this.studentModel.find({
+          classId: currentClass._id,
+        });
+
+        for (const student of students) {
+          const assessmentRecords = await this.assessmentRecordModel.find({
+            sessionId,
+            studentId: student._id,
+          });
+
+          if (assessmentRecords.length > 0) {
+            let totalScore = 0;
+            let totalSubjects = 0;
+
+            assessmentRecords.forEach((record) => {
+              record.subjectScores.forEach((subjectScore) => {
+                const ca = subjectScore.ca || 0;
+                const exam = subjectScore.exam || 0;
+                totalScore += ca + exam;
+                totalSubjects++;
+              });
+            });
+
+            const averageScore =
+              totalSubjects > 0 ? totalScore / totalSubjects : 0;
+
+            if (averageScore >= promotionCriteria) {
+              const graduatedStudents =
+                await this.studentModel.findByIdAndUpdate(student._id, {
+                  $set: { currentStatus: 'graduated' },
+                });
+            }
+          }
+        }
+        continue;
+      }
+
+      const students = await this.studentModel.find({
+        classId: currentClass._id,
+      });
+
+      for (const student of students) {
+        const assessmentRecords = await this.assessmentRecordModel.find({
+          sessionId,
+          studentId: student._id,
+        });
+
+        if (assessmentRecords.length > 0) {
+          let totalScore = 0;
+          let totalSubjects = 0;
+
+          assessmentRecords.forEach((record) => {
+            record.subjectScores.forEach((subjectScore) => {
+              const ca = subjectScore.ca || 0;
+              const exam = subjectScore.exam || 0;
+              totalScore += ca + exam;
+              totalSubjects++;
+            });
+          });
+
+          const averageScore =
+            totalSubjects > 0 ? totalScore / totalSubjects : 0;
+
+          if (averageScore >= promotionCriteria) {
+            const currentStudent = await this.studentModel.findByIdAndUpdate(
+              student._id,
+              { classId: nextClass._id },
+            );
+          }
+        }
+      }
+    }
+  }
+
+  async getStudentByUserId(userId: string) {
+    return await this.studentModel
+      .findOne({ userId: userId })
+      .populate('classId')
+      .populate('schoolId')
+      .populate('userId');
+  }
+
+  async updateStudentProfile(studentId: string, updateData: Student) {
+    return await this.studentModel.findByIdAndUpdate(studentId, updateData);
   }
 }
