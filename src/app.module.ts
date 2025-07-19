@@ -21,6 +21,7 @@ import { AssessmentRecordsModule } from './assessment-records/assessment-records
 import { SettingsModule } from './settings/settings.module';
 import { ExpensesModule } from './expenses/expenses.module';
 import { AttendanceModule } from './attendance/attendance.module';
+import { AiHelperGateway } from './ai-helper/ai-helper.gateway';
 
 @Module({
   imports: [
@@ -59,6 +60,6 @@ import { AttendanceModule } from './attendance/attendance.module';
     AttendanceModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AiHelperGateway],
 })
 export class AppModule {}

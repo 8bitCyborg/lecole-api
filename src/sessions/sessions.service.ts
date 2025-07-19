@@ -90,7 +90,6 @@ export class SessionsService {
     const sessions = await this.sessionModel
       .find({ schoolId: schoolId })
       .populate('termsId');
-    console.log('Schoolid sessions', schoolId, sessions);
     return sessions;
   }
 
