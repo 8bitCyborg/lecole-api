@@ -1,6 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { join } from 'path';
+import { config } from 'rxjs';
 import { Students } from 'src/students/entity/student.entity';
 import { Users } from 'src/users/entity/user.entity';
 
@@ -19,4 +20,8 @@ export const getDatabaseConfig = (
   entities: [join(__dirname, '..', '**', '*.entity.{ts,js}')],
   synchronize: true,
   // configService.get<string>('APP_ENV') === 'development' ? true : false,
+});
+
+export const getOpenRouterConfig = ( configService: ConfigService ) => ({
+  openRouterSecretKey: configService.get<string>('OPEN_ROUTER_SECRET'),
 });
