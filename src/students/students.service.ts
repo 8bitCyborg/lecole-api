@@ -20,7 +20,18 @@ export class StudentsService {
     private AuthUtilsService: AuthUtilsService,
   ) {}
 
-  async addStudent(schoolId, studentData) {
+  async addStudent(
+    schoolId: string,
+    studentData: {
+      classId: string;
+      termId: string;
+      sessionId: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      phone?: string;
+    },
+  ) {
     try {
       const { email, phone, firstName, lastName } = studentData;
       const newId = new ObjectId();
@@ -76,7 +87,18 @@ export class StudentsService {
     }
   }
 
-  async bulkEntry(schoolId, students) {
+  async bulkEntry(
+    schoolId,
+    students: {
+      classId: string;
+      termId: string;
+      sessionId: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      phone?: string;
+    }[],
+  ) {
     const data = students;
     const operations = data.map(async (studentData) => {
       const { email, phone, firstName, lastName } = studentData;
@@ -168,33 +190,6 @@ export class StudentsService {
     }
   }
 
-  // async promoteAll(schoolId: string) {
-  //   const classes = await this.classModel.find({ schoolId: schoolId });
-
-  //   classes.forEach(async (currentClass) => {
-  //     const nextClass = classes.find(
-  //       (cls) =>
-  //         cls.order == currentClass.order + 1 && cls.arm == currentClass.arm,
-  //     );
-  //     if (!nextClass) {
-  //       const graduatedStudents = await this.studentModel.updateMany(
-  //         { classId: currentClass._id },
-  //         { $set: { currentStatus: 'graduated' } },
-  //       );
-  //       return;
-  //     }
-  //     const students = await this.studentModel.find({
-  //       classId: currentClass._id,
-  //     });
-  //     students.map(async (student) => {
-  //       const currentStudent = await this.studentModel.findByIdAndUpdate(
-  //         student._id,
-  //         { classId: nextClass._id },
-  //       );
-  //     });
-  //   });
-  // }
-
   async promoteAll(schoolId: string) {
     const classes = await this.classModel.find({ schoolId: schoolId });
 
@@ -203,8 +198,8 @@ export class StudentsService {
 
     for (const currentClass of sortedClasses) {
       const nextClass = classes.find(
-        (cls) =>
-          cls.order == currentClass.order + 1 && cls.arm == currentClass.arm,
+        (cls) => cls.order == currentClass.order + 1,
+        // cls.order == currentClass.order + 1 && cls.arm == currentClass.arm,
       );
       if (!nextClass) {
         await this.studentModel.updateMany(
@@ -236,8 +231,8 @@ export class StudentsService {
 
     for (const currentClass of sortedClasses) {
       const nextClass = classes.find(
-        (cls) =>
-          cls.order == currentClass.order + 1 && cls.arm == currentClass.arm,
+        (cls) => cls.order == currentClass.order + 1,
+        // cls.order == currentClass.order + 1 && cls.arm == currentClass.arm,
       );
       if (!nextClass) {
         const students = await this.studentModel.find({

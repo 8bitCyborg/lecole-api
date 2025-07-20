@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as MongooseSchema } from 'mongoose';
+import { ClassArm } from './class-arm.schems';
 
 @Schema({ timestamps: true })
 export class Class {
@@ -43,8 +44,11 @@ export class Class {
   @Prop()
   order: number;
 
-  @Prop()
-  arm: string;
+  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'ClassArm' }] })
+  classArms: ClassArm[];
+
+  // @Prop()
+  // arm: string;
 
   @Prop()
   alt: string;

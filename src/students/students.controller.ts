@@ -30,7 +30,16 @@ export class StudentsController {
   @Post(':id')
   async addStudent(
     @Param('id') schoolId: string,
-    @Body() studentData: StudentDto,
+    @Body()
+    studentData: {
+      classId: string;
+      termId: string;
+      sessionId: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      phone?: string;
+    },
   ) {
     return this.studentService.addStudent(schoolId, studentData);
   }
@@ -38,7 +47,16 @@ export class StudentsController {
   @Post('/bulk/:id')
   async bulkEntry(
     @Param('id') schoolId: string,
-    @Body() studentData: Student[],
+    @Body()
+    studentData: {
+      classId: string;
+      termId: string;
+      sessionId: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      phone?: string;
+    }[],
   ) {
     return this.studentService.bulkEntry(schoolId, studentData);
   }
