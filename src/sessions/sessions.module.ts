@@ -14,6 +14,7 @@ import { Subject, SubjectSchema } from 'src/subjects/schemas/subject.schema';
 import { SchoolsService } from 'src/schools/schools.service';
 import { User, UserSchema } from 'src/users/schemas/user.schema';
 import { Student, StudentSchema } from 'src/students/schemas/student.schema';
+import { ClassArm, ClassArmSchema } from 'src/classes/schemas/class-arm.schema';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { Student, StudentSchema } from 'src/students/schemas/student.schema';
       { name: Subject.name, schema: SubjectSchema },
       { name: User.name, schema: UserSchema },
       { name: Student.name, schema: StudentSchema },
+      { name: ClassArm.name, schema: ClassArmSchema },
     ]),
   ],
   controllers: [SessionsController],

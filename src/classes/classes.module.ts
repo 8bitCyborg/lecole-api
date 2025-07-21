@@ -8,11 +8,13 @@ import {
   AssessmentRecordSchema,
 } from 'src/assessment-records/schemas/assessment-records.schema';
 import { AssessmentRecordsService } from 'src/assessment-records/assessment-records.service';
+import { ClassArm, ClassArmSchema } from './schemas/class-arm.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Class.name, schema: ClassSchema },
+      { name: ClassArm.name, schema: ClassArmSchema },
       { name: AssessmentRecord.name, schema: AssessmentRecordSchema },
     ]),
   ],

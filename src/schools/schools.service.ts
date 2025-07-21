@@ -12,6 +12,7 @@ import { Subject } from 'src/subjects/schemas/subject.schema';
 import { Student } from 'src/students/schemas/student.schema';
 import { Response } from 'express';
 import { AnnouncementsSchema } from './schemas/announcement.schema';
+import { ClassArm } from 'src/classes/schemas/class-arm.schema';
 
 @Injectable()
 export class SchoolsService {
@@ -19,6 +20,7 @@ export class SchoolsService {
     @InjectModel(School.name) private schoolModel,
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Class.name) private classModel: Model<Class>,
+    @InjectModel(ClassArm.name) private classArmModel: Model<ClassArm>,
     @InjectModel(Term.name) private termModel: Model<Term>,
     @InjectModel(AssessmentRecord.name)
     private assessmentRecordModel: Model<Term>,
@@ -74,14 +76,25 @@ export class SchoolsService {
         { name: 'SSS 3', alt: 'Grade 12', order: 16, arm: 'A' },
       ];
 
-      const classDocs = defaultClasses.map((classItem) => ({
-        name: classItem.name,
-        alt: classItem.alt,
-        order: classItem.order,
-        arm: classItem.arm,
-        schoolId: school._id,
-      }));
-      await this.classModel.insertMany(classDocs);
+      let classDocs = defaultClasses.map(async (classItem) => {
+        const defaultArm = await this.classArmModel.create({
+          name: classItem.arm,
+          alt: '',
+          order: classItem.order,
+          schoolId: school._id,
+        });
+        return {
+          name: classItem.name,
+          alt: classItem.alt,
+          order: classItem.order,
+          subClass: classItem.arm,
+          schoolId: school._id,
+          classArms: [defaultArm._id],
+        };
+      });
+      const result = await Promise.all(classDocs);
+
+      await this.classModel.insertMany(result);
 
       return school;
     } catch (error) {

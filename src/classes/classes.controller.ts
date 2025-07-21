@@ -26,18 +26,30 @@ export class ClassesController {
     return this.classesService.update(classId, termId, updateClassDto);
   }
 
+  @Post('create/arm/:classId')
+  createArm(
+    @Param('classId') classId: string,
+    @Body() createArm: { name: string; alt?: string; classId: string },
+  ) {
+    return this.classesService.createArm(classId, createArm);
+  }
+
+  @Post('update/arm/:armId/:termId')
+  updateArm(
+    @Param('armId') armId: string,
+    @Param('termId') termId: string,
+    @Body() updateClassDto: UpdateClassDto,
+  ) {
+    return this.classesService.updateArm(armId, termId, updateClassDto);
+  }
+
   @Get('details/:classId')
   findOne(@Param('classId') classId: string) {
     return this.classesService.findClass(classId);
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.classesService.findOne(+id);
-  // }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.classesService.remove(+id);
+  @Get('details/arm/:armId')
+  finClassArm(@Param('armId') armId: string) {
+    return this.classesService.findClassArm(armId);
   }
 }

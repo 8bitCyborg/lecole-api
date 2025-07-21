@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { School } from '../../schools/schemas/school.schema';
 import { User } from 'src/users/schemas/user.schema';
+import { ClassArm } from 'src/classes/schemas/class-arm.schema';
 
 @Schema({ timestamps: true })
 export class Student extends Document {
@@ -22,6 +23,12 @@ export class Student extends Document {
 
   // @Prop({ required: true })
   // admissionClass: string;
+
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'School' })
+  schoolId: School;
+
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'ClassArm' })
+  armId: ClassArm;
 
   @Prop({
     type: String,
@@ -64,9 +71,6 @@ export class Student extends Document {
 
   @Prop()
   address: string;
-
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'School' })
-  schoolId: School;
 
   @Prop()
   recordsId: string;

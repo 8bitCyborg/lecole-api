@@ -3,10 +3,10 @@ import mongoose, { Document } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class Subject extends Document {
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true })
   name: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true })
   code: string;
 
   // @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Class' }] })

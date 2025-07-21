@@ -13,6 +13,7 @@ import {
 } from 'src/assessment-records/schemas/assessment-records.schema';
 import { Subject, SubjectSchema } from 'src/subjects/schemas/subject.schema';
 import { Student, StudentSchema } from 'src/students/schemas/student.schema';
+import { ClassArm, ClassArmSchema } from 'src/classes/schemas/class-arm.schema';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { Student, StudentSchema } from 'src/students/schemas/student.schema';
       { name: School.name, schema: SchoolSchema },
       { name: User.name, schema: UserSchema },
       { name: Class.name, schema: ClassSchema },
+      { name: ClassArm.name, schema: ClassArmSchema },
       { name: Term.name, schema: TermSchema },
       { name: AssessmentRecord.name, schema: AssessmentRecordSchema },
       { name: Subject.name, schema: SubjectSchema },

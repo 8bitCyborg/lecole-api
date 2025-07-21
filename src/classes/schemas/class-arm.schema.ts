@@ -7,6 +7,9 @@ export class ClassArm {
   @Prop({ required: true })
   name: string; // "A", "B", "C", etc.
 
+  @Prop()
+  alt: string; // "A", "B", "C", etc.
+
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Staff' })
   classTeacher?: MongooseSchema.Types.ObjectId;
 

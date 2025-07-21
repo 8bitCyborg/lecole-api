@@ -2,14 +2,12 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { AuthUtilsService } from './authUtils/auth.utils';
-import { Users } from 'src/users/entity/user.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { getJwtConfig } from '../config/configuration';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './authUtils/auth.guard';
 import { UsersModule } from 'src/users/users.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/users/schemas/user.schema';
 import { School, SchoolSchema } from 'src/schools/schemas/school.schema';
@@ -22,6 +20,7 @@ import {
 } from 'src/assessment-records/schemas/assessment-records.schema';
 import { Subject, SubjectSchema } from 'src/subjects/schemas/subject.schema';
 import { Student, StudentSchema } from 'src/students/schemas/student.schema';
+import { ClassArm, ClassArmSchema } from 'src/classes/schemas/class-arm.schema';
 @Module({
   imports: [
     // TypeOrmModule.forFeature([Users]),
@@ -33,6 +32,7 @@ import { Student, StudentSchema } from 'src/students/schemas/student.schema';
       { name: AssessmentRecord.name, schema: AssessmentRecordSchema },
       { name: Subject.name, schema: SubjectSchema },
       { name: Student.name, schema: StudentSchema },
+      { name: ClassArm.name, schema: ClassArmSchema },
     ]),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => {

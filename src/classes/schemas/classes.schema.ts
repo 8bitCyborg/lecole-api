@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as MongooseSchema } from 'mongoose';
-import { ClassArm } from './class-arm.schems';
+import { ClassArm } from './class-arm.schema';
 
 @Schema({ timestamps: true })
 export class Class {
