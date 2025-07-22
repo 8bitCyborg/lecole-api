@@ -39,6 +39,7 @@ export class StudentsController {
       lastName: string;
       email: string;
       phone?: string;
+      armId: string;
     },
   ) {
     return this.studentService.addStudent(schoolId, studentData);

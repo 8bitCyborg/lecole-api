@@ -30,6 +30,7 @@ export class StudentsService {
       lastName: string;
       email: string;
       phone?: string;
+      armId: string;
     },
   ) {
     try {
@@ -54,13 +55,6 @@ export class StudentsService {
       });
 
       const classInfo = await this.classModel.findById(studentData.classId);
-      // const subjects = classInfo?.subjects.map((subject) => {
-      //   return {
-      //     subjectId: subject,
-      //     ca: 0,
-      //     exam: 0,
-      //   };
-      // });
 
       const subjectGroups = classInfo?.subjectGroups.map((group) => {
         return {
@@ -77,6 +71,7 @@ export class StudentsService {
         sessionId: studentData.sessionId,
         schoolId: student.schoolId,
         subjectScores: subjectGroups,
+        armId: studentData.armId,
         // subjectScores: subjects,
       });
 
@@ -97,6 +92,7 @@ export class StudentsService {
       lastName: string;
       email: string;
       phone?: string;
+      armId?: string;
     }[],
   ) {
     const data = students;
@@ -122,13 +118,6 @@ export class StudentsService {
       });
 
       const classInfo = await this.classModel.findById(studentData.classId);
-      const subjects = classInfo?.subjects.map((subject) => {
-        return {
-          subjectId: subject,
-          ca: 0,
-          exam: 0,
-        };
-      });
 
       const subjectGroups = classInfo?.subjectGroups.map((group) => {
         return {
@@ -145,7 +134,7 @@ export class StudentsService {
         sessionId: studentData.sessionId,
         schoolId: student.schoolId,
         subjectScores: subjectGroups,
-        // subjectScores: subjects,
+        armId: studentData.armId,
       });
 
       return student;

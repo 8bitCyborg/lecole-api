@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document, Types } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
+import { ClassArm } from 'src/classes/schemas/class-arm.schema';
+import { Schema as MongooseSchema } from 'mongoose';
 
 // export const AssessmentRecordSchema = new Schema<IAssessmentRecord>(
 //   {
@@ -59,6 +61,13 @@ export class AssessmentRecord {
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Class' })
   classId: Types.ObjectId;
+
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'ClassArm',
+    required: true,
+  })
+  armId: ClassArm;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,

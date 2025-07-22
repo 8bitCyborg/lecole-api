@@ -121,10 +121,13 @@ export class ClassesService {
     if (!termId || termId == undefined) {
       return updatedClass;
     }
+
     const assessmentRecords = await this.assessmentRecordModel.find({
-      classId: id,
+      armId: id,
       termId: termId,
     });
+
+    console.log('Arm Assessment records: ', assessmentRecords);
 
     for (const record of assessmentRecords) {
       const currentSubjectIds = record.subjectScores.map((a) =>
