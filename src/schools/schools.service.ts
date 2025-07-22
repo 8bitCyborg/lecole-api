@@ -13,6 +13,7 @@ import { Student } from 'src/students/schemas/student.schema';
 import { Response } from 'express';
 import { AnnouncementsSchema } from './schemas/announcement.schema';
 import { ClassArm } from 'src/classes/schemas/class-arm.schema';
+import { ClassType } from 'types';
 
 @Injectable()
 export class SchoolsService {
@@ -76,25 +77,73 @@ export class SchoolsService {
         { name: 'SSS 3', alt: 'Grade 12', order: 16, arm: 'A' },
       ];
 
-      let classDocs = defaultClasses.map(async (classItem) => {
+      // let classDocs = defaultClasses.map(async (classItem) => {
+      //   const defaultArm = await this.classArmModel.create({
+      //     name: classItem.arm,
+      //     alt: '',
+      //     order: classItem.order,
+      //     schoolId: school._id,
+      //   });
+      //   return {
+      //     name: classItem.name,
+      //     alt: classItem.alt,
+      //     order: classItem.order,
+      //     subClass: classItem.arm,
+      //     schoolId: school._id,
+      //     classArms: [defaultArm._id],
+      //   };
+      // });
+      // const result = await Promise.all(classDocs);
+
+      // await this.classModel.insertMany(result);
+
+      ///////////////////////////////////////////////////
+
+      // const classDocs = defaultClasses.map(async (classItem) => {
+      //   const defaultArm = await this.classArmModel.create({
+      //     name: classItem.arm,
+      //     alt: '',
+      //     order: classItem.order,
+      //     schoolId: school._id,
+      //   });
+      //   const tempClass = await this.classModel.create({
+      //     name: classItem.name,
+      //     alt: classItem.alt,
+      //     order: classItem.order,
+      //     subClass: classItem.arm,
+      //     schoolId: school._id,
+      //     classArms: [defaultArm._id],
+      //   });
+      //   await defaultArm.updateOne({ classId: tempClass._id });
+      //   await defaultArm.save();
+      // });
+
+      // await Promise.all(classDocs);
+
+      const classDocs: any = [];
+
+      for (const classItem of defaultClasses) {
         const defaultArm = await this.classArmModel.create({
           name: classItem.arm,
           alt: '',
           order: classItem.order,
           schoolId: school._id,
         });
-        return {
+
+        const tempClass = await this.classModel.create({
           name: classItem.name,
           alt: classItem.alt,
           order: classItem.order,
           subClass: classItem.arm,
           schoolId: school._id,
           classArms: [defaultArm._id],
-        };
-      });
-      const result = await Promise.all(classDocs);
+        });
 
-      await this.classModel.insertMany(result);
+        await defaultArm.updateOne({ classId: tempClass._id });
+        await defaultArm.save();
+
+        classDocs.push(tempClass);
+      }
 
       return school;
     } catch (error) {

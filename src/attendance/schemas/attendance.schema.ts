@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import { ClassArm } from 'src/classes/schemas/class-arm.schema';
 import { Class } from 'src/classes/schemas/classes.schema';
 import { School } from 'src/schools/schemas/school.schema';
 import { Session } from 'src/sessions/schemas/session.schema';
@@ -17,6 +18,13 @@ export class Attendance extends Document {
     required: true,
   })
   classId: Class;
+
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'ClassArm',
+    required: true,
+  })
+  armId: ClassArm;
 
   @Prop({
     type: MongooseSchema.Types.ObjectId,
