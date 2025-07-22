@@ -26,7 +26,7 @@ export class SchoolsService {
     @InjectModel(AssessmentRecord.name)
     private assessmentRecordModel: Model<Term>,
     @InjectModel(Subject.name) private subjectModel: Model<Term>,
-    @InjectModel(Student.name) private studentModel: Model<Term>,
+    @InjectModel(Student.name) private studentModel: Model<Student>,
   ) {}
 
   async createSchool(schoolDetails: CreateSchoolDto, res?: Response) {
@@ -212,8 +212,7 @@ export class SchoolsService {
   }
 
   async beginTerm(schoolId: string, termId) {
-    console.log('SchoolD: ', schoolId, 'TermId: ', termId);
-    const term = await this.termModel.findByIdAndUpdate(
+    await this.termModel.findByIdAndUpdate(
       termId,
       { status: 'active' },
       { new: true },
@@ -254,6 +253,7 @@ export class SchoolsService {
             sessionId: schoolData?.currentSessionId,
             schoolId: schoolId,
             subjectScores: subjectGroups,
+            armId: student?.armId,
           });
         }
       });
@@ -279,9 +279,5 @@ export class SchoolsService {
     );
 
     console.log('School returned: ', school);
-
-    // return school;
-
-    // throw new BadRequestException('Invalid input data');
   }
 }

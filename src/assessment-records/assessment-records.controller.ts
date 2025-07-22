@@ -11,7 +11,6 @@ export class AssessmentRecordsController {
 
   @Post('student/:studentId')
   getStudentRecords(@Body() recordDetails: any) {
-    console.log('Record details: ', recordDetails);
     return this.assessmentRecordsService.getStudentRecords(recordDetails);
   }
 
@@ -30,8 +29,6 @@ export class AssessmentRecordsController {
 
   @Get('subject/:termId/:subjectId/:classId')
   getSubjectRecords(@Param() termId, @Param() subjectId, @Param() classId) {
-    console.log('SubjectId: ', subjectId.subjectId);
-    console.log('TermId: ', termId.termId);
     return this.assessmentRecordsService.getRecordsBySubjects(
       termId.termId,
       subjectId.subjectId,

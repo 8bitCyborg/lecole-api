@@ -72,7 +72,6 @@ export class StudentsService {
         schoolId: student.schoolId,
         subjectScores: subjectGroups,
         armId: studentData.armId,
-        // subjectScores: subjects,
       });
 
       return student;

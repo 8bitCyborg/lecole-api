@@ -21,7 +21,6 @@ export class AssessmentRecordsService {
     subjectScores: string[];
     subjectGroups: { subjectId: string; teacherId: string }[];
   }) {
-    console.log('Service record: ', recordDetails);
     const records = await this.assessmentRecordModel
       .findOne({
         studentId: recordDetails.studentId,
@@ -31,7 +30,6 @@ export class AssessmentRecordsService {
         schoolId: recordDetails.schoolId,
       })
       .populate('subjectScores.subjectId');
-    console.log('Records Returned: ', records);
     if (!records) {
       const subjectGroups = recordDetails?.subjectGroups.map(
         (group: { subjectId: string; teacherId: string }) => {
@@ -56,10 +54,8 @@ export class AssessmentRecordsService {
         .findById(newRecord._id)
         .populate('subjectScores.subjectId');
 
-      console.log('New Record: ', populatedResult);
       return populatedResult;
     }
-    console.log('Records: ', records);
     return records;
   }
 
@@ -83,7 +79,6 @@ export class AssessmentRecordsService {
         recordData,
         { upsert: true, new: true },
       );
-      console.log('Record: ', record);
       return record;
     } catch (error) {
       console.log('error', error);
@@ -104,7 +99,6 @@ export class AssessmentRecordsService {
     subjectId: string,
     classId: string,
   ) {
-    console.log('subject', termId, subjectId, classId);
     try {
       const records = await this.assessmentRecordModel
         .find({
@@ -113,7 +107,6 @@ export class AssessmentRecordsService {
           'subjectScores.subjectId': subjectId,
         })
         .populate('studentId');
-      // console.log('records: ', records);
       return records;
     } catch (error) {
       console.log('Error', error);

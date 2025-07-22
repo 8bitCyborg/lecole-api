@@ -22,6 +22,12 @@ export class ClassesService {
       .populate('subjectGroups.subjectId')
       .populate('classArms')
       .populate({
+        path: 'classArms',
+        populate: {
+          path: 'subjectGroups.subjectId',
+        },
+      })
+      .populate({
         path: 'classTeacher',
         populate: {
           path: 'userId',
@@ -70,11 +76,11 @@ export class ClassesService {
       const toAdd = updatedClassSubjectIds.filter(
         (id) => !currentSubjectIds.includes(id),
       );
-      console.log('Subjects to add: ', toAdd);
-      console.log(
-        'Updated class subject IDs from subjectGroups: ',
-        updatedClassSubjectIds,
-      );
+      // console.log('Subjects to add: ', toAdd);
+      // console.log(
+      //   'Updated class subject IDs from subjectGroups: ',
+      //   updatedClassSubjectIds,
+      // );
 
       const toRemove = currentSubjectIds.filter((id) => {
         return !updatedClassSubjectIds.includes(id);
@@ -87,7 +93,7 @@ export class ClassesService {
 
       // Add subjectScores for new subjects
       toAdd?.forEach((subjectId) => {
-        console.log('Adding subject score for: ', subjectId);
+        // console.log('Adding subject score for: ', subjectId);
         record.subjectScores.push({
           subjectId: new mongoose.Types.ObjectId(subjectId.toString()),
           ca: 0,
@@ -96,8 +102,9 @@ export class ClassesService {
         });
       });
 
-      return await record.save();
+      await record.save();
     }
+    return assessmentRecords;
   }
 
   async update(id: string, termId: string, updateClassDto: UpdateClassDto) {
@@ -127,8 +134,6 @@ export class ClassesService {
       termId: termId,
     });
 
-    console.log('Arm Assessment records: ', assessmentRecords);
-
     for (const record of assessmentRecords) {
       const currentSubjectIds = record.subjectScores.map((a) =>
         a.subjectId.toString(),
@@ -144,10 +149,6 @@ export class ClassesService {
         (id) => !currentSubjectIds.includes(id),
       );
       console.log('Subjects to add: ', toAdd);
-      console.log(
-        'Updated class subject IDs from subjectGroups: ',
-        updatedClassSubjectIds,
-      );
 
       const toRemove = currentSubjectIds.filter((id) => {
         return !updatedClassSubjectIds.includes(id);
@@ -160,7 +161,6 @@ export class ClassesService {
 
       // Add subjectScores for new subjects
       toAdd?.forEach((subjectId) => {
-        console.log('Adding subject score for: ', subjectId);
         record.subjectScores.push({
           subjectId: new mongoose.Types.ObjectId(subjectId.toString()),
           ca: 0,
@@ -169,8 +169,9 @@ export class ClassesService {
         });
       });
 
-      return await record.save();
+      await record.save();
     }
+    return assessmentRecords;
   }
 
   async createArm(
