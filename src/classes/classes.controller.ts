@@ -52,4 +52,9 @@ export class ClassesController {
   finClassArm(@Param('armId') armId: string) {
     return this.classesService.findClassArm(armId);
   }
+
+  @Get('arm/all/:schoolId')
+  findAllClassArms(@Param('schoolId') schoolId: string) {
+    return this.classesService.findAllClassArms(schoolId);
+  }
 }

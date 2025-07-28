@@ -192,7 +192,8 @@ export class StudentsService {
       );
       if (!nextClass) {
         await this.studentModel.updateMany(
-          { classId: currentClass._id },
+          { classId: currentClass._id, armId: currentClass.classArms[0] },
+
           { $set: { currentStatus: 'graduated' } },
         );
         continue;
@@ -290,7 +291,7 @@ export class StudentsService {
           if (averageScore >= promotionCriteria) {
             const currentStudent = await this.studentModel.findByIdAndUpdate(
               student._id,
-              { classId: nextClass._id },
+              { classId: nextClass._id, armId: nextClass.classArms[0] },
             );
           }
         }

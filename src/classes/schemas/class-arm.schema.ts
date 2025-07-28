@@ -46,6 +46,9 @@ export class ClassArm {
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Class' })
   classId: MongooseSchema.Types.ObjectId;
+
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'School', required: true })
+  schoolId: MongooseSchema.Types.ObjectId;
 }
 
 export const ClassArmSchema = SchemaFactory.createForClass(ClassArm);

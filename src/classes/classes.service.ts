@@ -204,4 +204,18 @@ export class ClassesService {
       .populate('classId');
     return classData;
   }
+
+  async findAllClassArms(schoolId: string) {
+    const arms = await this.classArmModel
+      .find({ schoolId })
+      .populate('classId')
+      .populate({
+        path: 'classTeacher',
+        populate: {
+          path: 'userId',
+        },
+      });
+    console.log('All arms: ', arms);
+    return arms;
+  }
 }
