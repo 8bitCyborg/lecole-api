@@ -28,12 +28,32 @@ export class UsersService {
     }
   }
 
+  async getUserById(id: string) {
+    try {
+      const user = await this.userModel.findById(id);
+      return user?.toObject();
+    } catch (error) {
+      console.log('Error getting user by ID: ', error);
+      return false;
+    }
+  }
+
   async updateUser(data: UserDto) {
     try {
       const user = await this.userModel.updateOne({ _id: data._id }, data);
       return user;
     } catch (error) {
       console.log('Error updating user: ', error);
+    }
+  }
+
+  async updateUserById(id: string, data: UserDto) {
+    try {
+      const user = await this.userModel.findByIdAndUpdate(data);
+      return user?.toObject();
+    } catch (error) {
+      console.log('Error updating user by ID: ', error);
+      throw new Error('User not found');
     }
   }
 
