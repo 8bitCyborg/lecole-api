@@ -85,16 +85,18 @@ export class AuthService {
   }
 
   async Register(data: any, res: Response) {
+    console.log('registering user');
+
     try {
       const checkIfUserExists = await this.userModel.findOne({
         email: data.email.toLowerCase(),
       });
-      if(checkIfUserExists) {
+      if (checkIfUserExists) {
         return res.status(400).send({
           message: 'User already exists',
           status: 400,
         });
-      };
+      }
 
       const user = await this.userService.createUser({
         ...data,
@@ -107,7 +109,7 @@ export class AuthService {
           message: 'Failed to create user',
           status: 500,
         });
-      };
+      }
 
       const school = await this.schoolService.createSchool({
         ...data,
@@ -120,8 +122,15 @@ export class AuthService {
         _id: user._id.toString(),
         email: user.email,
         schoolId: school._id,
-        loginId: data.role.slice(0, 3).toUpperCase() + '-' + school.shortCode + '-' + user._id.toString().slice(-3).toUpperCase(),
+        loginId:
+          data.role.slice(0, 3).toUpperCase() +
+          '-' +
+          school.shortCode +
+          '-' +
+          user._id.toString().slice(-3).toUpperCase(),
       });
+
+      console.log('Here', school);
 
       return res.status(200).send({
         message: 'Registration successful',
@@ -135,13 +144,12 @@ export class AuthService {
           ),
         },
       });
-
     } catch (error) {
+      console.log('Error', error);
       return res.status(500).send({
         message: error,
         status: 500,
       });
-    };
-
-  };
-};
+    }
+  }
+}
