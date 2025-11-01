@@ -1,9 +1,24 @@
 import { Controller, Post, Body, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
-import ROUTES from 'src/utils/routes';
+// import ROUTES from 'src/utils/routes';
 import { Public } from './authUtils/auth.guard';
-@Controller(ROUTES.auth.parent)
+// import ROUTES from '../utils/routes';
+// @Controller(ROUTES.auth.parent)
+
+const ROUTES = {
+  auth: {
+    parent: 'auth',
+    login: 'login',
+    register: 'register',
+  },
+  users: {
+    parent: 'users',
+  },
+};
+
+export default ROUTES;
+
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
