@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { Users } from '../../users/entity/user.entity';
+import { Users } from 'src/users/entity/user.entity';
 // import { Users } from 'src/users/entity/user.entity';
 import {
   Column,
