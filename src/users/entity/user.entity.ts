@@ -10,7 +10,8 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { Staff } from '../../staff/entities/staff.entity';
-import { School } from 'src/schools/entities/school.entity';
+import { School } from '../../schools/entities/school.entity';
+// import { School } from 'src/schools/entities/school.entity';
 
 export enum UserRole {
   SUPERADMIN = 'superadmin',
