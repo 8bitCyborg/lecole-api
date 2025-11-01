@@ -18,7 +18,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
   // app.use(new DelayMiddleware().use);
-  app.enableCors();
+  app.enableCors({
+    origin: '*',
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: 'Content-Type, Authorization, Accept',
+  });
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
