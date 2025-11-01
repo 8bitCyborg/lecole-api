@@ -30,12 +30,13 @@ export class Class {
         type: MongooseSchema.Types.ObjectId,
         ref: 'Staff',
         default: null,
+        set: (value: any) => (value === '' ? null : value),
       },
     },
   ])
   subjectGroups: {
     subjectId: MongooseSchema.Types.ObjectId;
-    teacherId?: MongooseSchema.Types.ObjectId;
+    teacherId?: MongooseSchema.Types.ObjectId | null;
   }[];
 
   @Prop({ default: 'A' })
