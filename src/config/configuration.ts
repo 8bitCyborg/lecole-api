@@ -1,8 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { join } from 'path';
-import { Students } from 'src/students/entity/student.entity';
-import { Users } from 'src/users/entity/user.entity';
 
 export const getJwtConfig = (configService: ConfigService) => ({
   jwtSecret: configService.get<string>('JWT_SECRET'),
