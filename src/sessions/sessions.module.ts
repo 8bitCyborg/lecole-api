@@ -3,18 +3,18 @@ import { Module } from '@nestjs/common';
 import { SessionsService } from './sessions.service';
 import { SessionsController } from './sessions.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { School, SchoolSchema } from 'src/schools/schemas/school.schema';
-import { Term, TermSchema } from 'src/terms/schemas/term.schema';
-import { Class, ClassSchema } from 'src/classes/schemas/classes.schema';
+import { School, SchoolSchema } from '../schools/schemas/school.schema';
+import { Term, TermSchema } from '../terms/schemas/term.schema';
+import { Class, ClassSchema } from '../classes/schemas/classes.schema';
 import {
   AssessmentRecord,
   AssessmentRecordSchema,
-} from 'src/assessment-records/schemas/assessment-records.schema';
-import { Subject, SubjectSchema } from 'src/subjects/schemas/subject.schema';
-import { SchoolsService } from 'src/schools/schools.service';
-import { User, UserSchema } from 'src/users/schemas/user.schema';
-import { Student, StudentSchema } from 'src/students/schemas/student.schema';
-import { ClassArm, ClassArmSchema } from 'src/classes/schemas/class-arm.schema';
+} from '../assessment-records/schemas/assessment-records.schema';
+import { Subject, SubjectSchema } from '../subjects/schemas/subject.schema';
+import { SchoolsService } from '../schools/schools.service';
+import { User, UserSchema } from '../users/schemas/user.schema';
+import { Student, StudentSchema } from '../students/schemas/student.schema';
+import { ClassArm, ClassArmSchema } from '../classes/schemas/class-arm.schema';
 
 @Module({
   imports: [

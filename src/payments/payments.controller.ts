@@ -10,7 +10,7 @@ import {
 import { PaymentsService } from './payments.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
-import { Public } from 'src/auth/authUtils/auth.guard';
+import { Public } from '../auth/authUtils/auth.guard';
 
 @Controller('payments')
 export class PaymentsController {

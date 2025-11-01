@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { School } from '../../schools/schemas/school.schema';
-import { User } from 'src/users/schemas/user.schema';
-import { ClassArm } from 'src/classes/schemas/class-arm.schema';
+import { User } from '../../users/schemas/user.schema';
+import { ClassArm } from '../../classes/schemas/class-arm.schema';
 
 @Schema({ timestamps: true })
 export class Student extends Document {

@@ -1,8 +1,8 @@
 import { Session } from './../../sessions/schemas/session.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
-import { Staff } from 'src/staff/schemas/staff.schema';
-import { Student } from 'src/students/schemas/student.schema';
+import { Staff } from '../../staff/schemas/staff.schema';
+import { Student } from '../../students/schemas/student.schema';
 import { GradingScheme } from './grading.schama';
 import { AnnouncementsSchema } from './announcement.schema';
 

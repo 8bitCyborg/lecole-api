@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { School } from 'src/schools/schemas/school.schema';
+import { School } from '../../schools/schemas/school.schema';
 export class UserDto {
   _id: string;
   firstName?: string;

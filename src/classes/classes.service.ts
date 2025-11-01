@@ -3,7 +3,7 @@ import { UpdateClassDto } from './dto/update-class.dto';
 import { Class } from './schemas/classes.schema';
 import mongoose, { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { AssessmentRecord } from 'src/assessment-records/schemas/assessment-records.schema';
+import { AssessmentRecord } from '../assessment-records/schemas/assessment-records.schema';
 import { ClassArm } from './schemas/class-arm.schema';
 
 @Injectable()

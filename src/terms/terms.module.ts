@@ -6,9 +6,9 @@ import { Term, TermSchema } from './schemas/term.schema';
 import {
   AssessmentRecord,
   AssessmentRecordSchema,
-} from 'src/assessment-records/schemas/assessment-records.schema';
-import { Class, ClassSchema } from 'src/classes/schemas/classes.schema';
-import { Subject, SubjectSchema } from 'src/subjects/schemas/subject.schema';
+} from '../assessment-records/schemas/assessment-records.schema';
+import { Class, ClassSchema } from '../classes/schemas/classes.schema';
+import { Subject, SubjectSchema } from '../subjects/schemas/subject.schema';
 
 @Module({
   imports: [

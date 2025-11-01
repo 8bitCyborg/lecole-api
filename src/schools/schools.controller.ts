@@ -11,7 +11,7 @@ import {
 import { SchoolsService } from './schools.service';
 import { CreateSchoolDto } from './dto/create-school.dto';
 import { UpdateSchoolDto } from './dto/update-school.dto';
-import { Public } from 'src/auth/authUtils/auth.guard';
+import { Public } from '../auth/authUtils/auth.guard';
 import { GradingScheme } from './schemas/grading.schama';
 import { AnnouncementsSchema } from './schemas/announcement.schema';
 

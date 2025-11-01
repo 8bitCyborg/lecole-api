@@ -3,15 +3,15 @@ import { StudentsController } from './students.controller';
 import { StudentsService } from './students.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Student, StudentSchema } from './schemas/student.schema';
-import { User, UserSchema } from 'src/users/schemas/user.schema';
+import { User, UserSchema } from '../users/schemas/user.schema';
 import {
   AssessmentRecord,
   AssessmentRecordSchema,
-} from 'src/assessment-records/schemas/assessment-records.schema';
-import { Class, ClassSchema } from 'src/classes/schemas/classes.schema';
-import { AuthUtilsService } from 'src/auth/authUtils/auth.utils';
+} from '../assessment-records/schemas/assessment-records.schema';
+import { Class, ClassSchema } from '../classes/schemas/classes.schema';
+import { AuthUtilsService } from '../auth/authUtils/auth.utils';
 import { JwtModule } from '@nestjs/jwt';
-import { getJwtConfig } from 'src/config/configuration';
+import { getJwtConfig } from '../config/configuration';
 import { ConfigService } from '@nestjs/config';
 
 @Module({

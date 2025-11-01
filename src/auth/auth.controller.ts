@@ -1,7 +1,7 @@
 import { Controller, Post, Body, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
-// import ROUTES from 'src/utils/routes';
+// import ROUTES from '../utils/routes';
 import { Public } from './authUtils/auth.guard';
 // import ROUTES from '../utils/routes';
 

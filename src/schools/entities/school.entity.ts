@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
-import { Users } from 'src/users/entity/user.entity';
-// import { Users } from 'src/users/entity/user.entity';
+import { Users } from '../../users/entity/user.entity';
+// import { Users } from '../../users/entity/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -8,9 +8,9 @@ import {
   ObjectIdColumn,
   OneToMany,
 } from 'typeorm';
-import { Session } from 'src/sessions/entity/session.entity';
-import { Students } from 'src/students/entity/student.entity';
-import { Staff } from 'src/staff/entities/staff.entity';
+import { Session } from '../../sessions/entity/session.entity';
+import { Students } from '../../students/entity/student.entity';
+import { Staff } from '../../staff/entities/staff.entity';
 
 export enum SubscriptionStatus {
   ACTIVE = 'active',

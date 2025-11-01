@@ -6,8 +6,8 @@ import { Class, ClassSchema } from './schemas/classes.schema';
 import {
   AssessmentRecord,
   AssessmentRecordSchema,
-} from 'src/assessment-records/schemas/assessment-records.schema';
-import { AssessmentRecordsService } from 'src/assessment-records/assessment-records.service';
+} from '../assessment-records/schemas/assessment-records.schema';
+import { AssessmentRecordsService } from '../assessment-records/assessment-records.service';
 import { ClassArm, ClassArmSchema } from './schemas/class-arm.schema';
 
 @Module({

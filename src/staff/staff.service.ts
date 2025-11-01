@@ -4,9 +4,9 @@ import { CreateStaffDto } from './dto/create-staff.dto';
 import { ObjectId } from 'mongodb';
 import { Staff } from './schemas/staff.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from 'src/users/schemas/user.schema';
+import { User } from '../users/schemas/user.schema';
 import { Model } from 'mongoose';
-import { AuthUtilsService } from 'src/auth/authUtils/auth.utils';
+import { AuthUtilsService } from '../auth/authUtils/auth.utils';
 
 @Injectable()
 export class StaffService {

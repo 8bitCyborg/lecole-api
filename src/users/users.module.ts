@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Users } from './entity/user.entity';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './schemas/user.schema';
-import { AuthUtilsService } from 'src/auth/authUtils/auth.utils';
+import { AuthUtilsService } from '../auth/authUtils/auth.utils';
 
 @Module({
   imports: [

@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Student } from './schemas/student.schema';
-import { User } from 'src/users/schemas/user.schema';
+import { User } from '../users/schemas/user.schema';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
-import { AssessmentRecord } from 'src/assessment-records/schemas/assessment-records.schema';
-import { Class } from 'src/classes/schemas/classes.schema';
-import { AuthUtilsService } from 'src/auth/authUtils/auth.utils';
+import { AssessmentRecord } from '../assessment-records/schemas/assessment-records.schema';
+import { Class } from '../classes/schemas/classes.schema';
+import { AuthUtilsService } from '../auth/authUtils/auth.utils';
 
 @Injectable()
 export class StudentsService {

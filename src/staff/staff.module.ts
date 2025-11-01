@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { StaffService } from './staff.service';
 import { StaffController } from './staff.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from 'src/users/schemas/user.schema';
+import { User, UserSchema } from '../users/schemas/user.schema';
 import { Staff, StaffSchema } from './schemas/staff.schema';
-import { School, SchoolSchema } from 'src/schools/schemas/school.schema';
-import { AuthUtilsService } from 'src/auth/authUtils/auth.utils';
+import { School, SchoolSchema } from '../schools/schemas/school.schema';
+import { AuthUtilsService } from '../auth/authUtils/auth.utils';
 import { JwtModule } from '@nestjs/jwt';
-import { getJwtConfig } from 'src/config/configuration';
+import { getJwtConfig } from '../config/configuration';
 import { ConfigService } from '@nestjs/config';
 
 @Module({

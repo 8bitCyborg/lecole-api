@@ -3,16 +3,16 @@ import { CreateSchoolDto } from './dto/create-school.dto';
 import { UpdateSchoolDto } from './dto/update-school.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { School } from './schemas/school.schema';
-import { User } from 'src/users/schemas/user.schema';
-import { Class } from 'src/classes/schemas/classes.schema';
+import { User } from '../users/schemas/user.schema';
+import { Class } from '../classes/schemas/classes.schema';
 import { Model, Types } from 'mongoose';
-import { Term } from 'src/terms/schemas/term.schema';
-import { AssessmentRecord } from 'src/assessment-records/schemas/assessment-records.schema';
-import { Subject } from 'src/subjects/schemas/subject.schema';
-import { Student } from 'src/students/schemas/student.schema';
+import { Term } from '../terms/schemas/term.schema';
+import { AssessmentRecord } from '../assessment-records/schemas/assessment-records.schema';
+import { Subject } from '../subjects/schemas/subject.schema';
+import { Student } from '../students/schemas/student.schema';
 import { Response } from 'express';
 import { AnnouncementsSchema } from './schemas/announcement.schema';
-import { ClassArm } from 'src/classes/schemas/class-arm.schema';
+import { ClassArm } from '../classes/schemas/class-arm.schema';
 import { ClassType } from 'types';
 
 @Injectable()

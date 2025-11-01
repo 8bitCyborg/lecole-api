@@ -2,12 +2,12 @@ import { Session } from './schemas/session.schema';
 import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { UpdateSessionDto } from './dto/update-session.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { School } from 'src/schools/schemas/school.schema';
-import { Term } from 'src/terms/schemas/term.schema';
-import { AssessmentRecord } from 'src/assessment-records/schemas/assessment-records.schema';
-import { Class } from 'src/classes/schemas/classes.schema';
-import { Subject } from 'src/subjects/schemas/subject.schema';
-import { SchoolsService } from 'src/schools/schools.service';
+import { School } from '../schools/schemas/school.schema';
+import { Term } from '../terms/schemas/term.schema';
+import { AssessmentRecord } from '../assessment-records/schemas/assessment-records.schema';
+import { Class } from '../classes/schemas/classes.schema';
+import { Subject } from '../subjects/schemas/subject.schema';
+import { SchoolsService } from '../schools/schools.service';
 import { Model } from 'mongoose';
 
 @Injectable()

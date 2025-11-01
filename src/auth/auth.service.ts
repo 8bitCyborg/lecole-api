@@ -1,11 +1,11 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthUtilsService } from './authUtils/auth.utils';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from 'src/users/schemas/user.schema';
-import { School } from 'src/schools/schemas/school.schema';
-import { SchoolsService } from 'src/schools/schools.service';
+import { User } from '../users/schemas/user.schema';
+import { School } from '../schools/schemas/school.schema';
+import { SchoolsService } from '../schools/schools.service';
 import { ObjectId } from 'mongodb';
 
 @Injectable()

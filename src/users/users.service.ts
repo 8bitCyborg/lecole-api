@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { RegisterDto } from 'src/auth/dto/register.dto';
+import { RegisterDto } from '../auth/dto/register.dto';
 import { UserDto } from './dto/user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
-import { AuthUtilsService } from 'src/auth/authUtils/auth.utils';
+import { AuthUtilsService } from '../auth/authUtils/auth.utils';
 
 @Injectable()
 export class UsersService {

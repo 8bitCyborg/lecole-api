@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Types } from 'mongoose';
-import { ClassArm } from 'src/classes/schemas/class-arm.schema';
+import { ClassArm } from '../../classes/schemas/class-arm.schema';
 import { Schema as MongooseSchema } from 'mongoose';
 
 // export const AssessmentRecordSchema = new Schema<IAssessmentRecord>(

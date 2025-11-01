@@ -1,11 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
-import { ClassArm } from 'src/classes/schemas/class-arm.schema';
-import { Class } from 'src/classes/schemas/classes.schema';
-import { School } from 'src/schools/schemas/school.schema';
-import { Session } from 'src/sessions/schemas/session.schema';
-import { Student } from 'src/students/schemas/student.schema';
-import { Term } from 'src/terms/schemas/term.schema';
+import { ClassArm } from '../../classes/schemas/class-arm.schema';
+import { Class } from '../../classes/schemas/classes.schema';
+import { School } from '../../schools/schemas/school.schema';
+import { Session } from '../../sessions/schemas/session.schema';
+import { Student } from '../../students/schemas/student.schema';
+import { Term } from '../../terms/schemas/term.schema';
 
 @Schema({ timestamps: true })
 export class Attendance extends Document {

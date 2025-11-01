@@ -6,7 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { ObjectId } from 'mongodb';
-import { School } from 'src/schools/entities/school.entity';
+import { School } from '../../schools/entities/school.entity';
 
 @Entity()
 export class Session {

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Types } from 'mongoose';
-import { School } from 'src/schools/schemas/school.schema';
+import { School } from '../../schools/schemas/school.schema';
 
 @Injectable()
 export class AuthUtilsService {
