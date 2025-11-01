@@ -4,7 +4,6 @@ import { AuthService } from './auth.service';
 // import ROUTES from 'src/utils/routes';
 import { Public } from './authUtils/auth.guard';
 // import ROUTES from '../utils/routes';
-// @Controller(ROUTES.auth.parent)
 
 const ROUTES = {
   auth: {
@@ -19,6 +18,7 @@ const ROUTES = {
 
 export default ROUTES;
 
+@Controller(ROUTES.auth.parent)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
