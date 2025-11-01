@@ -19,7 +19,15 @@ async function bootstrap() {
   app.use(cookieParser());
   // app.use(new DelayMiddleware().use);
   app.enableCors({
-    origin: '*',
+    origin: [
+      'http://localhost:3000',
+      // 'http://localhost:5173',
+      'http://localhost:4000',
+      'https://predus.netlify.app',
+      'https://computerofficial.com',
+      'https://computerofficial.com',
+    ],
+    // origin: '*',
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type, Authorization, Accept',
