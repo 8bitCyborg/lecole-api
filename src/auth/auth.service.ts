@@ -73,6 +73,8 @@ export class AuthService {
   }
 
   async Register(data: any, res: Response) {
+    console.log('registering user');
+
     try {
       const checkIfUserExists = await this.userModel.findOne({
         email: data.email.toLowerCase(),
@@ -116,6 +118,8 @@ export class AuthService {
           user._id.toString().slice(-3).toUpperCase(),
       });
 
+      console.log('Here', school);
+
       return res.status(200).send({
         message: 'Registration successful',
         status: 200,
@@ -129,6 +133,7 @@ export class AuthService {
         },
       });
     } catch (error) {
+      console.log('Error', error);
       return res.status(500).send({
         message: error,
         status: 500,
