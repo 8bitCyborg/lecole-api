@@ -18,18 +18,19 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
   // app.use(new DelayMiddleware().use);
-  app.enableCors({
-    origin: [
-      'http://localhost:3000',
-      // 'http://localhost:5173',
-      'http://localhost:4000',
-      'https://lecole.vercel.app',
-    ],
-    // origin: '*',
-    credentials: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    allowedHeaders: 'Content-Type, Authorization, Accept',
-  });
+  // app.enableCors({
+  //   origin: [
+  //     'http://localhost:3000',
+  //     // 'http://localhost:5173',
+  //     'http://localhost:4000',
+  //     'https://lecole.vercel.app',
+  //   ],
+  //   // origin: '*',
+  //   credentials: true,
+  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  //   allowedHeaders: 'Content-Type, Authorization, Accept',
+  // });
+  app.enableCors();
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
