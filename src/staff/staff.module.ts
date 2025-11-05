@@ -21,9 +21,15 @@ import { ConfigService } from '@nestjs/config';
       useFactory: (configService: ConfigService) => {
         const config = getJwtConfig(configService);
         return {
-          secret: config.jwtSecret,
+          // secret: config.jwtSecret,
+          // signOptions: {
+          //   expiresIn: config.jwtExpiresIn,
+          // },
+          secret:
+            configService.get<string>('JWT_SECRET') ||
+            'default-secret-change-me',
           signOptions: {
-            expiresIn: config.jwtExpiresIn,
+            expiresIn: configService.get<string>('JWT_EXPIRES_IN') || '7d',
           },
           global: true,
         };
