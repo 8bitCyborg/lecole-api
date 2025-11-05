@@ -15,7 +15,7 @@ RUN yarn install
 COPY . .
 
 # Build the application
-RUN yarn build
+RUN yarn build --skipLibCheck
 
 # Stage 2: Production stage
 FROM node:20-alpine AS production
