@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { AuthUtilsService } from './authUtils/auth.utils';
 import { JwtModule } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getJwtConfig } from '../config/configuration';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './authUtils/auth.guard';
@@ -35,22 +35,24 @@ import { ClassArm, ClassArmSchema } from '../classes/schemas/class-arm.schema';
       { name: ClassArm.name, schema: ClassArmSchema },
     ]),
     JwtModule.registerAsync({
-      useFactory: (configService: ConfigService) => {
-        const config = getJwtConfig(configService);
-        return {
-          // secret: config.jwtSecret,
-          // signOptions: {
-          //   expiresIn: config.jwtExpiresIn,
-          // },
-          secret:
-            configService.get<string>('JWT_SECRET') ||
-            'default-secret-change-me',
-          signOptions: {
-            expiresIn: configService.get<string>('JWT_EXPIRES_IN') || '7d',
-          },
-          global: true,
-        };
-      },
+      // useFactory: (configService: ConfigService) => {
+      //   const config = getJwtConfig(configService);
+      //   return {
+      //     secret: config.jwtSecret,
+      //     signOptions: {
+      //       expiresIn: config.jwtExpiresIn,
+      //     },
+      //     global: true,
+      //   };
+      // },
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret:
+          configService.get<string>('JWT_SECRET') || 'default-secret-change-me',
+        signOptions: {
+          expiresIn: configService.get<string>('JWT_EXPIRES_IN') || '7d',
+        },
+      }),
       inject: [ConfigService],
     }),
     UsersModule,
