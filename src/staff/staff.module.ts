@@ -18,6 +18,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       { name: School.name, schema: SchoolSchema },
     ]),
     JwtModule.registerAsync({
+      imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
         const config = getJwtConfig(configService);
         return {

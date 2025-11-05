@@ -35,6 +35,7 @@ import { ClassArm, ClassArmSchema } from '../classes/schemas/class-arm.schema';
       { name: ClassArm.name, schema: ClassArmSchema },
     ]),
     JwtModule.registerAsync({
+      imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
         const config = getJwtConfig(configService);
         return {
