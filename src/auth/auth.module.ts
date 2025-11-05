@@ -40,7 +40,7 @@ import { ClassArm, ClassArmSchema } from '../classes/schemas/class-arm.schema';
         return {
           secret: config.jwtSecret,
           signOptions: {
-            expiresIn: config.jwtExpiresIn,
+            expiresIn: config.jwtExpiresIn as any,
           },
           global: true,
         };

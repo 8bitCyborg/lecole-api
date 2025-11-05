@@ -23,30 +23,30 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       { name: Class.name, schema: ClassSchema },
     ]),
     JwtModule.registerAsync({
-      // useFactory: (configService: ConfigService) => {
-      //   const config = getJwtConfig(configService);
-      //   return {
-      //     // secret: config.jwtSecret,
-      //     // signOptions: {
-      //     //   expiresIn: config.jwtExpiresIn,
-      //     // },
-      //     secret:
-      //       configService.get<string>('JWT_SECRET') ||
-      //       'default-secret-change-me',
-      //     signOptions: {
-      //       expiresIn: configService.get<string>('JWT_EXPIRES_IN') || '7d',
-      //     },
-      //     global: true,
-      //   };
-      // },
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        secret:
-          configService.get<string>('JWT_SECRET') || 'default-secret-change-me',
-        signOptions: {
-          expiresIn: configService.get<string>('JWT_EXPIRES_IN') || '7d',
-        },
-      }),
+      useFactory: (configService: ConfigService) => {
+        const config = getJwtConfig(configService);
+        return {
+          secret: config.jwtSecret,
+          signOptions: {
+            expiresIn: config.jwtExpiresIn as any,
+          },
+          // secret:
+          //   configService.get<string>('JWT_SECRET') ||
+          //   'default-secret-change-me',
+          // signOptions: {
+          //   expiresIn: configService.get<string>('JWT_EXPIRES_IN') || '7d',
+          // },
+          global: true,
+        };
+      },
+      // imports: [ConfigModule],
+      // useFactory: async (configService: ConfigService) => ({
+      //   secret:
+      //     configService.get<string>('JWT_SECRET') || 'default-secret-change-me',
+      //   signOptions: {
+      //     expiresIn: configService.get<string>('JWT_EXPIRES_IN') || '7d',
+      //   },
+      // }),
       inject: [ConfigService],
     }),
   ],
