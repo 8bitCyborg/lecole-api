@@ -1,0 +1,75 @@
+# version: '3.8'
+
+# services:
+#   # MongoDB service
+#   mongodb:
+#     image: mongo:7
+#     container_name: lecole-mongodb
+#     restart: unless-stopped
+#     ports:
+#       - '27018:27017'
+#     environment:
+#       MONGO_INITDB_ROOT_USERNAME: admin
+#       MONGO_INITDB_ROOT_PASSWORD: password
+#       MONGO_INITDB_DATABASE: lecole
+#     volumes:
+#       - mongodb_data:/data/db
+#     networks:
+#       - lecole-network
+#     healthcheck:
+#       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+#       interval: 10s
+#       timeout: 5s
+#       retries: 5
+
+#   # NestJS API service
+#   api:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     container_name: lecole-api
+#     restart: unless-stopped
+#     ports:
+#       - '${PORT:-3000}:3000'
+#     environment:
+#       - NODE_ENV=production
+#       - PORT=${PORT:-3000}
+#       - DB_CONNECTION_URL=${DB_CONNECTION_URL:-mongodb://admin:password@mongodb:27017/lecole?authSource=admin}
+#       - JWT_SECRET=${JWT_SECRET}
+#       - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-7d}
+#     depends_on:
+#       mongodb:
+#         condition: service_healthy
+#     networks:
+#       - lecole-network
+
+# volumes:
+#   mongodb_data:
+#     driver: local
+
+# networks:
+#   lecole-network:
+#     driver: bridge
+
+services:
+  # NestJS API service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lecole-api
+    restart: unless-stopped
+    ports:
+      - '${PORT:-3000}:3000'
+    environment:
+      - NODE_ENV=production
+      - PORT=${PORT:-3000}
+      - DB_CONNECTION_URL=${DB_CONNECTION_URL:-mongodb://host.docker.internal:27017/lecole}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-7d}
+    networks:
+      - lecole-network
+
+networks:
+  lecole-network:
+    driver: bridge
