@@ -25,16 +25,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {
-        // const config = getJwtConfig(configService);
+        const config = getJwtConfig(configService);
         return {
-          // secret: config.jwtSecret,
-          // signOptions: {
-          //   expiresIn: config.jwtExpiresIn as any,
-          // },
-          secret:
-            configService.get<string>('JWT_SECRET') || 'acdb-secret-key-2024',
+          secret: config.jwtSecret,
           signOptions: {
-            expiresIn: configService.get<string>('JWT_EXPIRES_IN') || '7d',
+            expiresIn: config.jwtExpiresIn as any,
           },
           global: true,
         };
