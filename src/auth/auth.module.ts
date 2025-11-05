@@ -35,24 +35,17 @@ import { ClassArm, ClassArmSchema } from '../classes/schemas/class-arm.schema';
       { name: ClassArm.name, schema: ClassArmSchema },
     ]),
     JwtModule.registerAsync({
-      // useFactory: (configService: ConfigService) => {
-      //   const config = getJwtConfig(configService);
-      //   return {
-      //     secret: config.jwtSecret,
-      //     signOptions: {
-      //       expiresIn: config.jwtExpiresIn,
-      //     },
-      //     global: true,
-      //   };
-      // },
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        secret:
-          configService.get<string>('JWT_SECRET') || 'default-secret-change-me',
-        signOptions: {
-          expiresIn: configService.get<string>('JWT_EXPIRES_IN') || '7d',
-        },
-      }),
+      useFactory: (configService: ConfigService) => {
+        const config = getJwtConfig(configService);
+        return {
+          secret: config.jwtSecret,
+          signOptions: {
+            expiresIn: config.jwtExpiresIn,
+          },
+          global: true,
+        };
+      },
+
       inject: [ConfigService],
     }),
     UsersModule,
