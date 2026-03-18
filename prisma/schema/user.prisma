@@ -1,9 +1,18 @@
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
-  password  String
-  hashedRt  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(uuid())
+  email      String   @unique
+  first_name String
+  last_name  String
+  phone      String
+  role       Role     @default(ADMIN)
+  password   String
+  hashedRt   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
 }

@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { AuthService } from './auth.service';
-import { AuthDto } from './dto/auth.dto';
+import { AuthDto, LoginDto } from './dto/auth.dto';
 import {
   GetCurrentUser,
   GetCurrentUserId,
@@ -19,7 +19,7 @@ import { RtGuard } from './common/guards/rt.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   @Public()
   @Post('local/signup')
@@ -37,13 +37,13 @@ export class AuthController {
   @Post('local/signin')
   @HttpCode(HttpStatus.OK)
   async signinLocal(
-    @Body() dto: AuthDto,
+    @Body() dto: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     const { user, tokens } = await this.authService.signinLocal(dto);
     this.setCookies(res, tokens);
     return user;
-  }
+  };
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
