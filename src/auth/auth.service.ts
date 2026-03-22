@@ -33,10 +33,10 @@ export class AuthService {
 
   async signinLocal(dto: LoginDto) {
     const user = await this.userService.findByEmail(dto.email);
-    if (!user) throw new ForbiddenException('Access Denied');
+    if (!user) throw new ForbiddenException('User not found.');
 
     const passwordMatches = await bcrypt.compare(dto.password, user.password);
-    if (!passwordMatches) throw new ForbiddenException('Access Denied');
+    if (!passwordMatches) throw new ForbiddenException('Incorrect Email/Password');
 
     const tokens = await this.getTokens(user.id, user.email);
     const hashedRt = await this.hashData(tokens.refresh_token);
@@ -45,7 +45,7 @@ export class AuthService {
     const { password: _, ...userData } = user;
 
     return { user: userData, tokens };
-  }
+  };
 
   async logout(userId: string) {
     await this.userService.clearHashedRt(userId);
