@@ -31,4 +31,4 @@ export class SchoolController {
   update(@Param('id') id: string, @Body() dto: UpdateSchoolDto) {
     return this.schoolService.update(id, dto);
   };
-}
+};

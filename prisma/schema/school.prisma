@@ -1,16 +1,81 @@
+enum VerificationStatus {
+  unverified
+  pending
+  legally_verified
+  fully_accredited
+}
+
+enum SchoolType {
+  nursery
+  primary
+  secondary
+  K12
+}
+
+enum Curriculum {
+  nigerian
+  british
+  montessori
+  other
+}
+
+enum Term {
+  first_term
+  second_term
+  third_term
+}
+
+enum GradingSystem {
+  percentage
+  waec
+  gpa
+  other
+}
+
+enum OwnershipType {
+  private
+  mission
+  public
+}
+
 model School {
-  id                String    @id @default(uuid())
-  user_id           String    @unique
-  user              User      @relation(fields: [user_id], references: [id])
-  name              String    @unique
-  address           String
-  phone             String
-  email             String    @unique
+  id      String @id @default(uuid())
+  user_id String @unique
+  user    User   @relation(fields: [user_id], references: [id])
+
+  name      String  @unique
+  shortname String? @unique
+  address   String
+  state     String
+  lga       String?
+  phone     String
+  email     String  @unique
+
+  type            SchoolType     @default(K12)
+  curriculum      Curriculum     @default(nigerian)
+  grading_system  GradingSystem  @default(waec)
+  current_term    Term           @default(first_term)
+  current_session String         @default("2025/2026")
+  ownership_type  OwnershipType?
+
+  proprietor        String?
   website           String?
   logo              String?
-  principal         String?
   description       String?
   date_of_inception DateTime?
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+
+  cac_number          String?
+  cac_certificate_url String?
+  moe_number          String?
+  moe_certicate_url   String?
+  trcn_url            String?
+  tin                 String?
+
+  bank_name      String?
+  account_number String?
+  account_name   String?
+
+  verification_status VerificationStatus @default(pending)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
 }

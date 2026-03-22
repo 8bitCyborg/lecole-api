@@ -13,7 +13,7 @@ export class SchoolService {
   async create(dto: CreateSchoolDto) {
     const existing = await this.prisma.school.findFirst({
       where: {
-        OR: [{ name: dto.name }, { email: dto.email }, { user_id: dto.user_id }],
+        OR: [{ email: dto.email }, { user_id: dto.user_id }],
       },
     });
     if (existing) {

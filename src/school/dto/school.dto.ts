@@ -23,6 +23,14 @@ export class CreateSchoolDto {
 
   @IsString()
   @IsNotEmpty()
+  state: string;
+
+  @IsString()
+  @IsOptional()
+  lga?: string;
+
+  @IsString()
+  @IsNotEmpty()
   phone: string;
 
   @IsEmail()
@@ -39,7 +47,7 @@ export class CreateSchoolDto {
 
   @IsString()
   @IsOptional()
-  principal?: string;
+  proprietor?: string;
 
   @IsString()
   @IsOptional()
@@ -61,6 +69,14 @@ export class UpdateSchoolDto {
 
   @IsString()
   @IsOptional()
+  state?: string;
+
+  @IsString()
+  @IsOptional()
+  lga?: string;
+
+  @IsString()
+  @IsOptional()
   phone?: string;
 
   @IsEmail()
@@ -77,7 +93,7 @@ export class UpdateSchoolDto {
 
   @IsString()
   @IsOptional()
-  principal?: string;
+  proprietor?: string;
 
   @IsString()
   @IsOptional()
