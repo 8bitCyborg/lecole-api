@@ -51,17 +51,17 @@ model School {
   phone     String
   email     String  @unique
 
-  type            SchoolType     @default(K12)
-  curriculum      Curriculum     @default(nigerian)
-  grading_system  GradingSystem  @default(waec)
-  current_term    Term           @default(first_term)
-  current_session String         @default("2025/2026")
+  type            SchoolType?
+  curriculum      Curriculum?
+  grading_system  GradingSystem?
+  current_term    Term?
+  current_session String?
   ownership_type  OwnershipType?
+  proprietor      String?
 
-  proprietor        String?
   website           String?
   logo              String?
-  description       String?
+  motto             String?
   date_of_inception DateTime?
 
   cac_number          String?
@@ -75,7 +75,7 @@ model School {
   account_number String?
   account_name   String?
 
-  verification_status VerificationStatus @default(pending)
+  verification_status VerificationStatus @default(unverified)
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
 }
