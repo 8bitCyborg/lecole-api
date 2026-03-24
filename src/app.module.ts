@@ -7,9 +7,10 @@ import { AtGuard } from './auth/common/guards/at.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { UserModule } from './user/user.module';
 import { SchoolModule } from './school/school.module';
+import { ClassModule } from './class/class.module';
 
 @Module({
-  imports: [AuthModule, PrismaModule, UserModule, SchoolModule],
+  imports: [AuthModule, PrismaModule, UserModule, SchoolModule, ClassModule],
   controllers: [AppController],
   providers: [
     AppService,
