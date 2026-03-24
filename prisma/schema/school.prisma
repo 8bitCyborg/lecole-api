@@ -39,9 +39,14 @@ enum OwnershipType {
 }
 
 model School {
-  id      String @id @default(uuid())
-  user_id String @unique
-  user    User   @relation(fields: [user_id], references: [id])
+  id       String    @id @default(uuid())
+  userId   String    @unique
+  user     User      @relation(fields: [userId], references: [id])
+  teachers Teacher[]
+  classes  Class[]
+  arms     Arm[]
+  students Student[]
+  subjects Subject[]
 
   name      String  @unique
   shortname String? @unique
@@ -75,7 +80,11 @@ model School {
   account_number String?
   account_name   String?
 
-  verification_status VerificationStatus @default(unverified)
-  createdAt           DateTime           @default(now())
-  updatedAt           DateTime           @updatedAt
+  verificationStatus VerificationStatus @default(unverified)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  @@index([state])
+  @@index([lga])
+  @@index([verificationStatus])
 }

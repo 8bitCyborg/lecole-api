@@ -11,7 +11,7 @@ import {
 export class CreateSchoolDto {
   @IsUUID()
   @IsNotEmpty()
-  user_id: string;
+  userId: string;
 
   @IsString()
   @IsNotEmpty()

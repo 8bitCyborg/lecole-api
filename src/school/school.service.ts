@@ -13,7 +13,7 @@ export class SchoolService {
   async create(dto: CreateSchoolDto) {
     const existing = await this.prisma.school.findFirst({
       where: {
-        OR: [{ email: dto.email }, { user_id: dto.user_id }],
+        OR: [{ email: dto.email }, { userId: dto.userId }],
       },
     });
     if (existing) {
@@ -34,7 +34,7 @@ export class SchoolService {
 
   async findByUserId(userId: string) {
     const school = await this.prisma.school.findUnique({
-      where: { user_id: userId },
+      where: { userId: userId },
     });
     if (!school) throw new NotFoundException('School not found');
     return school;
