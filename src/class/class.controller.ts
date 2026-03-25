@@ -5,6 +5,7 @@ import {
   Param,
   Patch,
   Post,
+  Delete,
   UseGuards,
 } from '@nestjs/common';
 import { ClassService } from './class.service';
@@ -25,8 +26,16 @@ export class ClassController {
 
   @Post()
   create(@Body() dto: CreateClassDto) {
-    return this.classService.create(dto);
+    return this.classService.createClass(dto);
   };
+
+  @Delete(':id')
+  deleteClass(
+    @Param('id') id: string,
+    @GetCurrentSchoolId() schoolId: string,
+  ) {
+    return this.classService.deleteClass(id, schoolId);
+  }
 
   @Get(':id/arms')
   findArms(@Param('id') classId: string) {
@@ -44,7 +53,15 @@ export class ClassController {
       classId,
       schoolId,
     });
-  }
+  };
 
-}
+  @Delete(':id/arms/:armId')
+  deleteArm(
+    @Param('id') classId: string,
+    @Param('armId') armId: string,
+    @GetCurrentSchoolId() schoolId: string,
+  ) {
+    return this.classService.deleteArm(armId, classId, schoolId);
+  };
 
+};

@@ -17,7 +17,7 @@ export class ClassService {
     });
   };
 
-  async create(dto: CreateClassDto) {
+  async createClass(dto: CreateClassDto) {
     const existing = await this.prisma.class.findFirst({
       where: {
         OR: [{ name: dto.name }],
@@ -31,6 +31,12 @@ export class ClassService {
 
     return this.prisma.class.create({
       data: dto,
+    });
+  };
+
+  async deleteClass(id: string, schoolId: string) {
+    return this.prisma.class.delete({
+      where: { id, schoolId },
     });
   };
 
@@ -55,7 +61,13 @@ export class ClassService {
     return this.prisma.arm.create({
       data: dto,
     });
-  }
+  };
+
+  async deleteArm(id: string, classId: string, schoolId: string) {
+    return this.prisma.arm.delete({
+      where: { id, classId, schoolId },
+    });
+  };
 
 };
 
