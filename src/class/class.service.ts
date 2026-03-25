@@ -14,9 +14,16 @@ export class ClassService {
   async findAll(schoolId: string) {
     return this.prisma.class.findMany({
       where: { schoolId },
+      orderBy: { name: 'asc' },
       include: {
+        subjects: {
+          select: { name: true },
+        },
         _count: {
-          select: { arms: true },
+          select: {
+            arms: true,
+            subjects: true,
+          },
         },
       },
     });

@@ -8,9 +8,10 @@ import { APP_GUARD } from '@nestjs/core';
 import { UserModule } from './user/user.module';
 import { SchoolModule } from './school/school.module';
 import { ClassModule } from './class/class.module';
+import { SubjectModule } from './subject/subject.module';
 
 @Module({
-  imports: [AuthModule, PrismaModule, UserModule, SchoolModule, ClassModule],
+  imports: [AuthModule, PrismaModule, UserModule, SchoolModule, ClassModule, SubjectModule],
   controllers: [AppController],
   providers: [
     AppService,
