@@ -11,9 +11,18 @@ export class SubjectService {
   constructor(private prisma: PrismaService) { }
 
   async findAll(schoolId: string) {
-    return this.prisma.subject.findMany({
-      where: { schoolId }
-    })
+    const subjects = await this.prisma.subject.findMany({
+      where: { schoolId },
+      include: {
+        _count: {
+          select: {
+            classes: true,
+            teachers: true,
+          }
+        }
+      }
+    });
+    return subjects;
   };
 
   async createSubject(dto: CreateSubjectDto) {
