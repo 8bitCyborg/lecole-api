@@ -1,4 +1,5 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { Category } from '@prisma/client';
 
 export class CreateClassDto {
   @IsString()
@@ -8,4 +9,8 @@ export class CreateClassDto {
   @IsString()
   @IsNotEmpty()
   name: string;
+
+  @IsNotEmpty()
+  @IsEnum(Category)
+  category: Category;
 };

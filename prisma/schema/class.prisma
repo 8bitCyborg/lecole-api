@@ -1,3 +1,11 @@
+enum Category {
+  EARLY_YEARS
+  BASIC
+  JUNIOR_SECONDARY
+  SENIOR_SECONDARY
+  OTHER
+}
+
 model Class {
   id       String    @id @default(uuid())
   name     String
@@ -6,6 +14,7 @@ model Class {
   arms     Arm[]
   students Student[]
   order    Int?
+  category Category
 
   subjects Subject[]
 
@@ -15,6 +24,7 @@ model Class {
   @@unique([name, schoolId])
   @@index([schoolId])
   @@index([order])
+  @@index([category])
 }
 
 model Arm {
