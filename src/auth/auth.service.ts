@@ -25,7 +25,7 @@ export class AuthService {
       hashedPassword,
     });
 
-    const tokens = await this.getTokens(newUser.id, newUser.email, null);
+    const tokens = await this.getTokens(newUser.id, newUser.email ?? '', null);
     const hashedRt = await this.hashData(tokens.refresh_token);
     await this.userService.updateHashedRt(newUser.id, hashedRt);
 
@@ -46,7 +46,7 @@ export class AuthService {
       select: { id: true },
     });
 
-    const tokens = await this.getTokens(user.id, user.email, school?.id || null);
+    const tokens = await this.getTokens(user.id, user.email ?? '', school?.id || null);
     const hashedRt = await this.hashData(tokens.refresh_token);
     await this.userService.updateHashedRt(user.id, hashedRt);
 
@@ -72,7 +72,7 @@ export class AuthService {
       select: { id: true },
     });
 
-    const tokens = await this.getTokens(user.id, user.email, school?.id || null);
+    const tokens = await this.getTokens(user.id, user.email ?? '', school?.id || null);
     const hashedRt = await this.hashData(tokens.refresh_token);
     await this.userService.updateHashedRt(user.id, hashedRt);
 

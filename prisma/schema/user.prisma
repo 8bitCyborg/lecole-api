@@ -1,9 +1,9 @@
 model User {
   id         String   @id @default(uuid())
-  email      String   @unique
+  email      String?  @unique
   first_name String
   last_name  String
-  phone      String
+  phone      String?  @unique
   role       Role     @default(ADMIN)
   password   String
   hashedRt   String?
@@ -13,6 +13,8 @@ model User {
 
   teacher Teacher?
   student Student?
+
+  @@index([role])
 }
 
 enum Role {
