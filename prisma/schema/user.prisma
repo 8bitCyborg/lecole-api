@@ -13,6 +13,7 @@ model User {
   school     School?
 
   teacher Teacher?
+  staff   Staff?
   student Student?
 
   @@index([role])
@@ -21,6 +22,6 @@ model User {
 
 enum Role {
   STUDENT
-  TEACHER
+  STAFF
   ADMIN
 }

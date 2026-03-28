@@ -43,6 +43,7 @@ model School {
   userId   String    @unique @map("user_id")
   user     User      @relation(fields: [userId], references: [id])
   teachers Teacher[]
+  staff    Staff[]
   classes  Class[]
   arms     Arm[]
   students Student[]

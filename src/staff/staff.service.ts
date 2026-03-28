@@ -1,13 +1,13 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateTeacherDto } from './dto/createTeacher.dto';
+import { CreateStaffDto } from './dto/createStaff.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class TeacherService {
+export class StaffService {
   constructor(private prisma: PrismaService) { }
 
-  async createTeacher(dto: CreateTeacherDto, schoolId: string) {
+  async createStaff(dto: CreateStaffDto, schoolId: string) {
     if (dto.email) {
       const userExists = await this.prisma.user.findUnique({
         where: { email: dto.email },
@@ -33,20 +33,24 @@ export class TeacherService {
       const user = await tx.user.create({
         data: {
           email: dto.email,
-          firstName: dto.first_name,
-          lastName: dto.last_name,
+          firstName: dto.firstName,
+          lastName: dto.lastName,
           phone: dto.phone,
           password: hashedPassword,
-          role: 'TEACHER',
+          role: 'STAFF',
         },
       });
 
-      const teacher = await tx.teacher.create({
+      const staff = await tx.staff.create({
         data: {
           userId: user.id,
           schoolId,
           staffId: dto.staffId || null,
           bio: dto.bio,
+          title: dto.title,
+          gender: dto.gender,
+          designation: dto.designation || 'Teacher',
+          isTeachingStaff: dto.isTeachingStaff || false,
         },
         include: {
           user: {
@@ -61,12 +65,12 @@ export class TeacherService {
         },
       });
 
-      return teacher;
+      return staff;
     });
   }
 
   async findBySchool(schoolId: string) {
-    return this.prisma.teacher.findMany({
+    return this.prisma.staff.findMany({
       where: { schoolId },
       include: {
         user: {
@@ -81,8 +85,24 @@ export class TeacherService {
     });
   }
 
-  async getTeacher(id: string) {
-    const teacher = await this.prisma.teacher.findUnique({
+  async findTeachingStaff(schoolId: string) {
+    return this.prisma.staff.findMany({
+      where: { schoolId, isTeachingStaff: true },
+      include: {
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+            phone: true,
+          },
+        },
+      },
+    });
+  }
+
+  async getStaff(id: string) {
+    const staff = await this.prisma.staff.findUnique({
       where: { id },
       include: {
         user: {
@@ -100,25 +120,25 @@ export class TeacherService {
       },
     });
 
-    if (!teacher) {
-      throw new NotFoundException('Teacher not found');
+    if (!staff) {
+      throw new NotFoundException('Staff not found');
     }
 
-    return teacher;
+    return staff;
   }
 
-  async deleteTeacher(id: string) {
-    const teacher = await this.prisma.teacher.findUnique({
+  async deleteStaff(id: string) {
+    const staff = await this.prisma.staff.findUnique({
       where: { id },
     });
 
-    if (!teacher) {
-      throw new NotFoundException('Teacher not found');
+    if (!staff) {
+      throw new NotFoundException('Staff not found');
     }
 
-    // Deleting the user will cascade delete the teacher record
+    // Deleting the user will cascade delete the staff record
     return this.prisma.user.delete({
-      where: { id: teacher.userId },
+      where: { id: staff.userId },
     });
   }
 }

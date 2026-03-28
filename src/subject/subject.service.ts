@@ -17,7 +17,7 @@ export class SubjectService {
         _count: {
           select: {
             classes: true,
-            teachers: true,
+            staff: true,
           }
         }
       }
@@ -60,7 +60,7 @@ export class SubjectService {
         _count: {
           select: {
             classes: true,
-            teachers: true,
+            staff: true,
           }
         }
       }

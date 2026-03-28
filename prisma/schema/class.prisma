@@ -29,16 +29,20 @@ model Class {
 }
 
 model Arm {
-  id            String    @id @default(uuid())
-  name          String
-  classId       String    @map("class_id")
-  class         Class     @relation(fields: [classId], references: [id], onDelete: Cascade)
-  schoolId      String    @map("school_id")
-  school        School    @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  classMasterId String?   @unique @map("class_master_id")
-  classMaster   Teacher?  @relation("ClassMaster", fields: [classMasterId], references: [id], onDelete: SetNull)
-  capacity      Int?
-  students      Student[]
+  id   String @id @default(uuid())
+  name String
+
+  classId String @map("class_id")
+  class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  schoolId String @map("school_id")
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  classMasterId String? @unique @map("class_master_id")
+  classMaster   Staff?  @relation("ClassMaster", fields: [classMasterId], references: [id], onDelete: SetNull)
+
+  capacity Int?
+  students Student[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
