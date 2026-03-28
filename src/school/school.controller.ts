@@ -29,6 +29,7 @@ export class SchoolController {
     return school;
   }
 
+  // needed here because the schoolId has to be baked into the jwt for zero-trust.
   private setCookies(res: Response, tokens: any) {
     res.cookie('access_token', tokens.access_token, {
       httpOnly: true,
