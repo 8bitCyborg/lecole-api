@@ -33,8 +33,8 @@ export class TeacherService {
       const user = await tx.user.create({
         data: {
           email: dto.email,
-          first_name: dto.first_name,
-          last_name: dto.last_name,
+          firstName: dto.first_name,
+          lastName: dto.last_name,
           phone: dto.phone,
           password: hashedPassword,
           role: 'TEACHER',
@@ -52,8 +52,8 @@ export class TeacherService {
           user: {
             select: {
               email: true,
-              first_name: true,
-              last_name: true,
+              firstName: true,
+              lastName: true,
               phone: true,
             },
           },
@@ -71,8 +71,8 @@ export class TeacherService {
       include: {
         user: {
           select: {
-            first_name: true,
-            last_name: true,
+            firstName: true,
+            lastName: true,
             email: true,
             phone: true,
           },
@@ -88,8 +88,8 @@ export class TeacherService {
         user: {
           select: {
             email: true,
-            first_name: true,
-            last_name: true,
+            firstName: true,
+            lastName: true,
             phone: true,
             role: true,
             createdAt: true,

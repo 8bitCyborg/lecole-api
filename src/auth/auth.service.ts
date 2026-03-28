@@ -19,8 +19,8 @@ export class AuthService {
     const hashedPassword = await this.hashData(dto.password);
     const newUser = await this.userService.createUser({
       email: dto.email,
-      first_name: dto.first_name,
-      last_name: dto.last_name,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
       phone: dto.phone,
       hashedPassword,
     });

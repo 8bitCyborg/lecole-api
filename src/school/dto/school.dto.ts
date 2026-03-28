@@ -55,7 +55,7 @@ export class CreateSchoolDto {
 
   @IsDateString()
   @IsOptional()
-  date_of_inception?: string;
+  dateOfInception?: string;
 }
 
 export class UpdateSchoolDto {
@@ -101,5 +101,5 @@ export class UpdateSchoolDto {
 
   @IsDateString()
   @IsOptional()
-  date_of_inception?: string;
+  dateOfInception?: string;
 }

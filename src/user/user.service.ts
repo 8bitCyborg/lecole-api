@@ -4,14 +4,14 @@ import { AuthDto } from '../auth/dto/auth.dto';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async createUser(dto: Omit<AuthDto, 'password'> & { hashedPassword: string }) {
     return this.prisma.user.create({
       data: {
         email: dto.email,
-        first_name: dto.first_name,
-        last_name: dto.last_name,
+        firstName: dto.firstName,
+        lastName: dto.lastName,
         phone: dto.phone,
         role: 'ADMIN',
         password: dto.hashedPassword,
