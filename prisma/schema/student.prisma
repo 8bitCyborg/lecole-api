@@ -39,4 +39,5 @@ model Student {
   @@index([classId])
   @@index([armId])
   @@index([admissionNumber])
+  @@map("students")
 }

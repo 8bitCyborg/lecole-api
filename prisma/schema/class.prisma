@@ -25,6 +25,7 @@ model Class {
   @@index([schoolId])
   @@index([order])
   @@index([category])
+  @@map("classes")
 }
 
 model Arm {
@@ -44,4 +45,5 @@ model Arm {
 
   @@index([classId])
   @@index([schoolId])
+  @@map("arms")
 }

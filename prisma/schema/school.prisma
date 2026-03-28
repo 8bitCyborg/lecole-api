@@ -87,4 +87,5 @@ model School {
   @@index([state])
   @@index([lga])
   @@index([verificationStatus])
+  @@map("schools")
 }

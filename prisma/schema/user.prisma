@@ -15,6 +15,7 @@ model User {
   student Student?
 
   @@index([role])
+  @@map("users")
 }
 
 enum Role {

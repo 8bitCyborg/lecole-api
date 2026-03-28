@@ -15,4 +15,5 @@ model Teacher {
   updatedAt DateTime @updatedAt
 
   @@index([schoolId])
+  @@map("teachers")
 }
