@@ -8,22 +8,47 @@ export class StaffService {
   constructor(private prisma: PrismaService) { }
 
   async createStaff(dto: CreateStaffDto, schoolId: string) {
-    if (dto.email) {
-      const userExists = await this.prisma.user.findUnique({
-        where: { email: dto.email },
-      });
-
-      if (userExists) {
-        throw new ConflictException('A user with this email already exists');
-      }
-    }
-
-    const phoneExists = await this.prisma.user.findFirst({
-      where: { phone: dto.phone },
+    const existingUser = await this.prisma.user.findFirst({
+      where: {
+        OR: [
+          ...(dto.email ? [{ email: dto.email }] : []),
+          { phone: dto.phone },
+        ],
+      },
     });
 
-    if (phoneExists) {
-      throw new ConflictException('A user with this phone number already exists');
+    if (existingUser) {
+      const staffExists = await this.prisma.staff.findFirst({
+        where: { userId: existingUser.id, schoolId },
+      });
+
+      if (staffExists) {
+        throw new ConflictException('This user is already registered as staff in this school');
+      }
+
+      return this.prisma.staff.create({
+        data: {
+          userId: existingUser.id,
+          schoolId,
+          staffId: dto.staffId || null,
+          bio: dto.bio,
+          title: dto.title,
+          gender: dto.gender,
+          designation: dto.designation || 'Teacher',
+          isTeachingStaff: dto.isTeachingStaff || false,
+        },
+        include: {
+          user: {
+            select: {
+              email: true,
+              firstName: true,
+              lastName: true,
+              phone: true,
+            },
+          },
+          subjects: true,
+        },
+      });
     }
 
     const defaultPassword = dto.password || 'Lecole@123';
