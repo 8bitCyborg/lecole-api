@@ -166,4 +166,19 @@ export class StaffService {
       where: { id: staff.userId },
     });
   }
+
+  async updateStaff(id: string, data: Partial<CreateStaffDto>) {
+    const staff = await this.prisma.staff.findUnique({
+      where: { id },
+    });
+
+    if (!staff) {
+      throw new NotFoundException('Staff not found');
+    }
+
+    return this.prisma.staff.update({
+      where: { id },
+      data,
+    });
+  }
 }

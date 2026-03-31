@@ -42,6 +42,15 @@ export class SubjectController {
     return this.subjectService.assignClasses(id, schoolId, classIds);
   };
 
+  @Patch(':id/teachers')
+  assignTeachers(
+    @Param('id') id: string,
+    @GetCurrentSchoolId() schoolId: string,
+    @Body('teacherIds') teacherIds: string[]
+  ) {
+    return this.subjectService.assignTeachers(id, schoolId, teacherIds);
+  };
+
   @Delete(':id')
   deleteSubject(@Param('id') id: string, @GetCurrentSchoolId() schoolId: string) {
     return this.subjectService.deleteSubject(id, schoolId);

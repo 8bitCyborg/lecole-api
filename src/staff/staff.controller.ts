@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Patch,
   HttpCode,
   HttpStatus,
   Param,
@@ -38,6 +39,12 @@ export class StaffController {
   @Get(':id')
   getStaffMember(@Param('id') id: string) {
     return this.staffService.getStaff(id);
+  }
+
+  @Patch(':id')
+  @HttpCode(HttpStatus.OK)
+  updateStaffMember(@Param('id') id: string, @Body() dto: CreateStaffDto) {
+    return this.staffService.updateStaff(id, dto);
   }
 
   @Delete(':id')

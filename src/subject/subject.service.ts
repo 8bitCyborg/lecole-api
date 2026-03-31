@@ -62,6 +62,18 @@ export class SubjectService {
             classes: true,
             staff: true,
           }
+        },
+        staff: {
+          select: {
+            id: true,
+            user: {
+              select: {
+                firstName: true,
+                lastName: true,
+                email: true,
+              }
+            }
+          }
         }
       }
     });
@@ -86,6 +98,30 @@ export class SubjectService {
           select: {
             id: true,
             name: true,
+          }
+        }
+      }
+    });
+  };
+
+  async assignTeachers(id: string, schoolId: string, staffIds: string[]) {
+    return this.prisma.subject.update({
+      where: { id, schoolId },
+      data: {
+        staff: {
+          set: staffIds.map(staffId => ({ id: staffId }))
+        }
+      },
+      include: {
+        staff: {
+          select: {
+            id: true,
+            user: {
+              select: {
+                firstName: true,
+                lastName: true,
+              }
+            }
           }
         }
       }
