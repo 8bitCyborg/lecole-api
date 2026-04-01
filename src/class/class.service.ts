@@ -55,6 +55,7 @@ export class ClassService {
   async getArmsBySchool(schoolId: string) {
     return this.prisma.arm.findMany({
       where: { schoolId },
+      orderBy: { name: 'asc' },
       include: {
         class: {
           select: { name: true },
@@ -66,6 +67,7 @@ export class ClassService {
   async findArms(classId: string) {
     return this.prisma.arm.findMany({
       where: { classId },
+      orderBy: { name: 'asc' },
     });
   };
 
