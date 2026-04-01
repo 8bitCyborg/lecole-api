@@ -181,4 +181,19 @@ export class StaffService {
       data,
     });
   }
+
+  async assignSubjects(id: string, subjectIds: string[]) {
+    // We use Prisma's 'set' to replace the existing subjects with the new list
+    return this.prisma.staff.update({
+      where: { id },
+      data: {
+        subjects: {
+          set: subjectIds.map((sid) => ({ id: sid })),
+        },
+      },
+      include: {
+        subjects: true,
+      },
+    });
+  }
 }

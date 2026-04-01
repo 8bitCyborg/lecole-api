@@ -47,6 +47,15 @@ export class StaffController {
     return this.staffService.updateStaff(id, dto);
   }
 
+  @Patch(':id/subjects')
+  @HttpCode(HttpStatus.OK)
+  assignSubjects(
+    @Param('id') id: string,
+    @Body('subjectIds') subjectIds: string[],
+  ) {
+    return this.staffService.assignSubjects(id, subjectIds);
+  }
+
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   deleteStaffMember(@Param('id') id: string) {
