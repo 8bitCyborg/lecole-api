@@ -38,7 +38,7 @@ model Arm {
   schoolId String @map("school_id")
   school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
 
-  classMasterId String? @unique @map("class_master_id")
+  classMasterId String? @map("class_master_id")
   classMaster   Staff?  @relation("ClassMaster", fields: [classMasterId], references: [id], onDelete: SetNull)
 
   capacity Int?
@@ -49,5 +49,6 @@ model Arm {
 
   @@index([classId])
   @@index([schoolId])
+  @@index([classMasterId])
   @@map("arms")
 }

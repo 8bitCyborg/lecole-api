@@ -52,6 +52,17 @@ export class ClassService {
     });
   };
 
+  async getArmsBySchool(schoolId: string) {
+    return this.prisma.arm.findMany({
+      where: { schoolId },
+      include: {
+        class: {
+          select: { name: true },
+        },
+      },
+    });
+  };
+
   async findArms(classId: string) {
     return this.prisma.arm.findMany({
       where: { classId },
@@ -80,6 +91,21 @@ export class ClassService {
       where: { id, classId, schoolId },
     });
   };
+
+  async assignMasterToArm(armId: string, staffId: string | null, schoolId: string) {
+    const arm = await this.prisma.arm.findUnique({
+      where: { id: armId },
+    });
+
+    if (!arm || arm.schoolId !== schoolId) {
+      throw new NotFoundException('Arm not found');
+    }
+
+    return this.prisma.arm.update({
+      where: { id: armId },
+      data: { classMasterId: staffId || null },
+    });
+  }
 
 };
 

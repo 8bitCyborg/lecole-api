@@ -37,6 +37,11 @@ export class ClassController {
     return this.classService.deleteClass(id, schoolId);
   }
 
+  @Get('arms')
+  findArmsBySchool(@GetCurrentSchoolId() schoolId: string) {
+    return this.classService.getArmsBySchool(schoolId);
+  }
+
   @Get(':id/arms')
   findArms(@Param('id') classId: string) {
     return this.classService.findArms(classId);
@@ -62,6 +67,15 @@ export class ClassController {
     @GetCurrentSchoolId() schoolId: string,
   ) {
     return this.classService.deleteArm(armId, classId, schoolId);
+  };
+
+  @Patch('arms/:armId/master')
+  assignMasterToArm(
+    @Param('armId') armId: string,
+    @GetCurrentSchoolId() schoolId: string,
+    @Body() dto: { staffId: string | null },
+  ) {
+    return this.classService.assignMasterToArm(armId, dto.staffId, schoolId);
   };
 
 };

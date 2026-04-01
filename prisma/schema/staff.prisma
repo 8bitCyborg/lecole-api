@@ -23,7 +23,7 @@ model Staff {
   designation String @default("Teacher")
 
   subjects Subject[]
-  arm      Arm?      @relation("ClassMaster")
+  arms     Arm[]     @relation("ClassMaster")
 
   gender Gender @default(MALE)
   title  Title?

@@ -141,7 +141,7 @@ export class StaffService {
           },
         },
         subjects: true,
-        arm: true,
+        arms: { include: { class: true } },
       },
     });
 
