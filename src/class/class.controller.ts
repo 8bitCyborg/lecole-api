@@ -70,6 +70,16 @@ export class ClassController {
     return this.classService.deleteArm(armId, classId, schoolId);
   };
 
+  @Patch(':id/arms/:armId')
+  updateArm(
+    @Param('id') classId: string,
+    @Param('armId') armId: string,
+    @GetCurrentSchoolId() schoolId: string,
+    @Body() dto: Partial<CreateArmDto>,
+  ) {
+    return this.classService.updateArm(armId, classId, schoolId, dto);
+  };
+
   @Patch('arms/:armId/master')
   assignMasterToArm(
     @Param('armId') armId: string,

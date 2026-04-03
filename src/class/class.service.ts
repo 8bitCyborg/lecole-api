@@ -94,6 +94,38 @@ export class ClassService {
     });
   };
 
+  async updateArm(armId: string, classId: string, schoolId: string, dto: Partial<CreateArmDto>) {
+    const arm = await this.prisma.arm.findUnique({
+      where: { id: armId, classId, schoolId },
+    });
+
+    if (!arm) {
+      throw new NotFoundException('Arm not found');
+    }
+
+    if (dto.name && dto.name !== arm.name) {
+      const existing = await this.prisma.arm.findFirst({
+        where: {
+          name: dto.name,
+          classId,
+          NOT: { id: armId },
+        },
+      });
+
+      if (existing) {
+        throw new ConflictException('An arm with this name already exists in this class');
+      }
+    }
+
+    return this.prisma.arm.update({
+      where: { id: armId },
+      data: {
+        name: dto.name,
+        capacity: dto.capacity,
+      },
+    });
+  }
+
   async assignMasterToArm(armId: string, staffId: string | null, schoolId: string) {
     const arm = await this.prisma.arm.findUnique({
       where: { id: armId },
