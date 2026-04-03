@@ -17,7 +17,7 @@ export class ClassService {
       orderBy: { name: 'asc' },
       include: {
         subjects: {
-          select: { name: true },
+          select: { id: true, name: true },
         },
         _count: {
           select: {
@@ -106,6 +106,30 @@ export class ClassService {
     return this.prisma.arm.update({
       where: { id: armId },
       data: { classMasterId: staffId || null },
+    });
+  }
+
+  async assignSubjects(classId: string, schoolId: string, subjectIds: string[]) {
+    const cls = await this.prisma.class.findUnique({
+      where: { id: classId },
+    });
+
+    if (!cls || cls.schoolId !== schoolId) {
+      throw new NotFoundException('Class not found');
+    }
+
+    return this.prisma.class.update({
+      where: { id: classId },
+      data: {
+        subjects: {
+          set: subjectIds.map((id) => ({ id })),
+        },
+      },
+      include: {
+        subjects: {
+          select: { id: true, name: true },
+        },
+      },
     });
   }
 

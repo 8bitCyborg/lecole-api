@@ -13,6 +13,7 @@ import { AtGuard } from 'src/auth/common/guards/at.guard';
 import { GetCurrentUserId, GetCurrentSchoolId } from 'src/auth/common/decorators';
 import { CreateClassDto } from './dto/createClass.dto';
 import { CreateArmDto } from './dto/createArm.dto';
+import { AssignSubjectsDto } from './dto/assignSubjects.dto';
 
 @UseGuards(AtGuard)
 @Controller('class')
@@ -76,6 +77,15 @@ export class ClassController {
     @Body() dto: { staffId: string | null },
   ) {
     return this.classService.assignMasterToArm(armId, dto.staffId, schoolId);
+  };
+
+  @Post(':id/subjects')
+  assignSubjects(
+    @Param('id') classId: string,
+    @GetCurrentSchoolId() schoolId: string,
+    @Body() dto: AssignSubjectsDto,
+  ) {
+    return this.classService.assignSubjects(classId, schoolId, dto.subjectIds);
   };
 
 };
