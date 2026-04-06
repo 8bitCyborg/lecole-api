@@ -10,9 +10,19 @@ import { SchoolModule } from './school/school.module';
 import { ClassModule } from './class/class.module';
 import { SubjectModule } from './subject/subject.module';
 import { StaffModule } from './staff/staff.module';
+import { StudentModule } from './student/student.module';
 
 @Module({
-  imports: [AuthModule, PrismaModule, UserModule, SchoolModule, ClassModule, SubjectModule, StaffModule],
+  imports: [
+    AuthModule,
+    PrismaModule,
+    UserModule,
+    SchoolModule,
+    ClassModule,
+    SubjectModule,
+    StaffModule,
+    StudentModule
+  ],
   controllers: [AppController],
   providers: [
     AppService,

@@ -36,7 +36,7 @@ export class AuthService {
 
   async signinLocal(dto: LoginDto) {
     const user = await this.userService.findByEmail(dto.email);
-    if (!user) throw new ForbiddenException('User not found.');
+    if (!user || !user.password) throw new ForbiddenException('Incorrect Email/Password');
 
     const passwordMatches = await bcrypt.compare(dto.password, user.password);
     if (!passwordMatches) throw new ForbiddenException('Incorrect Email/Password');

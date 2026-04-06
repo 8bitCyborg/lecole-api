@@ -6,15 +6,15 @@ model User {
   lastName   String   @map("last_name")
   phone      String?  @unique
   role       Role     @default(ADMIN)
-  password   String
+  password   String?
   hashedRt   String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   school     School?
 
-  teacher Teacher?
-  staff   Staff?
-  student Student?
+  teacher  Teacher?
+  staff    Staff?
+  studentProfiles Student[]
 
   @@index([role])
   @@map("users")
@@ -24,4 +24,5 @@ enum Role {
   STUDENT
   STAFF
   ADMIN
+  GUARDIAN
 }

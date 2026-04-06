@@ -1,7 +1,6 @@
 enum Gender {
   MALE
   FEMALE
-  OTHER
 }
 
 enum StudentStatus {
@@ -11,11 +10,11 @@ enum StudentStatus {
 }
 
 model Student {
-  id       String  @id @default(uuid())
-  userId   String  @unique
-  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  schoolId String? @map("school_id")
-  school   School? @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+  id       String @id @default(uuid())
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Restrict)
+  schoolId String @map("school_id")
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Restrict)
 
   classId String? @map("class_id")
   class   Class?  @relation(fields: [classId], references: [id], onDelete: SetNull)
@@ -23,10 +22,10 @@ model Student {
   armId String? @map("string_id")
   arm   Arm?    @relation(fields: [armId], references: [id], onDelete: SetNull)
 
-  admissionNumber String    @unique @map("admission_number")
+  admissionNumber String    @map("admission_number")
   dateOfBirth     DateTime? @map("date_of_birth")
   guardianPhone   String?   @map("guardian_phone")
-  guardianEmail   String?   @map("guardia_email")
+  guardianEmail   String?   @map("guardian_email")
   isFeesPaid      Boolean   @default(false) @map("is_fees_paid")
 
   gender Gender
@@ -35,6 +34,8 @@ model Student {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@unique([userId, schoolId])
+  @@unique([schoolId, admissionNumber])
   @@index([userId])
   @@index([schoolId])
   @@index([classId])
