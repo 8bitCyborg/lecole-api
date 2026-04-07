@@ -31,11 +31,6 @@ export class StaffController {
     return this.staffService.findBySchool(schoolId);
   }
 
-  @Get('teachers')
-  getTeachingStaff(@GetCurrentSchoolId() schoolId: string) {
-    return this.staffService.findTeachingStaff(schoolId);
-  }
-
   @Get(':id')
   getStaffMember(@Param('id') id: string) {
     return this.staffService.getStaff(id);

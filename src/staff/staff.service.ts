@@ -108,23 +108,7 @@ export class StaffService {
         },
       },
     });
-  }
-
-  async findTeachingStaff(schoolId: string) {
-    return this.prisma.staff.findMany({
-      where: { schoolId, isTeachingStaff: true },
-      include: {
-        user: {
-          select: {
-            firstName: true,
-            lastName: true,
-            email: true,
-            phone: true,
-          },
-        },
-      },
-    });
-  }
+  };
 
   async getStaff(id: string) {
     const staff = await this.prisma.staff.findUnique({
