@@ -9,8 +9,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ClassService } from './class.service';
+import { ArmService } from './arm.service';
 import { AtGuard } from 'src/auth/common/guards/at.guard';
-import { GetCurrentUserId, GetCurrentSchoolId } from 'src/auth/common/decorators';
+import { GetCurrentSchoolId } from 'src/auth/common/decorators';
 import { CreateClassDto } from './dto/createClass.dto';
 import { CreateArmDto } from './dto/createArm.dto';
 import { AssignSubjectsDto } from './dto/assignSubjects.dto';
@@ -18,7 +19,10 @@ import { AssignSubjectsDto } from './dto/assignSubjects.dto';
 @UseGuards(AtGuard)
 @Controller('class')
 export class ClassController {
-  constructor(private classService: ClassService) { }
+  constructor(
+    private classService: ClassService,
+    private armService: ArmService
+  ) { }
 
   @Get()
   findAll(@GetCurrentSchoolId() schoolId: string) {
@@ -40,12 +44,12 @@ export class ClassController {
 
   @Get('arms')
   findArmsBySchool(@GetCurrentSchoolId() schoolId: string) {
-    return this.classService.getArmsBySchool(schoolId);
+    return this.armService.getArmsBySchool(schoolId);
   }
 
   @Get(':id/arms')
   findArms(@Param('id') classId: string) {
-    return this.classService.findArms(classId);
+    return this.armService.findArms(classId);
   }
 
   @Post(':id/arms')
@@ -54,7 +58,7 @@ export class ClassController {
     @GetCurrentSchoolId() schoolId: string,
     @Body() dto: Omit<CreateArmDto, 'classId' | 'schoolId'>,
   ) {
-    return this.classService.createArm({
+    return this.armService.createArm({
       ...dto,
       classId,
       schoolId,
@@ -67,7 +71,7 @@ export class ClassController {
     @Param('armId') armId: string,
     @GetCurrentSchoolId() schoolId: string,
   ) {
-    return this.classService.deleteArm(armId, classId, schoolId);
+    return this.armService.deleteArm(armId, classId, schoolId);
   };
 
   @Patch(':id/arms/:armId')
@@ -77,7 +81,7 @@ export class ClassController {
     @GetCurrentSchoolId() schoolId: string,
     @Body() dto: Partial<CreateArmDto>,
   ) {
-    return this.classService.updateArm(armId, classId, schoolId, dto);
+    return this.armService.updateArm(armId, classId, schoolId, dto);
   };
 
   @Patch('arms/:armId/master')
@@ -86,7 +90,7 @@ export class ClassController {
     @GetCurrentSchoolId() schoolId: string,
     @Body() dto: { staffId: string | null },
   ) {
-    return this.classService.assignMasterToArm(armId, dto.staffId, schoolId);
+    return this.armService.assignMasterToArm(armId, dto.staffId, schoolId);
   };
 
   @Post(':id/subjects')
@@ -103,7 +107,7 @@ export class ClassController {
     @Param('armId') armId: string,
     @GetCurrentSchoolId() schoolId: string,
   ) {
-    return this.classService.findStudentsByArm(armId, schoolId);
+    return this.armService.findStudentsByArm(armId, schoolId);
   };
 
 };
