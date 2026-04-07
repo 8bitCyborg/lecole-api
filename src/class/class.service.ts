@@ -165,5 +165,34 @@ export class ClassService {
     });
   }
 
+  async findStudentsByArm(armId: string, schoolId: string) {
+    const arm = await this.prisma.arm.findUnique({
+      where: { id: armId, schoolId },
+    });
+
+    if (!arm) {
+      throw new NotFoundException('Arm not found');
+    }
+
+    return this.prisma.student.findMany({
+      where: { armId, schoolId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: {
+        user: {
+          firstName: 'asc',
+        },
+      },
+    });
+  }
+
 };
 

@@ -40,6 +40,11 @@ export class StudentService {
       where: { id },
       include: {
         ...STUDENT_INCLUDE,
+        class: {
+          include: {
+            subjects: true,
+          },
+        },
         user: {
           select: {
             ...STUDENT_INCLUDE.user.select,

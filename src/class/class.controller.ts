@@ -98,4 +98,12 @@ export class ClassController {
     return this.classService.assignSubjects(classId, schoolId, dto.subjectIds);
   };
 
+  @Get('arms/:armId/students')
+  findStudentsByArm(
+    @Param('armId') armId: string,
+    @GetCurrentSchoolId() schoolId: string,
+  ) {
+    return this.classService.findStudentsByArm(armId, schoolId);
+  };
+
 };
