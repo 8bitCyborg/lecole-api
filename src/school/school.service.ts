@@ -62,14 +62,29 @@ export class SchoolService {
     return school;
   }
 
-  private async _findById(id: string) {
+  async findById(id: string) {
     const school = await this.prisma.school.findUnique({ where: { id } });
     if (!school) throw new NotFoundException('School not found');
     return school;
   }
 
+  async getAcademicContext(schoolId: string) {
+    const school = await this.findById(schoolId);
+
+    if (!school.currentSession || !school.currentTerm) {
+      throw new ConflictException(
+        'School academic context (session or term) is not configured.',
+      );
+    }
+
+    return {
+      session: school.currentSession,
+      term: school.currentTerm,
+    };
+  };
+
   async update(id: string, dto: UpdateSchoolDto) {
-    await this._findById(id);
+    await this.findById(id);
     return this.prisma.school.update({
       where: { id },
       data: {

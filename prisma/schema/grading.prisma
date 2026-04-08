@@ -1,0 +1,27 @@
+model GradingModule {
+  id         String         @id @default(cuid())
+  schoolId   String?
+  term       String?
+  session    String?
+  name       String // "Mid-term Test"
+  percentage Float // 20.0
+  category   ModuleCategory @default(CA)
+  sequence   Int?           @default(0)
+  isLocked   Boolean        @default(false)
+
+  // Optional: Link to a specific subject if it's not a school-wide policy
+  subjectId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([schoolId, term])
+  @@index([schoolId, session])
+  @@index([schoolId, term, session])
+}
+
+enum ModuleCategory {
+  CA
+  EXAM
+  PRACTICAL
+}
