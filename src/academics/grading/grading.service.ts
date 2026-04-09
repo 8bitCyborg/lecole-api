@@ -62,9 +62,9 @@ export class GradingService {
   async update(id: string, dto: UpdateGradingModuleDto) {
     const module = await this.findOne(id);
 
-    if (module.isLocked) {
-      throw new ForbiddenException('This grading module is locked and cannot be updated.');
-    }
+    // if (module.isLocked) {
+    //   throw new ForbiddenException('This grading module is locked and cannot be updated.');
+    // }
 
     return this.prisma.gradingModule.update({
       where: { id },
@@ -94,5 +94,6 @@ export class GradingService {
         isLocked: lock,
       },
     });
-  }
+  };
+
 };
