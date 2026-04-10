@@ -29,6 +29,14 @@ export class ClassController {
     return this.classService.findAll(schoolId);
   };
 
+  @Get(':id')
+  findClass(
+    @Param('id') id: string,
+    @GetCurrentSchoolId() schoolId: string,
+  ) {
+    return this.classService.findClass(id, schoolId);
+  }
+
   @Post()
   create(@Body() dto: CreateClassDto) {
     return this.classService.createClass(dto);

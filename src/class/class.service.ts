@@ -28,6 +28,24 @@ export class ClassService {
     });
   };
 
+  async findClass(classId: string, schoolId: string) {
+    return this.prisma.class.findUnique({
+      where: { id: classId, schoolId },
+      include: {
+        subjects: {
+          select: { id: true, name: true }
+        },
+        _count: {
+          select: {
+            arms: true,
+            subjects: true,
+          },
+        },
+      },
+    });
+
+  };
+
   async createClass(dto: CreateClassDto) {
     const existing = await this.prisma.class.findFirst({
       where: {
