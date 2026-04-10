@@ -15,6 +15,7 @@ import { GetCurrentSchoolId } from 'src/auth/common/decorators';
 import { CreateGradingModuleDto } from './dto/create-grading-module.dto';
 import { UpdateGradingModuleDto } from './dto/update-grading-module.dto';
 import { LockGradingModulesDto } from './dto/lock-grading-module.dto';
+import { BatchUpsertGradeDto } from './dto/batch-upsert-grade.dto';
 
 @UseGuards(AtGuard)
 @Controller('grading')
@@ -65,5 +66,21 @@ export class GradingController {
   @Delete('modules/:id')
   remove(@Param('id') id: string) {
     return this.gradingService.remove(id);
+  }
+
+  @Get('arms/:armId/grades')
+  findGradesByArm(
+    @GetCurrentSchoolId() schoolId: string,
+    @Param('armId') armId: string,
+  ) {
+    return this.gradingService.findGradesByArm(schoolId, armId);
+  }
+
+  @Post('batch-upsert')
+  batchUpsert(
+    @GetCurrentSchoolId() schoolId: string,
+    @Body() dto: BatchUpsertGradeDto,
+  ) {
+    return this.gradingService.batchUpsert(schoolId, dto);
   }
 }

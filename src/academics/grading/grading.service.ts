@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { SchoolService } from 'src/school/school.service';
 import { CreateGradingModuleDto } from './dto/create-grading-module.dto';
 import { UpdateGradingModuleDto } from './dto/update-grading-module.dto';
+import { BatchUpsertGradeDto } from './dto/batch-upsert-grade.dto';
 
 @Injectable()
 export class GradingService {
@@ -95,5 +96,73 @@ export class GradingService {
       },
     });
   };
+
+  async findGradesByArm(schoolId: string, armId: string) {
+    const { session, term } = await this.schoolService.getAcademicContext(schoolId);
+    return this.prisma.grade.findMany({
+      where: {
+        schoolId,
+        armId,
+        session,
+        term,
+      },
+    });
+  }
+
+  async batchUpsert(schoolId: string, dto: BatchUpsertGradeDto) {
+    const { context, scores } = dto;
+
+    // Enrollment Validation: Ensure all students belong to the arm and school
+    const studentIds = scores.map(s => s.studentId);
+    const enrolledStudents = await this.prisma.student.findMany({
+      where: {
+        id: { in: studentIds },
+        schoolId,
+        armId: context.armId,
+      },
+      select: { id: true },
+    });
+
+    const enrolledIds = new Set(enrolledStudents.map(s => s.id));
+    const invalidIds = studentIds.filter(id => !enrolledIds.has(id));
+
+    if (invalidIds.length > 0) {
+      throw new ForbiddenException(`The following students are not enrolled in this arm: ${invalidIds.join(', ')}`);
+    }
+
+    // Perform Upserts in a transaction for atomicity
+    const operations = scores.map(item =>
+      this.prisma.grade.upsert({
+        where: {
+          studentId_subjectId_gradingModuleId_term_session: {
+            studentId: item.studentId,
+            subjectId: item.subjectId,
+            gradingModuleId: item.gradingModuleId,
+            term: context.term,
+            session: context.session,
+          },
+        },
+        update: {
+          score: item.score,
+          updatedAt: new Date(),
+        },
+        create: {
+          score: item.score,
+          studentId: item.studentId,
+          subjectId: item.subjectId,
+          gradingModuleId: item.gradingModuleId,
+          classId: context.classId,
+          armId: context.armId,
+          term: context.term,
+          session: context.session,
+          schoolId: schoolId,
+        },
+      })
+    );
+
+    await this.prisma.$transaction(operations);
+
+    return { count: scores.length };
+  }
 
 };
