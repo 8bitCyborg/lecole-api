@@ -19,8 +19,9 @@ model Student {
   classId String? @map("class_id")
   class   Class?  @relation(fields: [classId], references: [id], onDelete: SetNull)
 
-  armId String? @map("string_id")
-  arm   Arm?    @relation(fields: [armId], references: [id], onDelete: SetNull)
+  armId  String? @map("string_id")
+  arm    Arm?    @relation(fields: [armId], references: [id], onDelete: SetNull)
+  grades Grade[]
 
   admissionNumber String    @map("admission_number")
   dateOfBirth     DateTime? @map("date_of_birth")

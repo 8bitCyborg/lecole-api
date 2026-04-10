@@ -2,11 +2,11 @@ enum ModuleCategory {
   CA
   EXAM
   PRACTICAL
-};
+}
 
 model GradingModule {
   id         String         @id @default(cuid())
-  schoolId   String? @map("school_id")
+  schoolId   String?        @map("school_id")
   term       String?
   session    String?
   name       String // "Mid-term Test"
@@ -14,6 +14,7 @@ model GradingModule {
   category   ModuleCategory @default(CA)
   sequence   Int?           @default(0)
   isLocked   Boolean        @default(false) @map("is_locked")
+  grades     Grade[]
 
   // Optional: Link to a specific subject if it's not a school-wide policy
   subjectId String? @map("subject_id")
@@ -24,41 +25,40 @@ model GradingModule {
   @@index([schoolId, term])
   @@index([schoolId, session])
   @@index([schoolId, term, session])
-};
+}
 
 model Grade {
-  id              String   @id @default(uuid())
-  score           Float    @default(0)
+  id    String @id @default(uuid())
+  score Float  @default(0)
 
   // Foreign Keys with Database Mappings
-  studentId       String   @map("student_id")
-  student         Student  @relation(fields: [studentId], references: [id])
-  
-  subjectId       String   @map("subject_id")
-  subject         Subject  @relation(fields: [subjectId], references: [id])
+  studentId String  @map("student_id")
+  student   Student @relation(fields: [studentId], references: [id])
 
-  gradingModuleId String   @map("grading_module_id")
+  subjectId String  @map("subject_id")
+  subject   Subject @relation(fields: [subjectId], references: [id])
+
+  gradingModuleId String        @map("grading_module_id")
   gradingModule   GradingModule @relation(fields: [gradingModuleId], references: [id])
 
   // Contextual Data for filtering
-  classId         String   @map("class_id")
-  armId           String?  @map("arm_id")
-  term            String
-  session         String
-  schoolId        String   @map("school_id")
+  classId  String  @map("class_id")
+  armId    String? @map("arm_id")
+  term     String
+  session  String
+  schoolId String  @map("school_id")
 
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   // Metadata Map for flexibility
-  metadata        Json?    @default("{}")
+  metadata Json? @default("{}")
 
   // Constraints & Performance
-  @@unique([studentId, subjectId, gradingModuleId, term, session])  
+  @@unique([studentId, subjectId, gradingModuleId, term, session])
   // Composite Index: Optimized for "Current Term" grade entry and broadsheets
   @@index([schoolId, session, term, classId])
   // Index: Optimized for student transcripts
   @@index([studentId, subjectId])
-
   @@map("grades")
 }

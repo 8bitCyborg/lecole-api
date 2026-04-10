@@ -3,8 +3,9 @@ model Subject {
   name String
   code String?
 
-  schoolId String @map("school_id")
-  school   School @relation(fields: [schoolId], references: [id])
+  schoolId String  @map("school_id")
+  school   School  @relation(fields: [schoolId], references: [id])
+  grades   Grade[]
 
   classes Class[]
   staff   Staff[]
