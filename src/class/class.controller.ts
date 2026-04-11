@@ -29,6 +29,28 @@ export class ClassController {
     return this.classService.findAll(schoolId);
   };
 
+  @Get('arms')
+  findArmsBySchool(@GetCurrentSchoolId() schoolId: string) {
+    return this.armService.getArmsBySchool(schoolId);
+  }
+
+  @Patch('arms/:armId/master')
+  assignMasterToArm(
+    @Param('armId') armId: string,
+    @GetCurrentSchoolId() schoolId: string,
+    @Body() dto: { staffId: string | null },
+  ) {
+    return this.armService.assignMasterToArm(armId, dto.staffId, schoolId);
+  };
+
+  @Get('arms/:armId/students')
+  findStudentsByArm(
+    @Param('armId') armId: string,
+    @GetCurrentSchoolId() schoolId: string,
+  ) {
+    return this.armService.findStudentsByArm(armId, schoolId);
+  };
+
   @Get(':id')
   findClass(
     @Param('id') id: string,
@@ -50,13 +72,9 @@ export class ClassController {
     return this.classService.deleteClass(id, schoolId);
   }
 
-  @Get('arms')
-  findArmsBySchool(@GetCurrentSchoolId() schoolId: string) {
-    return this.armService.getArmsBySchool(schoolId);
-  }
 
   @Get(':id/arms')
-  findArms(@Param('id') classId: string) {
+  findArmsByClass(@Param('id') classId: string) {
     return this.armService.findArms(classId);
   }
 
@@ -92,14 +110,6 @@ export class ClassController {
     return this.armService.updateArm(armId, classId, schoolId, dto);
   };
 
-  @Patch('arms/:armId/master')
-  assignMasterToArm(
-    @Param('armId') armId: string,
-    @GetCurrentSchoolId() schoolId: string,
-    @Body() dto: { staffId: string | null },
-  ) {
-    return this.armService.assignMasterToArm(armId, dto.staffId, schoolId);
-  };
 
   @Post(':id/subjects')
   assignSubjects(
@@ -110,12 +120,5 @@ export class ClassController {
     return this.classService.assignSubjects(classId, schoolId, dto.subjectIds);
   };
 
-  @Get('arms/:armId/students')
-  findStudentsByArm(
-    @Param('armId') armId: string,
-    @GetCurrentSchoolId() schoolId: string,
-  ) {
-    return this.armService.findStudentsByArm(armId, schoolId);
-  };
 
 };

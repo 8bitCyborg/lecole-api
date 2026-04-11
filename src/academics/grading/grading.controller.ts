@@ -83,4 +83,12 @@ export class GradingController {
   ) {
     return this.gradingService.batchUpsert(schoolId, dto);
   }
+
+  @Get('grades/:studentId')
+  findGradesByStudent(
+    @GetCurrentSchoolId() schoolId: string,
+    @Param('studentId') studentId: string,
+  ) {
+    return this.gradingService.findGradesByStudent(schoolId, studentId);
+  }
 }

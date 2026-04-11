@@ -165,4 +165,24 @@ export class GradingService {
     return { count: scores.length };
   }
 
+  async findGradesByStudent(schoolId: string, studentId: string, term?, session?) {
+    return this.prisma.grade.findMany({
+      where: {
+        schoolId,
+        studentId,
+        ...(term && { term }),
+        ...(session && { session }),
+      },
+      include: {
+        subject: {
+          select: {
+            id: true,
+            name: true,
+            code: true,
+          }
+        },
+      },
+    });
+  };
+
 };
