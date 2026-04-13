@@ -13,6 +13,7 @@ import { StaffModule } from './staff/staff.module';
 import { StudentModule } from './student/student.module';
 import { GradingModule } from './academics/grading/grading.module';
 import { AssessmentsModule } from './academics/assessments/assessments.module';
+import { AttendanceModule } from './academics/attendance/attendance.module';
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { AssessmentsModule } from './academics/assessments/assessments.module';
     StaffModule,
     StudentModule,
     GradingModule,
-    AssessmentsModule
+    AssessmentsModule,
+    AttendanceModule
   ],
   controllers: [AppController],
   providers: [
