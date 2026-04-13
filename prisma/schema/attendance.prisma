@@ -1,0 +1,39 @@
+// Define the possible statuses for clear data entry
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+}
+
+model Attendance {
+  id String @id @default(cuid())
+
+  // Use @db.Date to ensure we only store the calendar day (YYYY-MM-DD)
+  // This matches your frontend dateString: "2026-04-13"
+  date   DateTime         @db.Date
+  status AttendanceStatus
+
+  // Relations
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+
+  // The Context: Grouped under Academics
+  // classId is for regular school arms (e.g., Grade 10A)
+  // sessionId is for the private tutoring marketplace
+  schoolId String
+  armId    String
+  classId  String
+  term     String
+  session  String
+
+  // Audit Trail: Who actually marked this?
+  recordedById String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // CRITICAL: Composite unique constraint
+  // This prevents duplicate records for a student in the same class on the same day.
+  // This is what allows the "upsert" logic to work smoothly in your service.
+  @@unique([studentId, date, classId])
+  // Indexing for performance when fetching the Weekly Sheet
+  @@index([classId, date])
+}
