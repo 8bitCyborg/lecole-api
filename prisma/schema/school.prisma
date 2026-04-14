@@ -19,12 +19,6 @@ enum Curriculum {
   other
 }
 
-enum Term {
-  first_term
-  second_term
-  third_term
-}
-
 enum GradingSystem {
   percentage
   waec
@@ -38,10 +32,58 @@ enum OwnershipType {
   public
 }
 
+model Term {
+  id                String           @id @default(uuid())
+  identifier        String //eg. First Term
+  academicSession   AcademicSession? @relation(fields: [academicSessionId], references: [id])
+  academicSessionId String?
+  school            School?          @relation(fields: [schoolId], references: [id])
+  schoolId          String?
+
+  startDate DateTime  @map("start_date")
+  endDate   DateTime? @map("end_date")
+
+  numberOfWeeks Int @map("number_of_weeks")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([academicSessionId, identifier])
+  @@index([schoolId])
+  @@index([academicSessionId])
+  @@map("terms")
+}
+
+model AcademicSession {
+  id         String  @id @default(uuid())
+  identifier String // e.g. "2025/2026"
+  schoolId   String?
+  school     School? @relation(fields: [schoolId], references: [id])
+
+  startDate DateTime? @map("start_date")
+  endDate   DateTime? @map("end_date")
+
+  terms Term[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([schoolId, identifier])
+  @@index([schoolId])
+  @@map("academic_sessions")
+}
+
 model School {
-  id       String    @id @default(uuid())
-  userId   String    @unique @map("user_id")
-  user     User      @relation(fields: [userId], references: [id])
+  id     String @id @default(uuid())
+  userId String @unique @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+
+  academic_sessions AcademicSession[]
+  terms             Term[]
+
+  currentTermId    String?
+  currentSessionId String?
+
   teachers Teacher[]
   staff    Staff[]
   classes  Class[]
@@ -57,13 +99,12 @@ model School {
   phone     String
   email     String  @unique
 
-  type           SchoolType?
-  curriculum     Curriculum?
-  gradingSystem  GradingSystem? @map("grading_system")
-  currentTerm    Term?          @map("current_term")
-  currentSession String?        @map("current_session")
-  ownershipType  OwnershipType? @map("ownership_type")
-  proprietor     String?
+  type          SchoolType?
+  curriculum    Curriculum?
+  gradingSystem GradingSystem? @map("grading_system")
+
+  ownershipType OwnershipType? @map("ownership_type")
+  proprietor    String?
 
   website         String?
   logo            String?

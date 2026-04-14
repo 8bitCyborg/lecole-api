@@ -20,7 +20,12 @@ export class SchoolService {
   async create(dto: CreateSchoolDto) {
     const existing = await this.prisma.school.findFirst({
       where: {
-        OR: [{ email: dto.email }, { userId: dto.userId }],
+        OR: [
+          { email: dto.email },
+          { userId: dto.userId },
+          { name: dto.name },
+          ...(dto.shortname ? [{ shortname: dto.shortname }] : []),
+        ],
       },
     });
 
@@ -69,17 +74,19 @@ export class SchoolService {
   }
 
   async getAcademicContext(schoolId: string) {
-    const school = await this.findById(schoolId);
+    const school = await this.prisma.school.findUnique({
+      where: { id: schoolId },
+    });
 
-    if (!school.currentSession || !school.currentTerm) {
+    if (!school?.currentSessionId || !school?.currentTermId) {
       throw new ConflictException(
         'School academic context (session or term) is not configured.',
       );
     }
 
     return {
-      session: school.currentSession,
-      term: school.currentTerm,
+      session: school.currentSessionId,
+      term: school.currentTermId,
     };
   };
 

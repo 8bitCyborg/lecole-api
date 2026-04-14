@@ -1,12 +1,14 @@
 import {
   IsDateString,
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
   IsUrl,
   IsUUID,
 } from 'class-validator';
+import { OwnershipType } from '@prisma/client';
 
 export class CreateSchoolDto {
   @IsUUID()
@@ -16,6 +18,10 @@ export class CreateSchoolDto {
   @IsString()
   @IsNotEmpty()
   name: string;
+
+  @IsString()
+  @IsOptional()
+  shortname?: string;
 
   @IsString()
   @IsNotEmpty()
@@ -49,9 +55,13 @@ export class CreateSchoolDto {
   @IsOptional()
   proprietor?: string;
 
+  @IsEnum(OwnershipType)
+  @IsOptional()
+  ownershipType?: OwnershipType;
+
   @IsString()
   @IsOptional()
-  description?: string;
+  motto?: string;
 
   @IsDateString()
   @IsOptional()
@@ -62,6 +72,10 @@ export class UpdateSchoolDto {
   @IsString()
   @IsOptional()
   name?: string;
+
+  @IsString()
+  @IsOptional()
+  shortname?: string;
 
   @IsString()
   @IsOptional()
@@ -95,9 +109,13 @@ export class UpdateSchoolDto {
   @IsOptional()
   proprietor?: string;
 
+  @IsEnum(OwnershipType)
+  @IsOptional()
+  ownershipType?: OwnershipType;
+
   @IsString()
   @IsOptional()
-  description?: string;
+  motto?: string;
 
   @IsDateString()
   @IsOptional()
