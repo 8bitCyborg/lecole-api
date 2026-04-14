@@ -109,10 +109,26 @@ export class AttendanceService {
       }
     }
 
-    return this.prisma.attendance.findMany({
+    const records = await this.prisma.attendance.findMany({
       where: whereClause,
-      orderBy: { date: 'desc' },
+      orderBy: { date: 'asc' },
     });
+
+    /*
+      transform the results into the format [
+        { '2024-10-03': [records that match that date]},
+        { '2024-11-04': [records that match that date]},
+        ...
+      ]
+    */
+    return records.reduce((acc: any, record) => {
+      const dateStr = record.date.toISOString().split('T')[0];
+      if (!acc[dateStr]) {
+        acc[dateStr] = [];
+      }
+      acc[dateStr].push(record);
+      return acc;
+    }, {});
   }
 
   async findStudentRecords(studentId: string) {
@@ -122,6 +138,8 @@ export class AttendanceService {
     });
   };
 
+
+  // attendance should not be able to be deleted for now...
   // async remove(id: string) {
   // Attempt delete directly. Prisma throws an error if it doesn't exist.
   // return this.prisma.attendance.delete({
