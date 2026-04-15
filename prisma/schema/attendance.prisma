@@ -36,4 +36,5 @@ model Attendance {
   @@unique([studentId, date, classId])
   // Indexing for performance when fetching the Weekly Sheet
   @@index([classId, date])
+  @@map("attendance")
 }

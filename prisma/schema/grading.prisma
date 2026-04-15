@@ -25,6 +25,7 @@ model GradingModule {
   @@index([schoolId, term])
   @@index([schoolId, session])
   @@index([schoolId, term, session])
+  @@map("grading_modules")
 }
 
 model Grade {

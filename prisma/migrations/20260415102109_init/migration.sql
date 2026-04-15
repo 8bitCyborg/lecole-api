@@ -35,7 +35,7 @@ CREATE TYPE "StudentStatus" AS ENUM ('ACTIVE', 'GRADUATED', 'WITHDRAWN');
 CREATE TYPE "Role" AS ENUM ('STUDENT', 'STAFF', 'ADMIN', 'GUARDIAN');
 
 -- CreateTable
-CREATE TABLE "Attendance" (
+CREATE TABLE "attendance" (
     "id" TEXT NOT NULL,
     "date" DATE NOT NULL,
     "status" "AttendanceStatus" NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE "Attendance" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Attendance_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "attendance_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -80,7 +80,7 @@ CREATE TABLE "arms" (
 );
 
 -- CreateTable
-CREATE TABLE "GradingModule" (
+CREATE TABLE "grading_modules" (
     "id" TEXT NOT NULL,
     "school_id" TEXT,
     "term" TEXT,
@@ -94,7 +94,7 @@ CREATE TABLE "GradingModule" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "GradingModule_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "grading_modules_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -278,10 +278,10 @@ CREATE TABLE "_StaffToSubject" (
 );
 
 -- CreateIndex
-CREATE INDEX "Attendance_classId_date_idx" ON "Attendance"("classId", "date");
+CREATE INDEX "attendance_classId_date_idx" ON "attendance"("classId", "date");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Attendance_studentId_date_classId_key" ON "Attendance"("studentId", "date", "classId");
+CREATE UNIQUE INDEX "attendance_studentId_date_classId_key" ON "attendance"("studentId", "date", "classId");
 
 -- CreateIndex
 CREATE INDEX "classes_school_id_idx" ON "classes"("school_id");
@@ -305,13 +305,13 @@ CREATE INDEX "arms_school_id_idx" ON "arms"("school_id");
 CREATE INDEX "arms_class_master_id_idx" ON "arms"("class_master_id");
 
 -- CreateIndex
-CREATE INDEX "GradingModule_school_id_term_idx" ON "GradingModule"("school_id", "term");
+CREATE INDEX "grading_modules_school_id_term_idx" ON "grading_modules"("school_id", "term");
 
 -- CreateIndex
-CREATE INDEX "GradingModule_school_id_session_idx" ON "GradingModule"("school_id", "session");
+CREATE INDEX "grading_modules_school_id_session_idx" ON "grading_modules"("school_id", "session");
 
 -- CreateIndex
-CREATE INDEX "GradingModule_school_id_term_session_idx" ON "GradingModule"("school_id", "term", "session");
+CREATE INDEX "grading_modules_school_id_term_session_idx" ON "grading_modules"("school_id", "term", "session");
 
 -- CreateIndex
 CREATE INDEX "grades_school_id_session_term_class_id_idx" ON "grades"("school_id", "session", "term", "class_id");
@@ -416,7 +416,7 @@ CREATE INDEX "_ClassToSubject_B_index" ON "_ClassToSubject"("B");
 CREATE INDEX "_StaffToSubject_B_index" ON "_StaffToSubject"("B");
 
 -- AddForeignKey
-ALTER TABLE "Attendance" ADD CONSTRAINT "Attendance_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "students"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "attendance" ADD CONSTRAINT "attendance_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "students"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "classes" ADD CONSTRAINT "classes_school_id_fkey" FOREIGN KEY ("school_id") REFERENCES "schools"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -437,7 +437,7 @@ ALTER TABLE "grades" ADD CONSTRAINT "grades_student_id_fkey" FOREIGN KEY ("stude
 ALTER TABLE "grades" ADD CONSTRAINT "grades_subject_id_fkey" FOREIGN KEY ("subject_id") REFERENCES "subjects"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "grades" ADD CONSTRAINT "grades_grading_module_id_fkey" FOREIGN KEY ("grading_module_id") REFERENCES "GradingModule"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "grades" ADD CONSTRAINT "grades_grading_module_id_fkey" FOREIGN KEY ("grading_module_id") REFERENCES "grading_modules"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "terms" ADD CONSTRAINT "terms_academicSessionId_fkey" FOREIGN KEY ("academicSessionId") REFERENCES "academic_sessions"("id") ON DELETE SET NULL ON UPDATE CASCADE;

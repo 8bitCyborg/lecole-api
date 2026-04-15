@@ -120,4 +120,12 @@ export class UpdateSchoolDto {
   @IsDateString()
   @IsOptional()
   dateOfInception?: string;
+
+  @IsUUID()
+  @IsOptional()
+  currentTermId?: string | null;
+
+  @IsUUID()
+  @IsOptional()
+  currentSessionId?: string | null;
 }
