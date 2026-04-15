@@ -32,18 +32,34 @@ enum OwnershipType {
   public
 }
 
+enum Status {
+  active
+  concluded
+  paused
+  abandoned
+}
+
 model Term {
-  id                String           @id @default(uuid())
-  identifier        String //eg. First Term
+  id         String  @id @default(uuid())
+  identifier String //eg. First Term
+  schoolId   String?
+  school     School? @relation(fields: [schoolId], references: [id])
+
   academicSession   AcademicSession? @relation(fields: [academicSessionId], references: [id])
   academicSessionId String?
-  school            School?          @relation(fields: [schoolId], references: [id])
-  schoolId          String?
 
   startDate DateTime  @map("start_date")
   endDate   DateTime? @map("end_date")
 
   numberOfWeeks Int @map("number_of_weeks")
+
+  status         Status          @default(active)
+  attendances    Attendance[]
+  gradingModules GradingModule[]
+  grades         Grade[]
+  currentSchools School[] @relation("CurrentTerm")
+
+  previousTermId String? @map("previous_term_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -60,10 +76,16 @@ model AcademicSession {
   schoolId   String?
   school     School? @relation(fields: [schoolId], references: [id])
 
-  startDate DateTime? @map("start_date")
-  endDate   DateTime? @map("end_date")
+  termsPerSession Int    @default(3) @map("terms_per_session")
+  terms           Term[]
 
-  terms Term[]
+  status         Status          @default(active)
+  attendances    Attendance[]
+  gradingModules GradingModule[]
+  grades         Grade[]
+  currentSchools School[] @relation("CurrentSession")
+
+  previousSessionId String? @map("previous_session_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -82,7 +104,9 @@ model School {
   terms             Term[]
 
   currentTermId    String?
+  currentTerm      Term?            @relation("CurrentTerm", fields: [currentTermId], references: [id])
   currentSessionId String?
+  currentSession   AcademicSession? @relation("CurrentSession", fields: [currentSessionId], references: [id])
 
   teachers Teacher[]
   staff    Staff[]

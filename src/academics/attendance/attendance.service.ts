@@ -58,8 +58,8 @@ export class AttendanceService {
           studentId: item.studentId,
           classId,
           armId,
-          term,
-          session,
+          termId: term,
+          sessionId: session,
           schoolId,
           date: attendanceDate,
           recordedById: userId,
@@ -85,8 +85,8 @@ export class AttendanceService {
       schoolId,
       classId,
       armId,
-      term,
-      session,
+      termId: term,
+      sessionId: session,
     };
 
     if (startDate || endDate) {

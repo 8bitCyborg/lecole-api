@@ -15,8 +15,8 @@ import {
 import type { Response } from 'express';
 import { SchoolService } from './school.service';
 import { CreateSchoolDto, UpdateSchoolDto } from './dto/school.dto';
-import { CreateAcademicSessionDto } from './dto/academicSession.dto';
-import { CreateTermDto } from './dto/term.dto';
+import { CreateAcademicSessionDto, UpdateAcademicSessionDto } from './dto/academicSession.dto';
+import { CreateTermDto, UpdateTermDto } from './dto/term.dto';
 
 import { AtGuard } from '../auth/common/guards/at.guard';
 import { GetCurrentUserId, GetCurrentSchoolId } from '../auth/common/decorators';
@@ -61,44 +61,58 @@ export class SchoolController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() dto: UpdateSchoolDto) {
     return this.schoolService.update(id, dto);
-  };
+  }
 
-  @Post('sessions')
-  createSession(
-    @GetCurrentSchoolId() schoolId: string,
-    @Body() dto: CreateAcademicSessionDto,
-  ) {
-    if (!schoolId) throw new ForbiddenException('School ID not found in token');
+  @Post('session')
+  createSession(@GetCurrentSchoolId() schoolId: string, @Body() dto: CreateAcademicSessionDto) {
+    if (!schoolId) throw new ForbiddenException('School ID is required');
     return this.schoolService.createSession(schoolId, dto);
   }
 
-  @Get('sessions')
-  findAllSessions(@GetCurrentSchoolId() schoolId: string) {
-    if (!schoolId) throw new ForbiddenException('School ID not found in token');
-    return this.schoolService.findAllSessions(schoolId);
-  }
-
-  @Get('sessions/:id')
-  findSessionById(@Param('id') id: string) {
-    return this.schoolService.findSessionById(id);
-  }
-
-  @Post('terms')
-  createTerm(
+  @Patch('session/:sessionId')
+  updateSession(
     @GetCurrentSchoolId() schoolId: string,
-    @Body() dto: CreateTermDto,
+    @Param('sessionId') sessionId: string,
+    @Body() dto: UpdateAcademicSessionDto
   ) {
-    if (!schoolId) throw new ForbiddenException('School ID not found in token');
+    if (!schoolId) throw new ForbiddenException('School ID is required');
+    return this.schoolService.updateSession(schoolId, sessionId, dto);
+  }
+
+  @Get('session')
+  getSessions(@GetCurrentSchoolId() schoolId: string) {
+    if (!schoolId) throw new ForbiddenException('School ID is required');
+    return this.schoolService.getSessions(schoolId);
+  }
+  @Get('session/current')
+  getCurrentSession(@GetCurrentSchoolId() schoolId: string) {
+    if (!schoolId) throw new ForbiddenException('School ID is required');
+    return this.schoolService.getCurrentSession(schoolId);
+  }
+
+  @Post('term')
+  createTerm(@GetCurrentSchoolId() schoolId: string, @Body() dto: CreateTermDto) {
+    if (!schoolId) throw new ForbiddenException('School ID is required');
     return this.schoolService.createTerm(schoolId, dto);
   }
 
-  @Get('terms')
-  findAllTerms(
+  @Patch('term/:termId')
+  updateTerm(
     @GetCurrentSchoolId() schoolId: string,
-    @Query('sessionId') sessionId?: string,
+    @Param('termId') termId: string,
+    @Body() dto: UpdateTermDto
   ) {
-    if (!schoolId) throw new ForbiddenException('School ID not found in token');
-    return this.schoolService.findAllTerms(schoolId, sessionId);
+    if (!schoolId) throw new ForbiddenException('School ID is required');
+    return this.schoolService.updateTerm(schoolId, termId, dto);
+  }
+
+  @Patch('term/:termId/end')
+  endTerm(
+    @GetCurrentSchoolId() schoolId: string,
+    @Param('termId') termId: string
+  ) {
+    if (!schoolId) throw new ForbiddenException('School ID is required');
+    return this.schoolService.endTerm(schoolId, termId);
   }
 };
 

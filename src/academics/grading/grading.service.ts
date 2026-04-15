@@ -19,8 +19,8 @@ export class GradingService {
     const existing = await this.prisma.gradingModule.findFirst({
       where: {
         schoolId: dto.schoolId,
-        session,
-        term,
+        sessionId: session,
+        termId: term,
         name: dto.name,
         // subjectId: dto.subjectId
       }
@@ -33,8 +33,8 @@ export class GradingService {
     return this.prisma.gradingModule.create({
       data: {
         ...dto,
-        session,
-        term,
+        sessionId: session,
+        termId: term,
       },
     });
   };
@@ -43,8 +43,8 @@ export class GradingService {
     return this.prisma.gradingModule.findMany({
       where: {
         schoolId,
-        ...(session && { session }),
-        ...(term && { term }),
+        ...(session && { sessionId: session }),
+        ...(term && { termId: term }),
       },
       orderBy: { sequence: 'asc' },
     });
@@ -103,8 +103,8 @@ export class GradingService {
       where: {
         schoolId,
         armId,
-        session,
-        term,
+        sessionId: session,
+        termId: term,
       },
     });
   }
@@ -134,12 +134,12 @@ export class GradingService {
     const operations = scores.map(item =>
       this.prisma.grade.upsert({
         where: {
-          studentId_subjectId_gradingModuleId_term_session: {
+          studentId_subjectId_gradingModuleId_termId_sessionId: {
             studentId: item.studentId,
             subjectId: item.subjectId,
             gradingModuleId: item.gradingModuleId,
-            term: context.term,
-            session: context.session,
+            termId: context.term,
+            sessionId: context.session,
           },
         },
         update: {
@@ -153,8 +153,8 @@ export class GradingService {
           gradingModuleId: item.gradingModuleId,
           classId: context.classId,
           armId: context.armId,
-          term: context.term,
-          session: context.session,
+          termId: context.term,
+          sessionId: context.session,
           schoolId: schoolId,
         },
       })

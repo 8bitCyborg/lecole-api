@@ -6,7 +6,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateSchoolDto, UpdateSchoolDto } from './dto/school.dto';
 import { CreateAcademicSessionDto } from './dto/academicSession.dto';
-import { CreateTermDto } from './dto/term.dto';
+import { CreateTermDto, UpdateTermDto } from './dto/term.dto';
 
 
 
@@ -107,115 +107,213 @@ export class SchoolService {
     });
   };
 
-  // Academic Sessions
+
+
+
+  // Academic Session Methods.
   async createSession(schoolId: string, dto: CreateAcademicSessionDto) {
-    const existing = await this.prisma.academicSession.findFirst({
-      where: {
-        schoolId,
-        identifier: dto.identifier,
-      },
-    });
-
-    if (existing) {
-      throw new ConflictException('Academic session with this identifier already exists for this school');
-    }
-
     return this.prisma.$transaction(async (tx) => {
+      const existing = await tx.academicSession.findUnique({
+        where: {
+          schoolId_identifier: {
+            schoolId,
+            identifier: dto.identifier,
+          },
+        },
+      });
+
+      if (existing) {
+        throw new ConflictException('Academic session already exists');
+      }
+
       const session = await tx.academicSession.create({
         data: {
           identifier: dto.identifier,
-          schoolId,
-          startDate: dto.startDate ? new Date(dto.startDate) : null,
-          endDate: dto.endDate ? new Date(dto.endDate) : null,
+          schoolId: schoolId,
+          termsPerSession: dto.termsPerSession,
         },
       });
 
-      let currentTermId: string | null = null;
+      const school = await tx.school.findUnique({
+        where: { id: schoolId },
+      });
 
-      if (dto.term) {
-        const term = await tx.term.create({
+      if (!school?.currentSessionId) {
+        await tx.school.update({
+          where: { id: schoolId },
           data: {
-            identifier: dto.term.identifier,
-            startDate: new Date(dto.term.startDate),
-            endDate: dto.term.endDate ? new Date(dto.term.endDate) : null,
-            numberOfWeeks: dto.term.numberOfWeeks,
-            academicSessionId: session.id,
-            schoolId,
+            currentSessionId: session.id,
           },
         });
-        currentTermId = term.id;
       }
 
-      await tx.school.update({
-        where: { id: schoolId },
-        data: {
-          currentSessionId: session.id,
-          ...(currentTermId ? { currentTermId } : {}),
-        },
-      });
-
-      return tx.academicSession.findUnique({
-        where: { id: session.id },
-        include: {
-          terms: true,
-        },
-      });
+      return session;
     });
   }
 
-  async findAllSessions(schoolId: string) {
+  async updateSession(schoolId: string, sessionId: string, dto: import('./dto/academicSession.dto').UpdateAcademicSessionDto) {
+    const session = await this.prisma.academicSession.findUnique({
+      where: { id: sessionId, schoolId },
+      include: { terms: true }
+    });
+
+    if (!session) {
+      throw new NotFoundException('Academic session not found');
+    }
+
+    if (dto.termsPerSession && dto.termsPerSession < session.terms.length) {
+      throw new ConflictException('Cannot set terms per session lower than the number of existing terms');
+    }
+
+    if (dto.identifier && dto.identifier !== session.identifier) {
+      const existing = await this.prisma.academicSession.findUnique({
+        where: {
+          schoolId_identifier: {
+            schoolId,
+            identifier: dto.identifier,
+          },
+        },
+      });
+
+      if (existing) {
+        throw new ConflictException('Academic session with this identifier already exists');
+      }
+    }
+
+    return this.prisma.academicSession.update({
+      where: { id: sessionId },
+      data: {
+        ...(dto.identifier ? { identifier: dto.identifier } : {}),
+        ...(dto.termsPerSession ? { termsPerSession: dto.termsPerSession } : {}),
+      },
+    });
+  }
+
+
+  async getSessions(schoolId: string) {
     return this.prisma.academicSession.findMany({
       where: { schoolId },
       include: {
-        terms: true,
+        terms: {
+          orderBy: { startDate: 'asc' },
+        },
       },
-      orderBy: {
-        startDate: 'desc',
-      },
+      orderBy: { createdAt: 'desc' },
     });
   }
 
-  async findSessionById(id: string) {
-    const session = await this.prisma.academicSession.findUnique({
-      where: { id },
-      include: {
-        terms: true,
-      },
-    });
-    if (!session) throw new NotFoundException('Academic session not found');
-    return session;
-  }
-
-  // Terms
-  async createTerm(schoolId: string, dto: CreateTermDto) {
-    const term = await this.prisma.term.create({
-      data: {
-        ...dto,
-        schoolId,
-        startDate: new Date(dto.startDate),
-        endDate: dto.endDate ? new Date(dto.endDate) : null,
-      },
-    });
-
-    await this.prisma.school.update({
+  async getCurrentSession(schoolId: string) {
+    const school = await this.prisma.school.findUnique({
       where: { id: schoolId },
-      data: { currentTermId: term.id },
+      include: {
+        currentSession: {
+          include: {
+            terms: {
+              orderBy: { startDate: 'asc' },
+            },
+          },
+        },
+      },
     });
 
-    return term;
+    return school?.currentSession ?? null;
   }
 
-  async findAllTerms(schoolId: string, sessionId?: string) {
-    return this.prisma.term.findMany({
-      where: {
-        schoolId,
-        ...(sessionId ? { academicSessionId: sessionId } : {}),
+  // Term Methods
+  async createTerm(schoolId: string, dto: CreateTermDto) {
+    return this.prisma.$transaction(async (tx) => {
+      const existing = await tx.term.findUnique({
+        where: {
+          academicSessionId_identifier: {
+            academicSessionId: dto.academicSessionId,
+            identifier: dto.identifier,
+          },
+        },
+      });
+
+      if (existing) {
+        throw new ConflictException('A term with this identifier already exists in this session');
+      }
+
+      const term = await tx.term.create({
+        data: {
+          identifier: dto.identifier,
+          academicSessionId: dto.academicSessionId,
+          schoolId: schoolId,
+          startDate: new Date(dto.startDate),
+          endDate: dto.endDate ? new Date(dto.endDate) : undefined,
+          numberOfWeeks: dto.numberOfWeeks,
+        },
+      });
+
+      const school = await tx.school.findUnique({
+        where: { id: schoolId },
+      });
+
+      if (!school?.currentTermId) {
+        await tx.school.update({
+          where: { id: schoolId },
+          data: {
+            currentTermId: term.id,
+          },
+        });
+      }
+
+      return term;
+    });
+  }
+
+  async updateTerm(schoolId: string, termId: string, dto: UpdateTermDto) {
+    const term = await this.prisma.term.findUnique({
+      where: { id: termId, schoolId },
+    });
+    if (!term) throw new NotFoundException('Term not found');
+
+    if (dto.identifier && dto.identifier !== term.identifier) {
+      if (!term.academicSessionId) throw new ConflictException('Term does not belong to any session');
+
+      const existing = await this.prisma.term.findUnique({
+        where: {
+          academicSessionId_identifier: {
+            academicSessionId: term.academicSessionId,
+            identifier: dto.identifier,
+          },
+        },
+      });
+
+      if (existing) throw new ConflictException('A term with this identifier already exists in this session');
+    };
+
+    return this.prisma.term.update({
+      where: { id: termId },
+      data: {
+        ...(dto.identifier ? { identifier: dto.identifier } : {}),
+        ...(dto.startDate ? { startDate: new Date(dto.startDate) } : {}),
+        ...(dto.numberOfWeeks !== undefined ? { numberOfWeeks: dto.numberOfWeeks } : {}),
       },
-      orderBy: {
-        startDate: 'desc',
-      },
+    });
+  }
+
+  async endTerm(schoolId: string, termId: string) {
+    return this.prisma.$transaction(async (tx) => {
+      const term = await tx.term.findUnique({
+        where: { id: termId, schoolId },
+      });
+
+      if (!term) throw new NotFoundException('Term not found');
+      if (term.status !== 'active') throw new ConflictException('Term is not active');
+
+      const updatedTerm = await tx.term.update({
+        where: { id: termId },
+        data: { status: 'concluded' },
+      });
+
+      await tx.school.update({
+        where: { id: schoolId },
+        data: { currentTermId: null },
+      });
+
+      return updatedTerm;
     });
   }
 };
-
-

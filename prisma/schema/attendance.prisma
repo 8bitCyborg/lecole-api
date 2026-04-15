@@ -19,11 +19,13 @@ model Attendance {
   // The Context: Grouped under Academics
   // classId is for regular school arms (e.g., Grade 10A)
   // sessionId is for the private tutoring marketplace
-  schoolId String
-  armId    String
-  classId  String
-  term     String
-  session  String
+  schoolId  String
+  armId     String
+  classId   String
+  termId    String
+  term      Term            @relation(fields: [termId], references: [id])
+  sessionId String
+  session   AcademicSession @relation(fields: [sessionId], references: [id])
 
   // Audit Trail: Who actually marked this?
   recordedById String
