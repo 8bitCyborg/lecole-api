@@ -79,6 +79,15 @@ export class SchoolController {
     return this.schoolService.updateSession(schoolId, sessionId, dto);
   }
 
+  @Patch('session/:sessionId/end')
+  endSession(
+    @GetCurrentSchoolId() schoolId: string,
+    @Param('sessionId') sessionId: string
+  ) {
+    if (!schoolId) throw new ForbiddenException('School ID is required');
+    return this.schoolService.endSession(schoolId, sessionId);
+  }
+
   @Get('session')
   getSessions(@GetCurrentSchoolId() schoolId: string) {
     if (!schoolId) throw new ForbiddenException('School ID is required');

@@ -189,6 +189,43 @@ export class SchoolService {
     });
   }
 
+  async endSession(schoolId: string, sessionId: string) {
+    return this.prisma.$transaction(async (tx) => {
+      const session = await tx.academicSession.findUnique({
+        where: { id: sessionId, schoolId },
+        include: { terms: { where: { status: 'active' } } }
+      });
+
+      if (!session) throw new NotFoundException('Academic session not found');
+      // if (session.status !== 'active') throw new ConflictException('Session is already concluded or not active');
+
+      // Conclude the session
+      const updatedSession = await tx.academicSession.update({
+        where: { id: sessionId },
+        data: { status: 'concluded' },
+      });
+
+      // Also conclude any active terms in this session if they exist
+      if (session.terms.length > 0) {
+        await tx.term.updateMany({
+          where: { academicSessionId: sessionId, status: 'active' },
+          data: { status: 'concluded' },
+        });
+      }
+
+      // Clear the school's current academic context
+      await tx.school.update({
+        where: { id: schoolId },
+        data: {
+          currentSessionId: null,
+          currentTermId: null,
+        },
+      });
+
+      return updatedSession;
+    });
+  };
+
 
   async getSessions(schoolId: string) {
     return this.prisma.academicSession.findMany({
