@@ -106,4 +106,11 @@ export class AuthService {
       refresh_token: rt,
     };
   }
+
+  async verifyPassword(userId: string, password: string): Promise<boolean> {
+    const user = await this.userService.findById(userId);
+    if (!user || !user.password) return false;
+
+    return bcrypt.compare(password, user.password);
+  }
 }

@@ -6,6 +6,7 @@ import {
   Post,
   Res,
   UseGuards,
+  ForbiddenException,
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { AuthService } from './auth.service';
@@ -66,6 +67,17 @@ export class AuthController {
   ) {
     const tokens = await this.authService.refreshTokens(userId, rt);
     this.setCookies(res, tokens);
+    return { success: true };
+  }
+
+  @Post('verify-password')
+  @HttpCode(HttpStatus.OK)
+  async verifyPassword(
+    @GetCurrentUserId() userId: string,
+    @Body('password') password: string,
+  ) {
+    const isValid = await this.authService.verifyPassword(userId, password);
+    if (!isValid) throw new ForbiddenException('Incorrect Password');
     return { success: true };
   }
 
