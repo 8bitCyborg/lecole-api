@@ -18,7 +18,7 @@ export const STUDENT_INCLUDE = {
 };
 
 export class StudentServiceHelper {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async createUserAndEnrollment(schoolId: string, dto: CreateStudentDto) {
     const defaultPassword = dto.password || 'LecoleStudent@123';

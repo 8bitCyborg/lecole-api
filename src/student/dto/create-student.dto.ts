@@ -18,9 +18,9 @@ export class CreateStudentDto {
   @IsEnum(Gender)
   gender: Gender;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  admissionNumber: string;
+  admissionNumber?: string;
 
   @IsOptional()
   @IsString()

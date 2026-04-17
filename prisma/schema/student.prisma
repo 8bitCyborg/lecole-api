@@ -24,10 +24,10 @@ model Student {
   grades     Grade[]
   attendance Attendance[]
 
-  admissionNumber String    @map("admission_number")
+  admissionNumber String?   @map("admission_number")
   dateOfBirth     DateTime? @map("date_of_birth")
-  guardianPhone   String?   @map("guardian_phone")
-  guardianEmail   String?   @map("guardian_email")
+  guardianPhone   String    @map("guardian_phone")
+  guardianEmail   String    @map("guardian_email")
   isFeesPaid      Boolean   @default(false) @map("is_fees_paid")
 
   gender Gender
