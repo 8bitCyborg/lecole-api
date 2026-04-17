@@ -10,11 +10,15 @@ async function bootstrap() {
     origin:
       process.env.APP_ENV === 'prod'
         ? 'https://lecole.app'
-        : 'http://localhost:5173',
+        : ['http://localhost:5173', 'https://lecole-web.netlify.app'],
     credentials: true,
   });
   app.use(cookieParser() as any);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true
+  }));
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
