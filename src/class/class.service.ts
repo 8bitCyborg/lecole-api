@@ -4,7 +4,7 @@ import {
   NotFoundException
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateClassDto } from './dto/createClass.dto';
+import { CreateClassDto, CreateBulkClassesDto } from './dto/createClass.dto';
 
 @Injectable()
 export class ClassService {
@@ -49,12 +49,13 @@ export class ClassService {
   async createClass(dto: CreateClassDto) {
     const existing = await this.prisma.class.findFirst({
       where: {
-        OR: [{ name: dto.name }],
+        schoolId: dto.schoolId,
+        name: dto.name,
       },
     });
     if (existing) {
       throw new ConflictException(
-        'A class with this name or school already exists',
+        'A class with this name already exists in this school',
       );
     };
 
@@ -62,6 +63,34 @@ export class ClassService {
       data: dto,
     });
   };
+
+  async createBulkClasses(dto: CreateBulkClassesDto) {
+    const { classes, schoolId } = dto;
+
+    const names = classes.map(c => c.name);
+    const existingClasses = await this.prisma.class.findMany({
+      where: {
+        schoolId,
+        name: { in: names },
+      },
+      select: { name: true },
+    });
+
+    const existingNames = new Set(existingClasses.map(c => c.name));
+    const newClasses = classes.filter(c => !existingNames.has(c.name));
+
+    if (newClasses.length === 0) {
+      throw new ConflictException('All provided classes already exist');
+    }
+
+    return this.prisma.class.createMany({
+      data: newClasses.map(c => ({
+        ...c,
+        schoolId,
+      })),
+      skipDuplicates: true,
+    });
+  }
 
   async deleteClass(id: string, schoolId: string) {
     return this.prisma.class.delete({

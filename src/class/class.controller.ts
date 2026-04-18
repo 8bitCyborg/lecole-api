@@ -12,7 +12,7 @@ import { ClassService } from './class.service';
 import { ArmService } from './arm.service';
 import { AtGuard } from 'src/auth/common/guards/at.guard';
 import { GetCurrentSchoolId } from 'src/auth/common/decorators';
-import { CreateClassDto } from './dto/createClass.dto';
+import { CreateClassDto, CreateBulkClassesDto } from './dto/createClass.dto';
 import { CreateArmDto } from './dto/createArm.dto';
 import { AssignSubjectsDto } from './dto/assignSubjects.dto';
 
@@ -63,6 +63,11 @@ export class ClassController {
   create(@Body() dto: CreateClassDto) {
     return this.classService.createClass(dto);
   };
+
+  @Post('bulk')
+  createBulk(@Body() dto: CreateBulkClassesDto) {
+    return this.classService.createBulkClasses(dto);
+  }
 
   @Delete(':id')
   deleteClass(
