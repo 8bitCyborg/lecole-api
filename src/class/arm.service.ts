@@ -4,7 +4,7 @@ import {
   NotFoundException
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateArmDto } from './dto/createArm.dto';
+import { CreateArmDto, CreateBulkArmsDto } from './dto/createArm.dto';
 
 @Injectable()
 export class ArmService {
@@ -53,6 +53,35 @@ export class ArmService {
       data: dto,
     });
   };
+
+  async createBulkArms(dto: CreateBulkArmsDto) {
+    const { arms, classId, schoolId } = dto;
+
+    const names = arms.map(a => a.name);
+    const existingArms = await this.prisma.arm.findMany({
+      where: {
+        classId,
+        name: { in: names },
+      },
+      select: { name: true },
+    });
+
+    const existingNames = new Set(existingArms.map(a => a.name));
+    const newArms = arms.filter(a => !existingNames.has(a.name));
+
+    if (newArms.length === 0) {
+      throw new ConflictException('All provided arms already exist in this class');
+    }
+
+    return this.prisma.arm.createMany({
+      data: newArms.map(a => ({
+        ...a,
+        classId,
+        schoolId,
+      })),
+      skipDuplicates: true,
+    });
+  }
 
   async deleteArm(id: string, classId: string, schoolId: string) {
     return this.prisma.arm.delete({

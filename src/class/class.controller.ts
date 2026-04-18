@@ -13,7 +13,7 @@ import { ArmService } from './arm.service';
 import { AtGuard } from 'src/auth/common/guards/at.guard';
 import { GetCurrentSchoolId } from 'src/auth/common/decorators';
 import { CreateClassDto, CreateBulkClassesDto } from './dto/createClass.dto';
-import { CreateArmDto } from './dto/createArm.dto';
+import { CreateArmDto, CreateBulkArmsDto } from './dto/createArm.dto';
 import { AssignSubjectsDto } from './dto/assignSubjects.dto';
 
 @UseGuards(AtGuard)
@@ -95,6 +95,19 @@ export class ClassController {
       schoolId,
     });
   };
+
+  @Post(':id/arms/bulk')
+  createArmsBulk(
+    @Param('id') classId: string,
+    @GetCurrentSchoolId() schoolId: string,
+    @Body() dto: CreateBulkArmsDto,
+  ) {
+    return this.armService.createBulkArms({
+      ...dto,
+      classId,
+      schoolId,
+    });
+  }
 
   @Delete(':id/arms/:armId')
   deleteArm(
