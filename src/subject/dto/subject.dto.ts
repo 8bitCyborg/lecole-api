@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsArray, IsNotEmpty, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateSubjectDto {
   @IsString()
@@ -13,4 +14,26 @@ export class CreateSubjectDto {
   @IsString()
   @IsOptional()
   code?: string;
+}
+
+export class BulkSubjectItemDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  @IsOptional()
+  code?: string;
+}
+
+export class CreateBulkSubjectsDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => BulkSubjectItemDto)
+  subjects: BulkSubjectItemDto[];
+
+  @IsString()
+  @IsNotEmpty()
+  @IsUUID()
+  schoolId: string;
 }

@@ -11,7 +11,7 @@ import {
 import { SubjectService } from './subject.service';
 import { AtGuard } from 'src/auth/common/guards/at.guard';
 import { GetCurrentUserId, GetCurrentSchoolId } from 'src/auth/common/decorators';
-import { CreateSubjectDto } from './dto/subject.dto';
+import { CreateSubjectDto, CreateBulkSubjectsDto } from './dto/subject.dto';
 
 @UseGuards(AtGuard)
 @Controller('subject')
@@ -26,6 +26,11 @@ export class SubjectController {
   @Post()
   createSubject(@Body() dto: CreateSubjectDto) {
     return this.subjectService.createSubject(dto);
+  };
+
+  @Post('bulk')
+  createBulkSubjects(@Body() dto: CreateBulkSubjectsDto) {
+    return this.subjectService.createBulkSubjects(dto);
   };
 
   @Get(':id')

@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateSubjectDto } from './dto/subject.dto';
+import { CreateSubjectDto, CreateBulkSubjectsDto } from './dto/subject.dto';
 
 @Injectable()
 export class SubjectService {
@@ -40,6 +40,35 @@ export class SubjectService {
       data: dto,
     });
   };
+
+  async createBulkSubjects(dto: CreateBulkSubjectsDto) {
+    const { subjects, schoolId } = dto;
+
+    // Get existing subjects to avoid duplicates
+    const names = subjects.map(s => s.name);
+    const existingSubjects = await this.prisma.subject.findMany({
+      where: {
+        schoolId,
+        name: { in: names },
+      },
+      select: { name: true },
+    });
+
+    const existingNames = new Set(existingSubjects.map(s => s.name));
+    const newSubjects = subjects.filter(s => !existingNames.has(s.name));
+
+    if (newSubjects.length === 0) {
+      throw new ConflictException('All provided subjects already exist');
+    }
+
+    return this.prisma.subject.createMany({
+      data: newSubjects.map(s => ({
+        ...s,
+        schoolId,
+      })),
+      skipDuplicates: true, // Extra safety
+    });
+  }
 
   async deleteSubject(id: string, schoolId: string) {
     return this.prisma.subject.delete({
