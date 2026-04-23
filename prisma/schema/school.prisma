@@ -37,6 +37,7 @@ enum Status {
   concluded
   paused
   abandoned
+  draft
 }
 
 model Term {
@@ -57,7 +58,7 @@ model Term {
   attendances    Attendance[]
   gradingModules GradingModule[]
   grades         Grade[]
-  currentSchools School[] @relation("CurrentTerm")
+  currentSchools School[]        @relation("CurrentTerm")
 
   previousTermId String? @map("previous_term_id")
 
@@ -83,7 +84,7 @@ model AcademicSession {
   attendances    Attendance[]
   gradingModules GradingModule[]
   grades         Grade[]
-  currentSchools School[] @relation("CurrentSession")
+  currentSchools School[]        @relation("CurrentSession")
 
   previousSessionId String? @map("previous_session_id")
 
