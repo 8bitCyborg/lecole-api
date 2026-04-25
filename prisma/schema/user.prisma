@@ -15,8 +15,6 @@ model User {
   studentProfiles Student[]
 
   memberships Membership[]
-  school      School?      @relation(fields: [schoolId], references: [id])
-  schoolId    String?
 
   @@map("users")
 }
