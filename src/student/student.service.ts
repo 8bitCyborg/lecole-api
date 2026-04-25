@@ -48,7 +48,6 @@ export class StudentService {
         user: {
           select: {
             ...STUDENT_INCLUDE.user.select,
-            role: true,
             createdAt: true,
           },
         },

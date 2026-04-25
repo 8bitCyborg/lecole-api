@@ -28,6 +28,8 @@ model Staff {
   gender Gender @default(MALE)
   title  Title?
 
+  memberships Membership[]
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 

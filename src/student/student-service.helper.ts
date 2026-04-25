@@ -31,7 +31,6 @@ export class StudentServiceHelper {
           firstName: dto.firstName,
           lastName: dto.lastName,
           password: hashedPassword,
-          role: 'STUDENT',
         },
       });
 

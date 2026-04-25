@@ -62,7 +62,6 @@ export class StaffService {
           lastName: dto.lastName,
           phone: dto.phone,
           password: hashedPassword,
-          role: 'STAFF',
         },
       });
 
@@ -120,7 +119,6 @@ export class StaffService {
             firstName: true,
             lastName: true,
             phone: true,
-            role: true,
             createdAt: true,
           },
         },

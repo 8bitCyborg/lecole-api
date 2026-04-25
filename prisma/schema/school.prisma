@@ -32,7 +32,7 @@ enum OwnershipType {
   public
 }
 
-enum Status {
+enum AcademicStatus {
   active
   concluded
   paused
@@ -54,7 +54,7 @@ model Term {
 
   numberOfWeeks Int @map("number_of_weeks")
 
-  status         Status          @default(active)
+  status         AcademicStatus  @default(active)
   attendances    Attendance[]
   gradingModules GradingModule[]
   grades         Grade[]
@@ -80,7 +80,7 @@ model AcademicSession {
   termsPerSession Int    @default(3) @map("terms_per_session")
   terms           Term[]
 
-  status         Status          @default(active)
+  status         AcademicStatus  @default(active)
   attendances    Attendance[]
   gradingModules GradingModule[]
   grades         Grade[]
@@ -109,12 +109,14 @@ model School {
   currentSessionId String?
   currentSession   AcademicSession? @relation("CurrentSession", fields: [currentSessionId], references: [id])
 
-  teachers Teacher[]
+  // teachers Teacher[]
   staff    Staff[]
   classes  Class[]
   arms     Arm[]
   students Student[]
   subjects Subject[]
+
+  memberships Membership[]
 
   name      String  @unique
   shortname String? @unique @map("short_name")
@@ -150,6 +152,7 @@ model School {
   verificationStatus VerificationStatus @default(unverified) @map("verification_status")
   createdAt          DateTime           @default(now()) @map("created_at")
   updatedAt          DateTime           @updatedAt @map("updated_at")
+  teachers           Teacher[]
 
   @@index([state])
   @@index([lga])

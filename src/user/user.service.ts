@@ -13,7 +13,6 @@ export class UserService {
         firstName: dto.firstName,
         lastName: dto.lastName,
         phone: dto.phone,
-        role: 'ADMIN',
         password: dto.hashedPassword,
       },
     });

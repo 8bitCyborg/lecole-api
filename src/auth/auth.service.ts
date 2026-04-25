@@ -16,6 +16,7 @@ export class AuthService {
   ) { }
 
   async signupLocal(dto: AuthDto) {
+    console.log('auth', dto);
     const hashedPassword = await this.hashData(dto.password);
     const newUser = await this.userService.createUser({
       email: dto.email,

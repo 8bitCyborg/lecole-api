@@ -5,24 +5,26 @@ model User {
   middleName String?  @map("middle_name")
   lastName   String   @map("last_name")
   phone      String?  @unique
-  role       Role     @default(ADMIN)
+  // role       Role     @default(ADMIN)
   password   String?
   hashedRt   String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   school     School?
 
-  teacher  Teacher?
-  staff    Staff?
+  teacher         Teacher?
+  staff           Staff?
   studentProfiles Student[]
 
-  @@index([role])
+  memberships Membership[]
+
+  // @@index([role])
   @@map("users")
 }
 
-enum Role {
-  STUDENT
-  STAFF
-  ADMIN
-  GUARDIAN
-}
+// enum Role {
+//   STUDENT
+//   STAFF
+//   ADMIN
+//   GUARDIAN
+// }
