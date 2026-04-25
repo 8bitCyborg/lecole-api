@@ -2,7 +2,7 @@ import { ConflictException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import * as bcrypt from 'bcrypt';
-import { StudentStatus } from '@prisma/client';
+import { StudentStatus, MembershipRole, MembershipStatus } from '@prisma/client';
 
 export const STUDENT_INCLUDE = {
   user: {
@@ -34,7 +34,20 @@ export class StudentServiceHelper {
         },
       });
 
-      return this.createStudentEnrollment(tx, user.id, schoolId, dto);
+      const student = await this.createStudentEnrollment(tx, user.id, schoolId, dto);
+
+      // create the student membership.
+      await tx.membership.create({
+        data: {
+          userId: user.id,
+          schoolId,
+          role: MembershipRole.STUDENT,
+          status: MembershipStatus.ACTIVE,
+          studentId: student.id,
+        },
+      });
+
+      return student;
     });
   }
 

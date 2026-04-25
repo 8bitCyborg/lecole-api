@@ -27,7 +27,25 @@ export class UserService {
   }
 
   async getUserProfile(userId: string, schoolId: string) {
+    const memberships = await this.prisma.membership.findMany({
+      where: { userId },
+      include: { school: true },
+    });
 
+    const currentMembership = await this.prisma.membership.findUnique({
+      where: {
+        userId_schoolId: { userId, schoolId },
+      },
+      include: {
+        staff: true,
+        student: true,
+      },
+    });
+
+    return {
+      memberships,
+      profile: currentMembership?.staff || currentMembership?.student || null,
+    };
   };
 
   async updateHashedRt(userId: string, hashedRt: string) {

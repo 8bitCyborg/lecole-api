@@ -2,6 +2,7 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateStaffDto } from './dto/createStaff.dto';
 import * as bcrypt from 'bcrypt';
+import { MembershipRole, MembershipStatus } from '@prisma/client';
 
 @Injectable()
 export class StaffService {
@@ -26,28 +27,43 @@ export class StaffService {
         throw new ConflictException('This user is already registered as staff in this school');
       }
 
-      return this.prisma.staff.create({
-        data: {
-          userId: existingUser.id,
-          schoolId,
-          staffId: dto.staffId || null,
-          bio: dto.bio,
-          title: dto.title,
-          gender: dto.gender,
-          designation: dto.designation || 'Teacher',
-          isTeachingStaff: dto.isTeachingStaff || false,
-        },
-        include: {
-          user: {
-            select: {
-              email: true,
-              firstName: true,
-              lastName: true,
-              phone: true,
-            },
+      return this.prisma.$transaction(async (tx) => {
+        const staff = await tx.staff.create({
+          data: {
+            userId: existingUser.id,
+            schoolId,
+            staffId: dto.staffId || null,
+            bio: dto.bio,
+            title: dto.title,
+            gender: dto.gender,
+            designation: dto.designation || 'Teacher',
+            isTeachingStaff: dto.isTeachingStaff || false,
           },
-          subjects: true,
-        },
+          include: {
+            user: {
+              select: {
+                email: true,
+                firstName: true,
+                lastName: true,
+                phone: true,
+              },
+            },
+            subjects: true,
+          },
+        });
+
+        // create the staff membership.
+        await tx.membership.create({
+          data: {
+            userId: existingUser.id,
+            schoolId,
+            role: MembershipRole.STAFF,
+            status: MembershipStatus.ACTIVE,
+            staffId: staff.id,
+          },
+        });
+
+        return staff;
       });
     }
 
@@ -86,6 +102,16 @@ export class StaffService {
             },
           },
           subjects: true,
+        },
+      });
+      // create the staff membership.
+      await tx.membership.create({
+        data: {
+          userId: user.id,
+          schoolId,
+          role: MembershipRole.STAFF,
+          status: MembershipStatus.ACTIVE,
+          staffId: staff.id,
         },
       });
 
