@@ -42,19 +42,24 @@ export class AuthService {
     const passwordMatches = await bcrypt.compare(dto.password, user.password);
     if (!passwordMatches) throw new ForbiddenException('Incorrect Email/Password');
 
-    const school = { id: '' };
-    // await this.prisma.school.findUnique({
-    //   where: { userId: user.id },
-    //   select: { id: true },
-    // });
+    const membership = await this.prisma.membership.findFirst({
+      where: { userId: user.id },
+      select: { schoolId: true, role: true }
+    });
 
-    const tokens = await this.getTokens(user.id, user.email ?? '', school?.id || null);
+    const tokens = await this.getTokens(user.id, user.email ?? '', membership?.schoolId || null);
     const hashedRt = await this.hashData(tokens.refresh_token);
     await this.userService.updateHashedRt(user.id, hashedRt);
 
     const { password: _, ...userData } = user;
 
-    return { user: userData, tokens };
+    return {
+      user: {
+        ...userData,
+        role: membership?.role,
+      },
+      tokens,
+    };
   };
 
   async logout(userId: string) {
@@ -69,13 +74,12 @@ export class AuthService {
     const rtMatches = await bcrypt.compare(rt, user.hashedRt);
     if (!rtMatches) throw new ForbiddenException('Access Denied');
 
-    const school = { id: '' };
-    // await this.prisma.school.findFirst({
-    //   where: { users: { some: { id: user.id } } },
-    //   select: { id: true },
-    // });
+    const membership = await this.prisma.membership.findFirst({
+      where: { userId: user.id },
+      select: { schoolId: true }
+    });
 
-    const tokens = await this.getTokens(user.id, user.email ?? '', school?.id || null);
+    const tokens = await this.getTokens(user.id, user.email ?? '', membership?.schoolId || null);
     const hashedRt = await this.hashData(tokens.refresh_token);
     await this.userService.updateHashedRt(user.id, hashedRt);
 

@@ -13,14 +13,15 @@ enum MembershipRole {
 }
 
 model Membership {
-  id       String           @id @default(uuid())
-  userId   String           @map("user_id")
-  schoolId String           @map("school_id")
-  role     MembershipRole   @default(STUDENT)
-  status   MembershipStatus @default(PENDING)
-
+  id     String @id @default(uuid())
+  userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id])
-  school School @relation(fields: [schoolId], references: [id])
+
+  schoolId String @map("school_id")
+  school   School @relation(fields: [schoolId], references: [id])
+
+  role   MembershipRole   @default(STUDENT)
+  status MembershipStatus @default(PENDING)
 
   studentId String? @unique @map("student_id")
   staffId   String? @unique @map("staff_id")
