@@ -16,16 +16,18 @@ model Membership {
   id       String           @id @default(uuid())
   userId   String           @map("user_id")
   schoolId String           @map("school_id")
-  role     MembershipRole   @default(STUDENT) // Moved from User to here
+  role     MembershipRole   @default(STUDENT)
   status   MembershipStatus @default(PENDING)
 
   user   User   @relation(fields: [userId], references: [id])
   school School @relation(fields: [schoolId], references: [id])
 
-  profileId String?  @unique @map("profile_id")
+  studentId String? @unique @map("student_id")
+  staffId   String? @unique @map("staff_id")
+
   // The Relations
-  student   Student? @relation(fields: [profileId], references: [id], map: "membership_student_fkey")
-  staff     Staff?   @relation(fields: [profileId], references: [id], map: "membership_staff_fkey")
+  student Student? @relation(fields: [studentId], references: [id])
+  staff   Staff?   @relation(fields: [staffId], references: [id])
 
   @@unique([userId, schoolId]) // Prevents duplicate memberships in the same school
   @@index([role])

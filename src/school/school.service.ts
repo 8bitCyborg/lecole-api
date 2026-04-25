@@ -22,56 +22,78 @@ export class SchoolService {
   ) { }
 
   async create(dto: CreateSchoolDto) {
+    const { userId, ...schoolData } = dto;
+
     const existing = await this.prisma.school.findFirst({
-      where: {
-        OR: [
-          { email: dto.email },
-          { userId: dto.userId },
-          { name: dto.name },
-          ...(dto.shortname ? [{ shortname: dto.shortname }] : []),
-        ],
-      },
+      where: { phone: schoolData.phone }
     });
 
-    if (existing) {
-      throw new ConflictException(
-        'A school with this name, email, or user already exists',
-      );
-    }
+    if (existing) throw new ConflictException('This school already exists');
 
-    const school = await this.prisma.school.create({
-      data: {
-        ...dto,
-        dateOfInception: dto.dateOfInception
-          ? new Date(dto.dateOfInception)
-          : undefined,
-      },
-    });
-
-    const user = await this.userService.findById(dto.userId);
+    const user = await this.userService.findById(userId);
     if (!user) throw new NotFoundException('User not found');
+
+    const result = await this.prisma.$transaction(async (tx) => {
+      // create the school.
+      const school = await tx.school.create({
+        data: {
+          ...schoolData,
+          dateOfInception: schoolData.dateOfInception
+            ? new Date(schoolData.dateOfInception)
+            : undefined,
+        },
+      });
+
+      // create the staff profile.
+      const staff = await tx.staff.create({
+        data: {
+          userId: userId,
+          schoolId: school.id,
+          isTeachingStaff: false,
+          designation: 'System Administrator',
+        },
+      });
+
+      // create the membership
+      await tx.membership.create({
+        data: {
+          userId: userId,
+          schoolId: school.id,
+          role: 'ADMIN',
+          status: 'ACTIVE',
+          staffId: staff.id,
+        },
+      });
+
+      return school;
+    });
 
     const tokens = await this.authService.getTokens(
       user.id,
       user.email ?? '',
-      school.id,
+      result.id,
     );
 
     const hashedRt = await this.authService.hashData(tokens.refresh_token);
     await this.userService.updateHashedRt(user.id, hashedRt);
 
-    return { school, tokens };
+    return { school: result, tokens };
   }
 
-  async findByUserId(userId: string) {
-    const school = await this.prisma.school.findUnique({
-      where: { userId: userId },
+  async findSchoolByUserId(userId: string) {
+    const membership = await this.prisma.membership.findFirst({
+      where: { userId },
+      include: { school: true },
     });
-    if (!school) throw new NotFoundException('School not found');
-    return school;
+
+    if (!membership?.school) {
+      throw new NotFoundException('School not found for this user');
+    }
+
+    return membership.school;
   }
 
-  async findById(id: string) {
+  async findSchoolById(id: string) {
     const school = await this.prisma.school.findUnique({ where: { id } });
     if (!school) throw new NotFoundException('School not found');
     return school;
@@ -95,7 +117,7 @@ export class SchoolService {
   };
 
   async update(id: string, dto: UpdateSchoolDto) {
-    await this.findById(id);
+    await this.findSchoolById(id);
     return this.prisma.school.update({
       where: { id },
       data: {

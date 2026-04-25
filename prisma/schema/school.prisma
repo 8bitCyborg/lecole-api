@@ -97,9 +97,7 @@ model AcademicSession {
 }
 
 model School {
-  id     String @id @default(uuid())
-  userId String @unique @map("user_id")
-  user   User   @relation(fields: [userId], references: [id])
+  id String @id @default(uuid())
 
   academic_sessions AcademicSession[]
   terms             Term[]
@@ -124,7 +122,7 @@ model School {
   state     String
   lga       String?
   phone     String
-  email     String  @unique
+  email     String?
 
   type          SchoolType?
   curriculum    Curriculum?
@@ -138,9 +136,9 @@ model School {
   motto           String?
   dateOfInception DateTime? @map("date_of_inception")
 
-  cacNumber         String? @map("cac_number")
+  cacNumber         String? @unique() @map("cac_number")
   cacCertificateUrl String? @map("cac_certificate_url")
-  moeNumber         String? @map("moe_number")
+  moeNumber         String? @unique() @map("moe_number")
   moeCerticateUrl   String? @map("moe_certificate_url")
   trcnUrl           String? @map("trcn_url")
   tin               String? @map("tin")
@@ -153,6 +151,7 @@ model School {
   createdAt          DateTime           @default(now()) @map("created_at")
   updatedAt          DateTime           @updatedAt @map("updated_at")
   teachers           Teacher[]
+  users              User[]
 
   @@index([state])
   @@index([lga])

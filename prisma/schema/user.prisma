@@ -5,20 +5,19 @@ model User {
   middleName String?  @map("middle_name")
   lastName   String   @map("last_name")
   phone      String?  @unique
-  // role       Role     @default(ADMIN)
   password   String?
   hashedRt   String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  school     School?
 
   teacher         Teacher?
   staff           Staff?
   studentProfiles Student[]
 
   memberships Membership[]
+  school      School?      @relation(fields: [schoolId], references: [id])
+  schoolId    String?
 
-  // @@index([role])
   @@map("users")
 }
 

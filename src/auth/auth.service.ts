@@ -42,10 +42,11 @@ export class AuthService {
     const passwordMatches = await bcrypt.compare(dto.password, user.password);
     if (!passwordMatches) throw new ForbiddenException('Incorrect Email/Password');
 
-    const school = await this.prisma.school.findUnique({
-      where: { userId: user.id },
-      select: { id: true },
-    });
+    const school = { id: '' };
+    // await this.prisma.school.findUnique({
+    //   where: { userId: user.id },
+    //   select: { id: true },
+    // });
 
     const tokens = await this.getTokens(user.id, user.email ?? '', school?.id || null);
     const hashedRt = await this.hashData(tokens.refresh_token);
@@ -68,10 +69,11 @@ export class AuthService {
     const rtMatches = await bcrypt.compare(rt, user.hashedRt);
     if (!rtMatches) throw new ForbiddenException('Access Denied');
 
-    const school = await this.prisma.school.findFirst({
-      where: { userId: user.id },
-      select: { id: true },
-    });
+    const school = { id: '' };
+    // await this.prisma.school.findFirst({
+    //   where: { users: { some: { id: user.id } } },
+    //   select: { id: true },
+    // });
 
     const tokens = await this.getTokens(user.id, user.email ?? '', school?.id || null);
     const hashedRt = await this.hashData(tokens.refresh_token);

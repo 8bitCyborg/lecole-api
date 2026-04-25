@@ -20,7 +20,7 @@ model Staff {
   isTeachingStaff Boolean @default(false) @map("is_teaching_staff")
   staffId         String? @map("staff_id")
 
-  designation String @default("Teacher")
+  designation String? @default("Teacher")
 
   subjects Subject[]
   arms     Arm[]     @relation("ClassMaster")

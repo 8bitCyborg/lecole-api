@@ -26,6 +26,10 @@ export class UserService {
     return this.prisma.user.findUnique({ where: { id: userId } });
   }
 
+  async getUserProfile(userId: string, schoolId: string) {
+
+  };
+
   async updateHashedRt(userId: string, hashedRt: string) {
     return this.prisma.user.update({
       where: { id: userId },

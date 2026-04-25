@@ -57,7 +57,7 @@ export class SchoolController {
 
   @Get()
   findMySchool(@GetCurrentUserId() userId: string) {
-    return this.schoolService.findByUserId(userId);
+    return this.schoolService.findSchoolByUserId(userId);
   };
 
   @Patch(':id')
