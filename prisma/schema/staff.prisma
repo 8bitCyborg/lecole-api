@@ -11,6 +11,9 @@ enum Title {
 model Staff {
   id String @id @default(uuid())
 
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+
   schoolId String @map("school_id")
   school   School @relation(fields: [schoolId], references: [id])
 

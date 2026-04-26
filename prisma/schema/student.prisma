@@ -13,6 +13,8 @@ model Student {
   id       String @id @default(uuid())
   schoolId String @map("school_id")
   school   School @relation(fields: [schoolId], references: [id], onDelete: Restrict)
+  userId   String @map("user_id")
+  user     User   @relation(fields: [userId], references: [id])
 
   classId String? @map("class_id")
   class   Class?  @relation(fields: [classId], references: [id], onDelete: SetNull)

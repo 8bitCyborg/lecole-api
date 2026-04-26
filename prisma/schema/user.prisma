@@ -11,6 +11,8 @@ model User {
   updatedAt  DateTime @updatedAt
 
   memberships Membership[]
+  students    Student[]
+  staff       Staff[]
 
   @@map("users")
 }
