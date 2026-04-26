@@ -107,10 +107,10 @@ export class StudentServiceHelper {
   }
 
   async checkExistingEnrollment(userId: string, schoolId: string) {
-    const enrollment = await this.prisma.student.findUnique({
+    const enrollment = await this.prisma.membership.findUnique({
       where: {
         userId_schoolId: { userId, schoolId },
-      },
+      }
     });
 
     if (enrollment) {
